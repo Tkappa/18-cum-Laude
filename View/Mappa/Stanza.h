@@ -20,6 +20,8 @@ class Stanza{
     void creaPorta(int direzione);
     //Mette il char carattere nella posizione specificata TODO:Fare che elimini la posizione vecchia?
     void updatePos(int x,int y,char carattere);
+    char getValue(int x,int y);
+    bool esiste();
 };
 
 #include "Stanza.cpp"

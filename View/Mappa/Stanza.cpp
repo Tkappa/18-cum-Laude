@@ -61,3 +61,11 @@ void Stanza::updatePos(int x,int y,char carattere){
     //controlla se collide con qualcosa che non sia uno spazio "vuoto"(".") e solo se non collide aggiorna la posizione
     if(stanza[x][y]=='.')stanza[x][y]=carattere;
 }
+
+char Stanza:: getValue(int x,int y){
+    return stanza[x][y];
+}
+bool Stanza::esiste(){
+    if(stanza[0][0]==' ') return false;
+    else return true;
+};

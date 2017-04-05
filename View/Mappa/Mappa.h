@@ -11,8 +11,10 @@ class Mappa{
     protected:
         Stanza mappa[altezzaMappa][lunghezzaMappa];
     public:
+        //crea una nuova mappa popolata da stanza
         Mappa(int nLivelliPrec);
-        void  stampaMappa();
+        //stampa la mappa con cout
+        void stampaMappa();
 
 };
 

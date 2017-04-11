@@ -61,6 +61,7 @@ bool character::muovi(int direction) {
     }
 
     // if (Mappa.canMove(xPos, yPos, newX, newY)) {
+    return false;
 }
 
 
@@ -97,20 +98,20 @@ int character::getIntelligence() {
 int character::muoviVersoPersonaggio(character otherCharacter) {
 
     // differenza tra le componenti x ed y dei due personaggi
-    int dx = abs(this->currentPosition.xPos - character->currentPosition.xPos);
-    int dy = abs(this->currentPosition.yPos - character->currentPosition.yPos);
+    int dx = abs(this->currentPosition->xPos - otherCharacter.currentPosition->xPos);
+    int dy = abs(this->currentPosition->yPos - otherCharacter.currentPosition->yPos);
 
     // asse su sui muoversi, a seconda di quale dove esiste la distanza maggiore
     bool moveOnXAxis = dx > dy;
 
     if (moveOnXAxis) {  // considero l'asse x
-        if (this->currentPosition.xPos > otherCharacter->currentPosition.xPos) { // se il personaggio corrente è più a destra
+        if (this->currentPosition->xPos > otherCharacter.currentPosition->xPos) { // se il personaggio corrente è più a destra
             return 1;   // vado a sinistra
         } else {
             return 3;   // altrimenti vado a destra
         }
     } else {
-        if (this->currentPosition.yPos > otherCharacter->currentPosition.yPos) { // se il personaggio corrente è più in basso
+        if (this->currentPosition->yPos > otherCharacter.currentPosition->yPos) { // se il personaggio corrente è più in basso
             return 2;   // mi muovo verso l'alto
         } else {
             return 4;   // mi muovo verso il basso

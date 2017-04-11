@@ -1,31 +1,33 @@
-//
-// Created by Stefano Andriolo on 11/04/17.
-//
+#include <string>
 
-#ifndef PROGETTO_PROGRAMMAZIONE_CHARACTER_H
-#define PROGETTO_PROGRAMMAZIONE_CHARACTER_H
+#ifndef CHARACTER_INTERFACE
+#define CHARACTER_INTERFACE
 
 typedef struct position {
     int xPos;
     int yPos;
 } POS;
 
-typedef POS * pos;
+typedef struct statistcs {
+    int life;
+    int strength;
+    int intelligence;
+} STATS;
 
 class character {
 protected:
     // parametri di esempio che poi saranno cambiati
-    int life;
-    int strength;
-    int intelligence;
+    STATS statistics;
 
     bool alive;
 
     // posizione corrente
-    pos currentPosition;
+    POS currentPosition;
 
 public:
-    character(int life, int strength, int intelligence) ;
+    character(STATS params, POS position) ;
+
+    character(STATS params) ;
 
     void attacca(character otherCharacter) ;
 
@@ -36,9 +38,10 @@ public:
     // ritorna l'intero che indica la direzione in cui muoversi
     int muoviVersoPersonaggio(character otherCharacter) ;
 
-    pos getPos() ;
+    POS getPos() ;
 
-    void setPos(pos newPosition) ;
+    // definito virtual per poter essere sovrascritto dalle classi derivate
+    virtual void setPos(POS newPosition) ;
 
     bool isAlive() ;
 
@@ -47,7 +50,9 @@ public:
     int getStrength() ;
 
     int getIntelligence() ;
+
+    virtual std::string toString() ;
 };
 
 
-#endif //PROGETTO_PROGRAMMAZIONE_CHARACTER_H
+#endif // CHARACTER_INTERFACE

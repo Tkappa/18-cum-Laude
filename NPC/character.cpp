@@ -9,11 +9,17 @@
 using namespace std;
 
 
-character::character(int life, int strength, int intelligence) {
-    this->life = life;
-    this->strength = strength;
-    this->intelligence = intelligence;
+character::character(STATS params) {
+    statistics = params;
     alive = true;
+
+    currentPosition = {0, 0};
+}
+
+
+character::character(STATS params, POS position) : character(params) {
+
+    currentPosition = position;
 }
 
 
@@ -23,11 +29,11 @@ character::character(int life, int strength, int intelligence) {
  */
 void character::attacca(character otherCharacter) {
 
-    this->life -= otherCharacter.strength;
-    otherCharacter.life -= this->strength;
+    this->statistics.life -= otherCharacter.statistics.strength;
+    otherCharacter.statistics.life -= this->statistics.strength;
 
-    this->alive = this->life > 0;
-    otherCharacter.alive = otherCharacter.life > 0;
+    this->alive = this->statistics.life > 0;
+    otherCharacter.alive = otherCharacter.statistics.life > 0;
 }
 
 
@@ -40,20 +46,20 @@ bool character::muovi(int direction) {
     // origine in alto a sinistra
 
     // variabili che conterranno, se sono state effettuate operazioni valide, la nuova posizione del personaggio
-    pos newPos = this->currentPosition;
+    POS newPos = this->currentPosition;
 
     switch (direction) {
         case 1:     // sinistra
-            newPos->xPos--;
+            newPos.xPos--;
             break;
         case 2:     // alto
-            newPos->yPos--;
+            newPos.yPos--;
             break;
         case 3:     // destra
-            newPos->xPos++;
+            newPos.xPos++;
             break;
         case 4:     // basso
-            newPos->yPos++;
+            newPos.yPos++;
             break;
         default:
             cout << "Direzione non valida" << endl;
@@ -65,7 +71,7 @@ bool character::muovi(int direction) {
 }
 
 
-void character::setPos(pos newPosition) {
+void character::setPos(POS newPosition) {
     this->currentPosition = newPosition;
 }
 
@@ -75,46 +81,63 @@ bool character::isAlive() {
 }
 
 
-pos character::getPos() {
+POS character::getPos() {
     return currentPosition;
 }
 
 
 int character::getLife() {
-    return life;
+    return statistics.life;
 }
 
 
 int character::getStrength() {
-    return strength;
+    return statistics.strength;
 }
 
 
 int character::getIntelligence() {
-    return intelligence;
+    return statistics.intelligence;
 }
 
 
 int character::muoviVersoPersonaggio(character otherCharacter) {
 
     // differenza tra le componenti x ed y dei due personaggi
-    int dx = abs(this->currentPosition->xPos - otherCharacter.currentPosition->xPos);
-    int dy = abs(this->currentPosition->yPos - otherCharacter.currentPosition->yPos);
+    int dx = abs(this->currentPosition.xPos - otherCharacter.currentPosition.xPos);
+    int dy = abs(this->currentPosition.yPos - otherCharacter.currentPosition.yPos);
 
     // asse su sui muoversi, a seconda di quale dove esiste la distanza maggiore
     bool moveOnXAxis = dx > dy;
 
     if (moveOnXAxis) {  // considero l'asse x
-        if (this->currentPosition->xPos > otherCharacter.currentPosition->xPos) { // se il personaggio corrente è più a destra
+        if (this->currentPosition.xPos > otherCharacter.currentPosition.xPos) { // se il personaggio corrente è più a destra
             return 1;   // vado a sinistra
         } else {
             return 3;   // altrimenti vado a destra
         }
     } else {
-        if (this->currentPosition->yPos > otherCharacter.currentPosition->yPos) { // se il personaggio corrente è più in basso
+        if (this->currentPosition.yPos > otherCharacter.currentPosition.yPos) { // se il personaggio corrente è più in basso
             return 2;   // mi muovo verso l'alto
         } else {
             return 4;   // mi muovo verso il basso
         }
     }
+}
+
+
+std::string character::toString() {
+    std::string s = "Character - life: ";
+    s += std::to_string(this->statistics.life);
+    s += ", strength: ";
+    s += std::to_string(this->statistics.strength);
+    s += ", intelligence: ";
+    s += std::to_string(this->statistics.intelligence);
+    s += ", xPos: ";
+    s += std::to_string(this->currentPosition.xPos);
+    s += ", yPos: ";
+    s += std::to_string(this->currentPosition.yPos);
+    s += this->isAlive() ? ", ALIVE" : ", DEAD";
+
+    return s;
 }

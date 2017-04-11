@@ -12,6 +12,7 @@ Stanza::Stanza(){
 
         }
     }
+    esplorata=false;
 }
 
 void Stanza::creaStanza() {
@@ -37,35 +38,81 @@ void Stanza::stampaStanza() {
     }
 }
 
-//direzione è il lato in cui verrà creata la porta, 0=sinista,1=su,2=destra,3=giu
+//direzione è il lato in cui verrà creata la porta, 1=sinista,2=su,3=destra,4=giu
 void Stanza::creaPorta(int direzione){
-    //TODO:Fare delle porte invece che aperture? Magari che si aprono con chiavi?
     //Avevo dimenticato che esistevano gli switch , che bel mondo in cui viviamo
     switch (direzione){
-        case 0: //sinistra
+        case 1: //sinistra
             stanza[altezzaStanza/2][0]='.';
             break;
-        case 1: //su
+        case 2: //su
             stanza[0][lunghezzaStanza/2]='.';
             break;
-        case 2: //destra
+        case 3: //destra
             stanza[altezzaStanza/2][lunghezzaStanza-1]='.';
             break;
-        case 3: //giu
+        case 4: //giu
             stanza[altezzaStanza-1][lunghezzaStanza/2]='.';
             break;
     }
 }
 
-void Stanza::updatePos(int x,int y,char carattere){
+void Stanza::creaPos(int x,int y,char carattere){
     //controlla se collide con qualcosa che non sia uno spazio "vuoto"(".") e solo se non collide aggiorna la posizione
-    if(stanza[x][y]=='.')stanza[x][y]=carattere;
+    //if(stanza[x][y]=='.')
+    stanza[x][y]=carattere;
 }
 
 char Stanza:: getValue(int x,int y){
-    return stanza[x][y];
+    return stanza[y][x];
 }
 bool Stanza::esiste(){
     if(stanza[0][0]==' ') return false;
     else return true;
 };
+bool Stanza::canMove(int x,int y,int dir){
+    switch(dir){
+case 1:
+    //sinistra
+    if(x==altezzaStanza/2 && y==0)
+        return true;
+    else if(stanza[x][y-1]!='|'&&stanza[x][y-1]!='-')
+        return true;
+    else
+        return false;
+    break;
+case 2:
+    //su
+    if(x==0 && y==lunghezzaStanza/2)
+        return true;
+    else if(stanza[x-1][y]!='|'&&stanza[x-1][y]!='-')
+        return true;
+    else
+        return false;
+    break;
+case 3:
+    //destra
+    if(x==lunghezzaStanza/2 && y==altezzaStanza-1)
+        return true;
+    else if(stanza[x][y+1]!='|' && stanza[x][y+1]!='-')
+        return true;
+    else
+        return false;
+    break;
+case 4:
+    //giu
+    if(x==lunghezzaStanza-1 && y==altezzaStanza/2 )
+        return true;
+    else if(stanza[x+1][y]!='|' && stanza[x+1][y]!='-')
+        return true;
+    else
+        return false;
+    break;
+    }
+};
+void Stanza::esplorazione(){
+    esplorata=true;
+}
+bool Stanza::isEsplorata(){
+    return esplorata;
+    }

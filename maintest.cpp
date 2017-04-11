@@ -1,14 +1,16 @@
 
-#include <curses.h>
+/*#include <curses.h>
 #include "View/Mappa/Mappa.h"
 #include "View/View.h"
 #include <iostream>
 
 #include <time.h>
 #include <cstdlib>
+*/
+//Per farlo funzionare bisogna scaricare la libreria ncurses e mettere tra le opzioni del --->LINKER<--- "-lncurses", vedi http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/helloworld.html
 
-
-int main(int argc, char *argv[])
+//commentato tutto per non dare conflitti con altri eventuali main
+/*int main(int argc, char *argv[])
 {
     //crea il random
     time_t t;
@@ -29,7 +31,7 @@ int main(int argc, char *argv[])
 	noecho(); //toglie gli input a schermo
 	cbreak(); // toglie la necessita di premere invio ad ogni comando
 	curs_set(0); //toglie il cursore
-	keypad(stdscr, TRUE); //offre la possibilità di usare tasti speciali (freccette etc..)
+	keypad(stdscr, TRUE); //offre la possibilitÃ  di usare tasti speciali (freccette etc..)
 
 	//inizializzazione della classe view
     View prova;
@@ -41,13 +43,13 @@ int main(int argc, char *argv[])
     refresh();
 
 
-    //Questo è un abbozzo di movimento
+    //Questo Ã¨ un abbozzo di movimento
     int c;
     while(1){
 	    c = getch();
 		switch(c)
 
-		{	//se il tasto premuto è "s" oppure freccia sinistra
+		{	//se il tasto premuto Ã¨ "s" oppure freccia sinistra
 		    case 97:
             case 260:
                 //controlla se si puo muovere in quella posizione
@@ -82,3 +84,4 @@ int main(int argc, char *argv[])
 	refresh();
     return 0;
 }
+*/

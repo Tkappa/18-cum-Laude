@@ -5,6 +5,12 @@
 #ifndef PROGETTO_PROGRAMMAZIONE_CHARACTER_H
 #define PROGETTO_PROGRAMMAZIONE_CHARACTER_H
 
+typedef struct position {
+    int xPos;
+    int yPos;
+} POS;
+
+typedef POS * pos;
 
 class character {
 protected:
@@ -16,8 +22,7 @@ protected:
     bool alive;
 
     // posizione corrente
-    int xPos;
-    int yPos;
+    pos currentPosition;
 
 public:
     character(int life, int strength, int intelligence) ;
@@ -27,13 +32,13 @@ public:
     // probabilmente sarà eliminato e realizzato da Igor
     bool muovi(int direction) ;
 
-    int getXPos() ;
+    // stabilisce in che direzione muoversi per avvicinarsi al personaggio passato come parametro
+    // ritorna l'intero che indica la direzione in cui muoversi
+    int muoviVersoPersonaggio(character otherCharacter) ;
 
-    int getYPos() ;
+    pos getPos() ;
 
-    void setXPos(int newX) ;
-
-    void setYPos(int newY) ;
+    void setPos(pos newPosition) ;
 
     bool isAlive() ;
 

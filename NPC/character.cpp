@@ -3,7 +3,9 @@
 //
 
 #include "character.h"
+
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 
@@ -38,21 +40,20 @@ bool character::muovi(int direction) {
     // origine in alto a sinistra
 
     // variabili che conterranno, se sono state effettuate operazioni valide, la nuova posizione del personaggio
-    int newX = this->xPos;
-    int newY = this->yPos;
+    pos newPos = this->currentPosition;
 
     switch (direction) {
         case 1:     // sinistra
-            newX--;
+            newPos->xPos--;
             break;
         case 2:     // alto
-            newY--;
+            newPos->yPos--;
             break;
         case 3:     // destra
-            newX++;
+            newPos->xPos++;
             break;
         case 4:     // basso
-            newY++;
+            newPos->yPos++;
             break;
         default:
             cout << "Direzione non valida" << endl;
@@ -63,13 +64,8 @@ bool character::muovi(int direction) {
 }
 
 
-void character::setXPos(int newX) {
-    this->xPos = newX;
-}
-
-
-void character::setYPos(int newY) {
-    this-yPos = newY;
+void character::setPos(pos newPosition) {
+    this->currentPosition = newPosition;
 }
 
 
@@ -78,13 +74,8 @@ bool character::isAlive() {
 }
 
 
-int character::getXPos() {
-    return xPos;
-}
-
-
-int character::getYPos() {
-    return yPos;
+pos character::getPos() {
+    return currentPosition;
 }
 
 
@@ -103,34 +94,26 @@ int character::getIntelligence() {
 }
 
 
+int character::muoviVersoPersonaggio(character otherCharacter) {
 
+    // differenza tra le componenti x ed y dei due personaggi
+    int dx = abs(this->currentPosition.xPos - character->currentPosition.xPos);
+    int dy = abs(this->currentPosition.yPos - character->currentPosition.yPos);
 
+    // asse su sui muoversi, a seconda di quale dove esiste la distanza maggiore
+    bool moveOnXAxis = dx > dy;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    if (moveOnXAxis) {  // considero l'asse x
+        if (this->currentPosition.xPos > otherCharacter->currentPosition.xPos) { // se il personaggio corrente è più a destra
+            return 1;   // vado a sinistra
+        } else {
+            return 3;   // altrimenti vado a destra
+        }
+    } else {
+        if (this->currentPosition.yPos > otherCharacter->currentPosition.yPos) { // se il personaggio corrente è più in basso
+            return 2;   // mi muovo verso l'alto
+        } else {
+            return 4;   // mi muovo verso il basso
+        }
+    }
+}

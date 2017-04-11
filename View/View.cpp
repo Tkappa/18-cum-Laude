@@ -65,13 +65,7 @@ void View::stampaoutputMappa(Mappa livello){
             if(livello.stanzaEsplorata(colMap,rigMap)){
                 for(rigSt=0;rigSt<altezzaStanza;rigSt++){
                     for(colSt=0;colSt<lunghezzaStanza;colSt++){
-                        char stamp=livello.getMapChar(colMap,rigMap,colSt,rigSt);
-                        if(stamp=='|')
-                            waddch(outputMappa,ACS_SBSB);
-                        else if(stamp=='-')
-                            waddch(outputMappa,ACS_HLINE);
-                        else
-                            waddch(outputMappa,stamp);
+                            waddch(outputMappa,livello.getMapChar(colMap,rigMap,colSt,rigSt));
                     }
                     cursY++;
                     wmove(outputMappa,cursY,cursX);
@@ -100,7 +94,7 @@ void View::stampaoutputMappa(Mappa livello){
     wrefresh(outputMappa);
 }
 void View::stampastoria(){
-    mvwprintw(storia,0,0,"Non so cosa scriverci in questo momento ne parleremo assieme più in la");
+    mvwprintw(storia,0,0,"Non so cosa scriverci in questo momento ne parleremo assieme piÃ¹ in la");
     wrefresh(storia);
 }
 

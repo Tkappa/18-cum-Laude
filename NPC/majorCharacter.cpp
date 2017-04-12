@@ -16,7 +16,7 @@ majorCharacter::majorCharacter(string name, string description, STATS params) : 
 
 
 majorCharacter::majorCharacter(string name, string description, STATS params, POS position) : majorCharacter(name, description, params) {
-    this->position = position;
+    this->currentPosition = position;
 }
 
 
@@ -55,7 +55,7 @@ string majorCharacter::toString() {
     s += ", yPos: ";
     s += to_string(this->currentPosition.yPos);
     s += this->isAlive() ? ", ALIVE, nome: " : ", DEAD, nome: ";
-    s += this->name;
+    s += this->getName();
     s += ", aiutante: [";
     s += this->follower != NULL ? this->follower->toString() : "NULL";
     s += "]";

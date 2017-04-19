@@ -14,10 +14,22 @@ int main() {
 
     // personaggio maggiore, può essere sia un personaggio alleato che un nemico
     majorCharacter mago ("Merlino", "Un mago molto potente", (STATS) {10, 5, 20}, (POS) {7, 3});
-    cout << mago.toString() << endl << '\t' << mago.getDescription() << endl << endl;
 
     majorCharacter drago ("Drago bianco occhi blu", "Un drago molto potente", (STATS) {50, 20, 1}, (POS) {1, 5});
     cout << drago.toString() << endl << '\t' << drago.getDescription() << endl << endl;
+
+
+    aiutante temp ((STATS) {2, 5, 3});
+    aiutante *elfo = &temp;
+
+    mago.setFollower(elfo);
+
+    cout << mago.toString() << endl << '\t' << mago.getDescription() << endl << endl;
+
+
+    drago.attacca(&mago);
+    cout << mago.toString() << endl
+        << drago.toString() << endl;
 
     return 0;
 }

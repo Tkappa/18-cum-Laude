@@ -14,7 +14,7 @@ protected:
     string name;
     string description;
 
-    // metodo da richiamare all'update della posizione del personaggio
+    // aiutante del personaggio
     aiutante * follower;
 
 public:

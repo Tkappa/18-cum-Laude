@@ -29,7 +29,7 @@ public:
 
     character(STATS params) ;
 
-    void attacca(character otherCharacter) ;
+    void attacca(character * otherCharacter) ;
 
     // probabilmente sarà eliminato e realizzato da Igor
     bool muovi(int direction) ;

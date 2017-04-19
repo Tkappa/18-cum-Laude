@@ -27,13 +27,13 @@ character::character(STATS params, POS position) : character(params) {
  * Metodo che fa combattere due personaggi, semplicemente sottrae la forza di uno alla vita dell'altro;
  * se la vita di uno dei due arriva a zero, questo viene contrassegnato come morto
  */
-void character::attacca(character otherCharacter) {
+void character::attacca(character * otherCharacter) {
 
-    this->statistics.life -= otherCharacter.statistics.strength;
-    otherCharacter.statistics.life -= this->statistics.strength;
+    this->statistics.life -= otherCharacter->statistics.strength;
+    otherCharacter->statistics.life -= this->statistics.strength;
 
     this->alive = this->statistics.life > 0;
-    otherCharacter.alive = otherCharacter.statistics.life > 0;
+    otherCharacter->alive = otherCharacter->statistics.life > 0;
 }
 
 

@@ -1,7 +1,8 @@
 #include "View.h"
-#include <curses.h>
+#include <ncurses/curses.h>
 #include <string>
 #include <stdlib.h>
+#include <cstdlib>
 #include <list>
 #include <iostream>
 View::View(){
@@ -23,13 +24,16 @@ View::View(){
     equip=newwin(height,width,starty,startx);
 }
 
-void View::stampanomeEstat(){
+void View::stampanomeEstat(Character & c){
     //QUA SI INTERFACCIA CON PG
-    char* nomechar="baobab";
+    const char* nomechar;
+    nomechar=c.getName().c_str();
     int vita,forza,intel;
-    vita=3;
-    forza=4;
-    intel=5;
+    vita=c.getStats().getLife();
+    forza=c.getStats().getStrength();
+    intel=c.getStats().getIntelligence();
+    weapons w = c.getArmi().front();
+    
     char buffer[3];
     //box(nomeEstat,0,0);
 
@@ -38,17 +42,31 @@ void View::stampanomeEstat(){
     wprintw(nomeEstat,"Nome personaggio: ");
     wprintw(nomeEstat,nomechar);
     wprintw(nomeEstat," Vita: ");
-    wprintw(nomeEstat,itoa(vita,buffer,10));
+//    wprintw(nomeEstat,itoa(vita,buffer,10));
+    sprintf(buffer,"%d",vita);
+    wprintw(nomeEstat,buffer);
     wprintw(nomeEstat," Forza: ");
-    wprintw(nomeEstat,itoa(forza,buffer,10));
+//    wprintw(nomeEstat,itoa(forza,buffer,10));
+    sprintf(buffer,"%d",forza);
+    wprintw(nomeEstat,buffer);
     wprintw(nomeEstat," Intelligenza: ");
-    wprintw(nomeEstat,itoa(intel,buffer,10));
+//    wprintw(nomeEstat,itoa(intel,buffer,10));
+    sprintf(buffer,"%d",intel);
+    wprintw(nomeEstat,buffer);
+    wprintw(nomeEstat,"  | Arma: ");
+    nomechar = w.getName().c_str();
+    wprintw(nomeEstat,nomechar);
+    sprintf(buffer,"%d",w.getValue());
+    wprintw(nomeEstat," [");
+    wprintw(nomeEstat,buffer);
+    wprintw(nomeEstat,"]");
     attroff(COLOR_PAIR(1));
     wrefresh(nomeEstat);
 }
-void View::stampaequip(){
+void View::stampaequip(string s){
+    const char* details = s.c_str();
     box(equip,0,0);
-    mvwprintw(equip,1,1,"Benvenuto");
+    mvwprintw(equip,1,1,details);
     wrefresh(equip);
 }
 void View::stampaoutputMappa(Mappa livello){
@@ -65,7 +83,8 @@ void View::stampaoutputMappa(Mappa livello){
             if(livello.stanzaEsplorata(colMap,rigMap)){
                 for(rigSt=0;rigSt<altezzaStanza;rigSt++){
                     for(colSt=0;colSt<lunghezzaStanza;colSt++){
-                            waddch(outputMappa,livello.getMapChar(colMap,rigMap,colSt,rigSt));
+                        char stamp=livello.getMapChar(colMap,rigMap,colSt,rigSt);
+                            waddch(outputMappa,stamp);
                     }
                     cursY++;
                     wmove(outputMappa,cursY,cursX);
@@ -82,19 +101,20 @@ void View::stampaoutputMappa(Mappa livello){
     }
 
     //Stampa tutti i gli oggetti "che si muovono" cosi non modificano la struttura dati
-    std::list<p_pers> oggetti;
+    std::list<p_char> oggetti;
     int printx,printy;
     oggetti=livello.getList();
-    for (std::list<p_pers>::iterator i = oggetti.begin(); i != oggetti.end(); ++i){
+    for (std::list<p_char>::iterator i = oggetti.begin(); i != oggetti.end(); ++i){
             printy=3+(*i)->pos.mapY*altezzaStanza+(*i)->pos.stanzY;
             printx=1+(*i)->pos.mapX*lunghezzaStanza+(*i)->pos.stanzX;
             wmove(outputMappa,printx,printy);
-            waddch(outputMappa,(*i)->nome);
+            waddch(outputMappa,(*i)->getSym());
     }
     wrefresh(outputMappa);
 }
-void View::stampastoria(){
-    mvwprintw(storia,0,0,"Non so cosa scriverci in questo momento ne parleremo assieme più in la");
+void View::stampastoria(string s){
+    const char* cose = s.c_str();
+    mvwprintw(storia,0,0,cose);
     wrefresh(storia);
 }
 

@@ -2,8 +2,9 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <curses.h>
-#include "Mappa/Mappa.h"
+#include <ncurses/curses.h>
+#include "mappa/Mappa.h"
+#include "../model/pc/Character.hpp"
 class View{
     protected:
         WINDOW * nomeEstat;
@@ -12,10 +13,10 @@ class View{
         WINDOW * equip;
     public:
         View();
-        void stampanomeEstat();
+        void stampanomeEstat(Character &c);
         void stampaoutputMappa(Mappa livello);
-        void stampastoria();
-        void stampaequip();
+        void stampastoria(string s);
+        void stampaequip(string s);
 
 };
 

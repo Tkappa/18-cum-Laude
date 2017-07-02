@@ -193,6 +193,13 @@ Mappa::Mappa(int n){
 
 }
 
+//Mappa::Mappa(const Mappa& orig){
+//    mappa = orig.mappa;
+//    scalasu = orig.scalasu;
+//    scalagiu = orig.scalagiu;
+//    Oggetti = orig.Oggetti;
+//}
+
 void  Mappa::stampaMappa(){
     for (int i=0;i<altezzaMappa ;i++){
         for (int j=0;j<lunghezzaMappa;j++){
@@ -205,75 +212,83 @@ void  Mappa::stampaMappa(){
 char Mappa::getMapChar(int MapX,int MapY,int StX,int StY){
     return mappa[MapY][MapX].getValue(StX,StY);
 }
-void Mappa::moveChar(pers * personaggio,int dir){
+void Mappa::moveChar(Character & personaggio,int dir){
+    Pos p= personaggio.getPos();
     switch(dir){
         case 1:
             //sinistra
-            if(personaggio->pos.stanzX==altezzaStanza/2 && personaggio->pos.stanzY==0){
-                personaggio->pos.mapY=personaggio->pos.mapY-1;
-                personaggio->pos.stanzY=altezzaStanza-1;
-                mappa[personaggio->pos.mapX][personaggio->pos.mapY].esplorazione();
+            if(p.stanzX==altezzaStanza/2 && p.stanzY==0){
+                p.mapY=p.mapY-1;
+                p.stanzY=altezzaStanza-1;
+                mappa[p.mapX][p.mapY].esplorazione();
             }
             else
-                personaggio->pos.stanzY=personaggio->pos.stanzY-1;
+                p.stanzY=p.stanzY-1;
             break;
         case 2:
             //su
-            if(personaggio->pos.stanzX==0 && personaggio->pos.stanzY==lunghezzaStanza/2){
-                personaggio->pos.mapX=personaggio->pos.mapX-1;
-                personaggio->pos.stanzX=altezzaStanza-1;
-                mappa[personaggio->pos.mapX][personaggio->pos.mapY].esplorazione();
+            if(p.stanzX==0 && p.stanzY==lunghezzaStanza/2){
+                p.mapX=p.mapX-1;
+                p.stanzX=altezzaStanza-1;
+                mappa[p.mapX][p.mapY].esplorazione();
             }
             else
-                personaggio->pos.stanzX=personaggio->pos.stanzX-1;
+                p.stanzX=p.stanzX-1;
             break;
         case 3:
             //destra
-            if(personaggio->pos.stanzX==lunghezzaStanza/2 && personaggio->pos.stanzY==altezzaStanza-1){
-                personaggio->pos.mapY=personaggio->pos.mapY+1;
-                personaggio->pos.stanzY=0;
-                mappa[personaggio->pos.mapX][personaggio->pos.mapY].esplorazione();
+            if(p.stanzX==lunghezzaStanza/2 && p.stanzY==altezzaStanza-1){
+                p.mapY=p.mapY+1;
+                p.stanzY=0;
+                mappa[p.mapX][p.mapY].esplorazione();
             }
             else
-                personaggio->pos.stanzY=personaggio->pos.stanzY+1;
+                p.stanzY=p.stanzY+1;
             break;
         case 4:
             //giu
-            if(personaggio->pos.stanzX==lunghezzaStanza-1 && personaggio->pos.stanzY==altezzaStanza/2){
-                personaggio->pos.mapX=personaggio->pos.mapX+1;
-                personaggio->pos.stanzX=0;
-                mappa[personaggio->pos.mapX][personaggio->pos.mapY].esplorazione();
+            if(p.stanzX==lunghezzaStanza-1 && p.stanzY==altezzaStanza/2){
+                p.mapX=p.mapX+1;
+                p.stanzX=0;
+                mappa[p.mapX][p.mapY].esplorazione();
             }
             else
-                personaggio->pos.stanzX=personaggio->pos.stanzX+1;
+                p.stanzX=p.stanzX+1;
             break;
     }
+    personaggio.setPos(p);
 }
-void Mappa::assegnaPosIniziale(pers *personaggio){
+void Mappa::assegnaPosIniziale(Character &personaggio){
     //il personaggio iniziale spawnerà sempre sulle scale che portano al livello prima
-    personaggio->pos.mapX=scalasu.pos.mapX;
-    personaggio->pos.mapY=scalasu.pos.mapY;
-    personaggio->pos.stanzX=scalasu.pos.stanzX;
-    personaggio->pos.stanzY=scalasu.pos.stanzY;
-    Oggetti.push_back(personaggio);
+    Pos p;
+    p.mapX=scalasu.pos.mapX;
+    p.mapY=scalasu.pos.mapY;
+    p.stanzX=scalasu.pos.stanzX;
+    p.stanzY=scalasu.pos.stanzY;
+    personaggio.setPos(p);
+
+    Oggetti.push_back(&personaggio);
 }
-void Mappa::assegnaPos(pers *personaggio,int MapX,int MapY,int StX,int StY){
-    personaggio->pos.mapX=MapX;
-    personaggio->pos.mapY=MapY;
-    personaggio->pos.stanzX=StX;
-    personaggio->pos.stanzY=StY;
-    Oggetti.push_back(personaggio);
+void Mappa::assegnaPos(Character & personaggio,int MapX,int MapY,int StX,int StY){
+    Pos p;
+    p.mapX=MapX;
+    p.mapY=MapY;
+    p.stanzX=StX;
+    p.stanzY=StY;
+    personaggio.setPos(p);
+    Oggetti.push_back(&personaggio);
 }
-bool Mappa::mapCanMove(pers * personaggio,int dir){
-    return mappa[personaggio->pos.mapX][personaggio->pos.mapY].canMove(personaggio->pos.stanzX,personaggio->pos.stanzY,dir);
+bool Mappa::mapCanMove(Character & personaggio,int dir){
+    Pos p= personaggio.getPos();
+    return mappa[p.mapX][p.mapY].canMove(p.stanzX,p.stanzY,dir);
 }
 bool Mappa::stanzaEsplorata(int MapX,int MapY){
     return mappa[MapY][MapX].isEsplorata();
 }
-void Mappa::nuovoOggetto(pers oggetto){
-    mappa[oggetto.pos.mapX][oggetto.pos.mapY].creaPos(oggetto.pos.stanzX,oggetto.pos.stanzY,oggetto.nome);
+void Mappa::nuovoOggetto(Character oggetto){
+    mappa[oggetto.getPos().mapX][oggetto.getPos().mapY].creaPos(oggetto.getPos().stanzX,oggetto.getPos().stanzY,oggetto.getSym());
 }
-std::list<p_pers> Mappa::getList(){
+std::list<p_char> Mappa::getList(){
 return Oggetti;
 }
 

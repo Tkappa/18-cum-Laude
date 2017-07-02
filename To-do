@@ -68,7 +68,7 @@ Necessario:
   [3]--Ogni bioma diverso avrà tipi di stanza diverse con grandezze variabili o cose del genere
   
   
-    [1]Storia:  //Credo di riuscirlo a fare io , devo vedere un attimo come strutturarlo , massimo mercoledi 5 l'ho fatto
+ [1]Storia:  //Credo di riuscirlo a fare io , devo vedere un attimo come strutturarlo , massimo mercoledi 5 l'ho fatto
      
     la storia è l'elenco di quello che sta succedendo nel gioco
     -Ad esempio entrando in una nuova stanza si notano 3 nuovi nemici,nella storia apparirà:
@@ -89,6 +89,9 @@ Necessario:
     Pensavo di farlo con una coda globale, quando succede qualche azione degna di essere aggiunta alla storia viene messa in coda
     Quando viene eseguito un turn() tutta la coda viene stampata.
     
+    
+    
+ [2]Schermata di creazione personaggio , schermata di morte e schermata di fine gioco
     
     
     

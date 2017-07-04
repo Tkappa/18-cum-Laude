@@ -39,8 +39,8 @@ public:
     string getName();
     string getDesc();
     void setDesc(string s);
-    char getSym();
-    void setSym(char sym);
+    string getSym();
+    void setSym(string sym);
     virtual string toStr();
 
     Pos pos;
@@ -49,7 +49,7 @@ protected:
     string desc;
     ability stats;
     list<weapons> armi;
-    char sym;
+    string sym;
     bool alive;
 };
 

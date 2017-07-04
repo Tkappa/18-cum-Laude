@@ -7,25 +7,32 @@
 #include <queue>
 #include <iostream>
 View::View(){
+
+    //Per adesso non è ancora resizible quindi i valori sono costanti
     refresh();
+
+
     int height = 1;
 	int width = COLS;
 	int starty = 1;
 	int startx = 0;
-    refresh();
-    nomeEstat=newwin(height,width,starty,startx+1);
+
+    nameAndStats=newwin(height,width,starty,startx+1);
+
     height=(LINES-7);
     starty=2;
-    outputMappa=newwin(height,width,starty,startx);
+    outputMap=newwin(height,width,starty,startx);
+
     height=5;
     starty=LINES-5;
-    storia=newwin(height,width,starty,startx+1);
+    narrative=newwin(height,width,starty,startx+1);
+
     height=5;
     starty=LINES-5;
-    equip=newwin(height,width,starty,startx);
+    inventory=newwin(height,width,starty,startx);
 }
 
-void View::stampanomeEstat(Character & c){
+void View::print_nameAndStats(Character & c){
     //QUA SI INTERFACCIA CON PG
     const char* nomechar;
     nomechar=c.getName().c_str();
@@ -36,43 +43,39 @@ void View::stampanomeEstat(Character & c){
     weapons w = c.getArmi().front();
 
     char buffer[3];
-    //box(nomeEstat,0,0);
 
     attron(COLOR_PAIR(1));
-    wmove(nomeEstat,0,0);
-    wprintw(nomeEstat,"Nome personaggio: ");
-    wprintw(nomeEstat,nomechar);
-    wprintw(nomeEstat," Vita: ");
-//    wprintw(nomeEstat,itoa(vita,buffer,10));
+    wmove(nameAndStats,0,0);
+    wprintw(nameAndStats,"Nome personaggio: ");
+    wprintw(nameAndStats,nomechar);
+    wprintw(nameAndStats," Vita: ");
     sprintf(buffer,"%d",vita);
-    wprintw(nomeEstat,buffer);
-    wprintw(nomeEstat," Forza: ");
-//    wprintw(nomeEstat,itoa(forza,buffer,10));
+    wprintw(nameAndStats,buffer);
+    wprintw(nameAndStats," Forza: ");
     sprintf(buffer,"%d",forza);
-    wprintw(nomeEstat,buffer);
-    wprintw(nomeEstat," Intelligenza: ");
-//    wprintw(nomeEstat,itoa(intel,buffer,10));
+    wprintw(nameAndStats,buffer);
+    wprintw(nameAndStats," Intelligenza: ");
     sprintf(buffer,"%d",intel);
-    wprintw(nomeEstat,buffer);
-    wprintw(nomeEstat,"  | Arma: ");
+    wprintw(nameAndStats,buffer);
+    wprintw(nameAndStats,"  | Arma: ");
     nomechar = w.getName().c_str();
-    wprintw(nomeEstat,nomechar);
+    wprintw(nameAndStats,nomechar);
     sprintf(buffer,"%d",w.getValue());
-    wprintw(nomeEstat," [");
-    wprintw(nomeEstat,buffer);
-    wprintw(nomeEstat,"]");
+    wprintw(nameAndStats," [");
+    wprintw(nameAndStats,buffer);
+    wprintw(nameAndStats,"]");
     attroff(COLOR_PAIR(1));
-    wrefresh(nomeEstat);
+    wrefresh(nameAndStats);
 }
-void View::stampaequip(string s){
+void View::print_inventory(string s){
     const char* details = s.c_str();
-    box(equip,0,0);
-    mvwprintw(equip,1,1,details);
-    wrefresh(equip);
+    box(inventory,0,0);
+    mvwprintw(inventory,1,1,details);
+    wrefresh(inventory);
 }
-void View::stampaoutputMappa(Mappa * CurLevel){
-    box(outputMappa,0,0);
-    wmove(outputMappa,1,3);
+void View::print_outputMap(Mappa * CurLevel){
+    box(outputMap,0,0);
+    wmove(outputMap,1,3);
     int colMap,rigMap,colSt,rigSt,cursX,cursY,cursBaseY;
     cursBaseY=1;
     cursX=3;
@@ -82,23 +85,23 @@ void View::stampaoutputMappa(Mappa * CurLevel){
     for(rigMap=0;rigMap<altezzaMappa;rigMap++){
         for(colMap=0;colMap<lunghezzaMappa;colMap++){
             if(CurLevel->stanzaEsplorata(colMap,rigMap)){
-                for(rigSt=0;rigSt<altezzaStanza;rigSt++){
-                    for(colSt=0;colSt<lunghezzaStanza;colSt++){
+                for(rigSt=0;rigSt<roomHeight;rigSt++){
+                    for(colSt=0;colSt<roomLenght;colSt++){
                         char stamp=CurLevel->getMapChar(colMap,rigMap,colSt,rigSt);
-                            waddch(outputMappa,stamp);
+                            waddch(outputMap,stamp);
                     }
                     cursY++;
-                    wmove(outputMappa,cursY,cursX);
+                    wmove(outputMap,cursY,cursX);
                  }
             }
             cursY=cursBaseY;
-            cursX=cursX+lunghezzaStanza;
-            wmove(outputMappa,cursY,cursX);
+            cursX=cursX+roomLenght;
+            wmove(outputMap,cursY,cursX);
         }
         cursX=3;
-        cursBaseY+=altezzaStanza;
+        cursBaseY+=roomLenght;
         cursY=cursBaseY;
-        wmove(outputMappa,cursY,cursX);
+        wmove(outputMap,cursY,cursX);
     }
 
     //Stampa tutti i personaggi "che si muovono" cosi non modificano la struttura dati
@@ -106,27 +109,27 @@ void View::stampaoutputMappa(Mappa * CurLevel){
     pers=CurLevel->getList();
     int printx,printy;
     for (std::list<p_char>::iterator i = pers.begin(); i != pers.end(); ++i){
-            std::cout<<"Sto stampando "<<*i<<" con simbolo:"<<(*i)->getSym()<<"\n";
-            printy=3+(*i)->pos.mapY*altezzaStanza+(*i)->pos.stanzY;
-            printx=1+(*i)->pos.mapX*lunghezzaStanza+(*i)->pos.stanzX;
-            wmove(outputMappa,printx,printy);
-            waddch(outputMappa,(*i)->getSym());
+            //std::cout<<"Sto stampando "<<*i<<" con simbolo:"<<(*i)->getSym()<<"\n";
+            printy=3+(*i)->pos.mapY*roomHeight+(*i)->pos.stanzY;
+            printx=1+(*i)->pos.mapX*roomLenght+(*i)->pos.stanzX;
+            wmove(outputMap,printx,printy);
+            waddstr(outputMap,(*i)->getSym().c_str());
     }
-    wrefresh(outputMappa);
+    wrefresh(outputMap);
 }
-void View::clearoutputMappa(){
-    werase(outputMappa);
+void View::clearoutputMap(){
+    werase(outputMap);
       }
-void View::stampastoria(queue<char*>* narrative){
-    werase(storia);
+void View::print_narrative(queue<char*>* narrativequeue){
+    werase(narrative);
     int cursY=0;
-    while(!narrative->empty()){
-        char* a=narrative->front();
-        waddstr(storia,a);
+    while(!narrativequeue->empty()){
+        char* a=narrativequeue->front();
+        waddstr(narrative,a);
         cursY++;
-        wmove(storia,cursY,0);
-        narrative->pop();
+        wmove(narrative,cursY,0);
+        narrativequeue->pop();
     }
-    wrefresh(storia);
+    wrefresh(narrative);
 }
 

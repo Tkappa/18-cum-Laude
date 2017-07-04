@@ -160,11 +160,11 @@ void Character::setDesc(string s) {
     desc = s;
 }
 
-char Character::getSym() {
+string Character::getSym() {
     return sym;
 }
 
-void Character::setSym(char sym) {
+void Character::setSym(string sym) {
     this->sym = sym;
 }
 

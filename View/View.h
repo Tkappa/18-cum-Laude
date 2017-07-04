@@ -7,17 +7,17 @@
 #include "../model/pc/Character.hpp"
 class View{
     protected:
-        WINDOW * nomeEstat;
-        WINDOW * outputMappa;
-        WINDOW * storia;
-        WINDOW * equip;
+        WINDOW * nameAndStats;
+        WINDOW * outputMap;
+        WINDOW * narrative;
+        WINDOW * inventory;
     public:
         View();
-        void stampanomeEstat(Character &c);
-        void stampaoutputMappa(Mappa* CurLevel);
-        void stampastoria(queue<char*>* narrative);
-        void stampaequip(string s);
-        void clearoutputMappa();
+        void print_nameAndStats(Character &c);
+        void print_outputMap(Mappa* CurLevel);
+        void print_narrative(queue<char*>* narrative);
+        void print_inventory(string s);
+        void clearoutputMap();
 
 };
 

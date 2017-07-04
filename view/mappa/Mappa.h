@@ -10,7 +10,7 @@
 #include "../../model/pc/Character.hpp"
 
 struct pers{
-char nome;
+string nome;
 mapPos pos;
 };
 struct obj{
@@ -24,7 +24,7 @@ const int altezzaMappa=3,lunghezzaMappa=16;
 
 class Mappa{
     protected:
-        Stanza mappa[altezzaMappa][lunghezzaMappa];
+        Room mappa[altezzaMappa][lunghezzaMappa];
         int nLevel;
         pers scalasu;
         pers scalagiu;

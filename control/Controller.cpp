@@ -39,8 +39,8 @@ void Controller::launch() {
 
     Character * punt_pg=&pg;
     //Character * punt= &pg;
-    pg.setSym('@');
-    anto.setSym('x');
+    pg.setSym("@");
+    anto.setSym("x");
     //    pg.setFollower(f);
     //curMap.assegnaPosIniziale(anto);
     curMap->assegnaPosIniziale(punt_pg);
@@ -56,10 +56,10 @@ void Controller::launch() {
     //inizializzazione della classe view
         View vista;
     //stampa l'interfaccia utente
-    vista.stampanomeEstat(pg);
-    vista.stampaoutputMappa(curMap);
+    vista.print_nameAndStats(pg);
+    vista.print_outputMap(curMap);
     narrative.push("Questa sarà una grande avventura!");
-    vista.stampastoria(&narrative);
+    vista.print_narrative(&narrative);
     //    vista.stampaequip(pg.getDesc());
     refresh();
 
@@ -77,7 +77,6 @@ void Controller::launch() {
     int mov;
     while (1) {
         c = getch();
-        vista.stampastoria(&narrative);
         //std::cout<<c;
         p1 = pg.getPos();
         p2 = anto.getPos();
@@ -96,25 +95,25 @@ void Controller::launch() {
                 if (curMap->mapCanMove(pg, 1))
                     // e in tal caso muovilo verso la posizione
                     curMap->moveChar(pg, 1);
-                vista.stampaoutputMappa(curMap);
+                vista.print_outputMap(curMap);
                 break;
             case 100:// char 'd'
             case 261:// right
                 if (curMap->mapCanMove(pg, 3))
                     curMap->moveChar(pg, 3);
-                vista.stampaoutputMappa(curMap);
+                vista.print_outputMap(curMap);
                 break;
             case 119:// char 'w'
             case 259:// su
                 if (curMap->mapCanMove(pg, 2))
                     curMap->moveChar(pg, 2);
-                vista.stampaoutputMappa(curMap);
+                vista.print_outputMap(curMap);
                 break;
             case 115:// char 's'
             case 258:// giu
                 if (curMap->mapCanMove(pg, 4))
                     curMap->moveChar(pg, 4);
-                vista.stampaoutputMappa(curMap);
+                vista.print_outputMap(curMap);
                 break;
             case 62:{//char >
                 pers stairs=curMap->getStairsDown();
@@ -122,8 +121,8 @@ void Controller::launch() {
                     curMap=curMap->nextMap();
                     curMap->assegnaPosIniziale(punt_pg);
                 }}
-                vista.clearoutputMappa();
-                vista.stampaoutputMappa(curMap);
+                vista.clearoutputMap();
+                vista.print_outputMap(curMap);
                 break;
             case 60://char <
                 {pers stairs=curMap->getStairsUp();
@@ -133,8 +132,8 @@ void Controller::launch() {
                     mapPos x=stairs.pos;
                     curMap->assegnaPos(punt_pg,x.mapX,x.mapY,x.stanzX,x.stanzY);
                 }
-                vista.clearoutputMappa();
-                vista.stampaoutputMappa(curMap);
+                vista.clearoutputMap();
+                vista.print_outputMap(curMap);
                 }
                 break;
             case 102:// char 'f'
@@ -148,11 +147,13 @@ void Controller::launch() {
                 //vista.stampastoria(b);
                 if (curMap->mapCanMove(pg, mov))
                     curMap->moveChar(pg, mov);
-                vista.stampaoutputMappa(curMap);
+                vista.print_outputMap(curMap);
                 break;
         }
         if (c == 113)// char 'q'
             break;
+
+    vista.print_narrative(&narrative);
     }
 
     refresh();

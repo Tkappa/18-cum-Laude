@@ -20,57 +20,58 @@ mapPos pos;
 
 typedef obj* p_obj;
 typedef Character* p_char;
-const int altezzaMappa=3,lunghezzaMappa=16;
+const int mapHeight=3,mapLenght=16;
 
-class Mappa{
+class Map{
     protected:
-        Room mappa[altezzaMappa][lunghezzaMappa];
+        Room mapMatrix[mapHeight][mapLenght];
         int nLevel;
-        pers scalasu;
-        pers scalagiu;
+        pers stairsUp;
+        pers stairDown;
         int nRooms;
-        std::list<p_char> Personaggi;
-        std::list<p_obj> Oggetti;
+        std::list<p_char> characterList;
+        std::list<p_obj> objectList;
         std::queue<char*>* globalnarrative;
 
     public:
-        Mappa* next;
-        Mappa* prev;
+        //Puntatori alla mappa precedente e successiva
+        Map* next;
+        Map* prev;
+
         //crea una nuova mappa popolata da stanza
-        Mappa(int nRoomsPrec,int nLevel,queue<char*>* narrative);
+        Map(int nRoomsPrec,int nLevel,queue<char*>* narrative);
 //        Mappa(const Mappa& orig);
         //stampa la mappa con cout facendo solo 0 e 1
-        void stampaMappa();
+        void printMap();
         //restituisce il carattere che sta alle coordinate specificate
         char getMapChar(int MapX,int MapY,int StX,int StY);
         //scrive sulla struttura dati di personaggio e lo sposta nella direzione specificata
-        void moveChar(Character & personaggio,int dir);
+        void moveChar(p_char personaggio,int dir);
         //mette il personaggio specificato(dovrebbe essere quello principale) sopra le scale che portano su come posizione iniziale
-        void assegnaPosIniziale(Character* personaggio);
+        void assignInizialPosition_toPlayer(p_char personaggio);
         //assegna la posizione specificata al personaggio passato per paramentro
-        void assegnaPos(p_char personaggio,int MapX,int MapY,int StX,int StY);
-        //Inserisce nella struttura dati l'oggetto passato
-        void nuovoOggetto(Character oggetto);
+        void assingPosition(p_char personaggio,int MapX,int MapY,int StX,int StY);
         //ritorna vero se il personaggio inserito pu� muoversi nella direzione specificata , altimenti falso
-        bool mapCanMove(Character & personaggio,int dir);
+        bool mapCanMove(p_char personaggio,int dir);
         //ritorna il valore di "esplorato" della stanza in quelle coordinate
-        bool stanzaEsplorata(int MapX,int MapY);
+        bool roomExplored(int MapX,int MapY);
         //fornisce una copia di "oggetti"
         std::list<p_char> getList();
         //Restituisce le due scale in modo da prenderne le posizioni
         pers getStairsUp();
         pers getStairsDown();
 
+        //Metodi che gestiscono il cambio di mappa
+        Map* nextMap();
+        Map* prevMap();
 
-        Mappa* nextMap();
-        Mappa* prevMap();
+        //Metodo per inserire la mappa precedente alla mappa attuale
+        void setPrev(Map* Map_Pointer);
 
-        void setPrev(Mappa* Map_Pointer);
-
-        //riempie la stanza indicata di un numero casuale gi mostri e oggetti
+        //riempie la stanza indicata di un numero casuale di mostri e oggetti
         void populate(int MapX,int MapY);
-
-        mapPos randStanzPos(int MapX,int MapY);
+        //Metodo utile a populate per mettere una posizione casuale nella stanza all'oggetto creato
+        mapPos randRoomPos(int MapX,int MapY);
 };
 
 

@@ -24,9 +24,9 @@ void Controller::launch() {
     srand((unsigned) time(&t));
 
     //crea la struttura dati con 3 stanze base
-    Mappa* head;
-    head= new Mappa(1,1,&narrative);
-    Mappa* curMap=head;
+    Map* head;
+    head= new Map(1,1,&narrative);
+    Map* curMap=head;
 
     //crea il personaggio principale
     ability mainpc;
@@ -43,7 +43,7 @@ void Controller::launch() {
     anto.setSym("x");
     //    pg.setFollower(f);
     //curMap.assegnaPosIniziale(anto);
-    curMap->assegnaPosIniziale(punt_pg);
+    curMap->assignInizialPosition_toPlayer(punt_pg);
 
     //setup di ncurses , queste ci vogliono sempre
     initscr(); //inizializza ncurses
@@ -92,34 +92,34 @@ void Controller::launch() {
             case 97:// char 'a'
             case 260:// left
                 //controlla se si puo muovere in quella posizione
-                if (curMap->mapCanMove(pg, 1))
+                if (curMap->mapCanMove(punt_pg, 1))
                     // e in tal caso muovilo verso la posizione
-                    curMap->moveChar(pg, 1);
+                    curMap->moveChar(punt_pg, 1);
                 vista.print_outputMap(curMap);
                 break;
             case 100:// char 'd'
             case 261:// right
-                if (curMap->mapCanMove(pg, 3))
-                    curMap->moveChar(pg, 3);
+                if (curMap->mapCanMove(punt_pg, 3))
+                    curMap->moveChar(punt_pg, 3);
                 vista.print_outputMap(curMap);
                 break;
             case 119:// char 'w'
             case 259:// su
-                if (curMap->mapCanMove(pg, 2))
-                    curMap->moveChar(pg, 2);
+                if (curMap->mapCanMove(punt_pg, 2))
+                    curMap->moveChar(punt_pg, 2);
                 vista.print_outputMap(curMap);
                 break;
             case 115:// char 's'
             case 258:// giu
-                if (curMap->mapCanMove(pg, 4))
-                    curMap->moveChar(pg, 4);
+                if (curMap->mapCanMove(punt_pg, 4))
+                    curMap->moveChar(punt_pg, 4);
                 vista.print_outputMap(curMap);
                 break;
             case 62:{//char >
                 pers stairs=curMap->getStairsDown();
                 if (stairs.pos.mapX==pg.getPos().mapX&&stairs.pos.mapY==pg.getPos().mapY && stairs.pos.stanzX==pg.getPos().stanzX && stairs.pos.stanzY==pg.getPos().stanzY){
                     curMap=curMap->nextMap();
-                    curMap->assegnaPosIniziale(punt_pg);
+                    curMap->assignInizialPosition_toPlayer(punt_pg);
                 }}
                 vista.clearoutputMap();
                 vista.print_outputMap(curMap);
@@ -130,7 +130,7 @@ void Controller::launch() {
                     curMap=curMap->prevMap();
                     stairs=curMap->getStairsDown();
                     mapPos x=stairs.pos;
-                    curMap->assegnaPos(punt_pg,x.mapX,x.mapY,x.stanzX,x.stanzY);
+                    curMap->assingPosition(punt_pg,x.mapX,x.mapY,x.stanzX,x.stanzY);
                 }
                 vista.clearoutputMap();
                 vista.print_outputMap(curMap);
@@ -145,8 +145,8 @@ void Controller::launch() {
                 mov = pg.moveToChar(anto); //non funziona
                 sprintf(b,"Premuto \'t\', dir: %d",mov);
                 //vista.stampastoria(b);
-                if (curMap->mapCanMove(pg, mov))
-                    curMap->moveChar(pg, mov);
+                if (curMap->mapCanMove(punt_pg, mov))
+                    curMap->moveChar(punt_pg, mov);
                 vista.print_outputMap(curMap);
                 break;
         }

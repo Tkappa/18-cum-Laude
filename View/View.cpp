@@ -73,7 +73,7 @@ void View::print_inventory(string s){
     mvwprintw(inventory,1,1,details);
     wrefresh(inventory);
 }
-void View::print_outputMap(Mappa * CurLevel){
+void View::print_outputMap(Map * CurLevel){
     box(outputMap,0,0);
     wmove(outputMap,1,3);
     int colMap,rigMap,colSt,rigSt,cursX,cursY,cursBaseY;
@@ -82,9 +82,9 @@ void View::print_outputMap(Mappa * CurLevel){
     cursY=1;
     char buffer[3];
     //stampa la struttura dati della mappa
-    for(rigMap=0;rigMap<altezzaMappa;rigMap++){
-        for(colMap=0;colMap<lunghezzaMappa;colMap++){
-            if(CurLevel->stanzaEsplorata(colMap,rigMap)){
+    for(rigMap=0;rigMap<mapHeight;rigMap++){
+        for(colMap=0;colMap<mapLenght;colMap++){
+            if(CurLevel->roomExplored(colMap,rigMap)){
                 for(rigSt=0;rigSt<roomHeight;rigSt++){
                     for(colSt=0;colSt<roomLenght;colSt++){
                         char stamp=CurLevel->getMapChar(colMap,rigMap,colSt,rigSt);

@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include <cstdlib>
+
 //Decommentare per vedere i messaggi di debug della creazione della mappa
 //#define debugMap
 //#define debugMapVerbose
@@ -25,10 +26,12 @@ struct posStanza{
 };
 
 
-Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
+Map::Map(int n,int nLevelPrec,queue<char*>* narrative){
 #ifdef debugMap
     cout<<"Iniziato il costruttore Mappa()"<<endl;
 #endif // debugMap
+
+    //Inizializza i vari puntatori
     globalnarrative=narrative;
     next = NULL;
     prev = NULL;
@@ -45,17 +48,17 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
     std::list<posStanza> listStanze;
 
     //stabilisco la posizione della stanza iniziale
-    int inizX=rand()%altezzaMappa;
-    int inizY=rand()%lunghezzaMappa;
-    mappa[inizX][inizY].createRoom();
-    mappa[inizX][inizY].exploration();
+    int inizX=rand()%mapHeight;
+    int inizY=rand()%mapLenght;
+    mapMatrix[inizX][inizY].createRoom();
+    mapMatrix[inizX][inizY].exploration();
     //creo le due scale e assegno la posizione della prima nella prima stanza ceata
-    scalagiu.nome=">";
-    scalasu.nome="<";
-    scalasu.pos.mapX=inizX;
-    scalasu.pos.mapY=inizY;
-    scalasu.pos.stanzX=rand()%(roomLenght-2)+1;
-    scalasu.pos.stanzY=rand()%(roomHeight-2)+1;
+    stairDown.nome=">";
+    stairsUp.nome="<";
+    stairsUp.pos.mapX=inizX;
+    stairsUp.pos.mapY=inizY;
+    stairsUp.pos.stanzX=rand()%(roomLenght-2)+1;
+    stairsUp.pos.stanzY=rand()%(roomHeight-2)+1;
 
     //E lo aggiungo alla struttura dati
     posStanza a;
@@ -85,10 +88,10 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
                 case 1:
                     //Sopra
                     if (x > 0) {
-                        if (!mappa[x - 1][y].exists()) {
-                            mappa[x - 1][y].createRoom();
-                            mappa[x][y].createDoor(2);
-                            mappa[x - 1][y].createDoor(4);
+                        if (!mapMatrix[x - 1][y].exists()) {
+                            mapMatrix[x - 1][y].createRoom();
+                            mapMatrix[x][y].createDoor(2);
+                            mapMatrix[x - 1][y].createDoor(4);
                             stanzeAggiuntive--;
                             posStanza b;
                             b.x = x - 1;
@@ -101,19 +104,19 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
 #endif
                         }
                         else{
-                            mappa[x][y].createDoor(2);
-                            mappa[x - 1][y].createDoor(4);
+                            mapMatrix[x][y].createDoor(2);
+                            mapMatrix[x - 1][y].createDoor(4);
                         }
                     }
                     break;
                 case 2:
                 case 6:
                     //Destra
-                    if (y < lunghezzaMappa - 1) {
-                        if (!mappa[x][y + 1].exists()) {
-                            mappa[x][y + 1].createRoom();
-                            mappa[x][y].createDoor(3);
-                            mappa[x][y + 1].createDoor(1);
+                    if (y < mapLenght - 1) {
+                        if (!mapMatrix[x][y + 1].exists()) {
+                            mapMatrix[x][y + 1].createRoom();
+                            mapMatrix[x][y].createDoor(3);
+                            mapMatrix[x][y + 1].createDoor(1);
                             stanzeAggiuntive--;
                             posStanza b;
                             b.x = x;
@@ -126,18 +129,18 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
 #endif
                         }
                         else{
-                            mappa[x][y].createDoor(3);
-                            mappa[x][y + 1].createDoor(1);
+                            mapMatrix[x][y].createDoor(3);
+                            mapMatrix[x][y + 1].createDoor(1);
                         }
                     }
                     break;
                 case 3:
                     //Sotto
-                    if (x < altezzaMappa - 1){
-                        if(!mappa[x + 1][y].exists()) {
-                        mappa[x + 1][y].createRoom();
-                        mappa[x][y].createDoor(4);
-                        mappa[x + 1][y].createDoor(2);
+                    if (x < mapHeight - 1){
+                        if(!mapMatrix[x + 1][y].exists()) {
+                        mapMatrix[x + 1][y].createRoom();
+                        mapMatrix[x][y].createDoor(4);
+                        mapMatrix[x + 1][y].createDoor(2);
                         stanzeAggiuntive--;
                         posStanza b;
                         b.x=x + 1;
@@ -150,8 +153,8 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
 #endif
                         }
                         else{
-                            mappa[x][y].createDoor(4);
-                            mappa[x + 1][y].createDoor(2);
+                            mapMatrix[x][y].createDoor(4);
+                            mapMatrix[x + 1][y].createDoor(2);
                         }
                     }
 
@@ -160,10 +163,10 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
                 case 7:
                     //Sinistra
                     if (y > 0) {
-                        if (!mappa[x][y - 1].exists()) {
-                            mappa[x][y - 1].createRoom();
-                            mappa[x][y].createDoor(1);
-                            mappa[x][y - 1].createDoor(3);
+                        if (!mapMatrix[x][y - 1].exists()) {
+                            mapMatrix[x][y - 1].createRoom();
+                            mapMatrix[x][y].createDoor(1);
+                            mapMatrix[x][y - 1].createDoor(3);
                             stanzeAggiuntive--;
                             posStanza b;
                             b.x = x;
@@ -176,8 +179,8 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
 #endif
                         }
                         else{
-                            mappa[x][y].createDoor(1);
-                            mappa[x][y - 1].createDoor(3);
+                            mapMatrix[x][y].createDoor(1);
+                            mapMatrix[x][y - 1].createDoor(3);
                         }
                     }
                     break;
@@ -196,52 +199,52 @@ Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
     //assegno al posizione ella seconda scala creata
     std::list<posStanza>::iterator i= listStanze.end();
     i--;
-    scalagiu.pos.mapX=(*i).x;
-    scalagiu.pos.mapY=(*i).y;
-    scalagiu.pos.stanzX=rand()%(roomLenght-2)+1;
-    scalagiu.pos.stanzY=rand()%(roomHeight-2)+1;
+    stairDown.pos.mapX=(*i).x;
+    stairDown.pos.mapY=(*i).y;
+    stairDown.pos.stanzX=rand()%(roomLenght-2)+1;
+    stairDown.pos.stanzY=rand()%(roomHeight-2)+1;
 
     //aggiungo entrambe le scale alla struttura dati
-    mappa[scalagiu.pos.mapX][scalagiu.pos.mapY].createPos(scalagiu.pos.stanzX,scalagiu.pos.stanzY,scalagiu.nome);
-    mappa[scalasu.pos.mapX][scalasu.pos.mapY].createPos(scalasu.pos.stanzX,scalasu.pos.stanzY,scalasu.nome);
+    mapMatrix[stairDown.pos.mapX][stairDown.pos.mapY].createPos(stairDown.pos.stanzX,stairDown.pos.stanzY,stairDown.nome);
+    mapMatrix[stairsUp.pos.mapX][stairsUp.pos.mapY].createPos(stairsUp.pos.stanzX,stairsUp.pos.stanzY,stairsUp.nome);
 
 #ifdef debugMap
     cout<<"Finito il costruttore Mappa()"<<endl;
 #endif // debugMap
 }
 
-void  Mappa::stampaMappa(){
-    for (int i=0;i<altezzaMappa ;i++){
-        for (int j=0;j<lunghezzaMappa;j++){
-            if(!mappa[i][j].exists()) std::cout<<0<<" ";
+void  Map::printMap(){
+    for (int i=0;i<mapHeight ;i++){
+        for (int j=0;j<mapLenght;j++){
+            if(!mapMatrix[i][j].exists()) std::cout<<0<<" ";
             else std::cout<<1<<" ";
         }
         std::cout<<"\n";
     }
 }
-char Mappa::getMapChar(int MapX,int MapY,int StX,int StY){
+char Map::getMapChar(int MapX,int MapY,int StX,int StY){
 #ifdef debugMap
     cout<<"Entrato dentro getMapChar(), char e':";
-    cout<<mappa[MapY][MapX].getValue(StX,StY)<<endl;
+    cout<<mapMatrix[MapY][MapX].getValue(StX,StY)<<endl;
 #endif // debugMap
-    return mappa[MapY][MapX].getValue(StX,StY);
+    return mapMatrix[MapY][MapX].getValue(StX,StY);
 }
-void Mappa::moveChar(Character & personaggio,int dir){
+void Map::moveChar(p_char personaggio,int dir){
 #ifdef debugMap
     cout<<"Inziato il metodo moveChar()"<<endl;
 #endif // debugMap
 
-    Pos p= personaggio.getPos();
+    Pos p= personaggio->getPos();
     switch(dir){
         case 1:
             //sinistra
             if(p.stanzX==roomHeight/2 && p.stanzY==0){
                 p.mapY=p.mapY-1;
                 p.stanzY=roomHeight-1;
-                if(!mappa[p.mapX][p.mapY].isExplored()){
+                if(!mapMatrix[p.mapX][p.mapY].isExplored()){
                     populate(p.mapX,p.mapY);
                 }
-                mappa[p.mapX][p.mapY].exploration();
+                mapMatrix[p.mapX][p.mapY].exploration();
             }
             else
                 p.stanzY=p.stanzY-1;
@@ -252,10 +255,10 @@ void Mappa::moveChar(Character & personaggio,int dir){
                 p.mapX=p.mapX-1;
                 p.stanzX=roomLenght-1;
 
-                if(!mappa[p.mapX][p.mapY].isExplored()){
+                if(!mapMatrix[p.mapX][p.mapY].isExplored()){
                     populate(p.mapX,p.mapY);
                 }
-                mappa[p.mapX][p.mapY].exploration();
+                mapMatrix[p.mapX][p.mapY].exploration();
             }
             else
                 p.stanzX=p.stanzX-1;
@@ -266,10 +269,10 @@ void Mappa::moveChar(Character & personaggio,int dir){
                 p.mapY=p.mapY+1;
                 p.stanzY=0;
 
-                if(!mappa[p.mapX][p.mapY].isExplored()){
+                if(!mapMatrix[p.mapX][p.mapY].isExplored()){
                     populate(p.mapX,p.mapY);
                 }
-                mappa[p.mapX][p.mapY].exploration();
+                mapMatrix[p.mapX][p.mapY].exploration();
             }
             else
                 p.stanzY=p.stanzY+1;
@@ -280,38 +283,38 @@ void Mappa::moveChar(Character & personaggio,int dir){
                 p.mapX=p.mapX+1;
                 p.stanzX=0;
 
-                if(!mappa[p.mapX][p.mapY].isExplored()){
+                if(!mapMatrix[p.mapX][p.mapY].isExplored()){
                     populate(p.mapX,p.mapY);
                 }
-                mappa[p.mapX][p.mapY].exploration();
+                mapMatrix[p.mapX][p.mapY].exploration();
             }
             else
                 p.stanzX=p.stanzX+1;
             break;
     }
-    personaggio.setPos(p);
+    personaggio->setPos(p);
 #ifdef debugMap
     cout<<"Finito il metodo moveChar()"<<endl;
 #endif // debugMap
 }
-void Mappa::assegnaPosIniziale(p_char personaggio){
+void Map::assignInizialPosition_toPlayer(p_char personaggio){
 #ifdef debugMap
     cout<<"Inziato il metodo assegnaPosIniziale()"<<endl;
 #endif // debugMap
     //il personaggio iniziale spawnerà sempre sulle scale che portano al livello prima
     Pos p;
-    p.mapX=scalasu.pos.mapX;
-    p.mapY=scalasu.pos.mapY;
-    p.stanzX=scalasu.pos.stanzX;
-    p.stanzY=scalasu.pos.stanzY;
+    p.mapX=stairsUp.pos.mapX;
+    p.mapY=stairsUp.pos.mapY;
+    p.stanzX=stairsUp.pos.stanzX;
+    p.stanzY=stairsUp.pos.stanzY;
 
     personaggio->setPos(p);
-    Personaggi.push_back(personaggio);
+    characterList.push_back(personaggio);
 #ifdef debugMap
     cout<<"Finito il metodo assegnaPosIniziale()"<<endl;
 #endif // debugMap
 }
-void Mappa::assegnaPos(p_char personaggio,int MapX,int MapY,int StX,int StY){
+void Map::assingPosition(p_char personaggio,int MapX,int MapY,int StX,int StY){
 #ifdef debugMap
     cout<<"Inziato il metodo assegnaPos()"<<endl;
 #endif // debugMap
@@ -321,88 +324,69 @@ void Mappa::assegnaPos(p_char personaggio,int MapX,int MapY,int StX,int StY){
     p.stanzX=StX;
     p.stanzY=StY;
     personaggio->setPos(p);
-    Personaggi.push_back(personaggio);
+    characterList.push_back(personaggio);
 #ifdef debugMap
     cout<<"Finito il metodo moveChar()"<<endl;
 #endif // debugMap
 }
-bool Mappa::mapCanMove(Character & personaggio,int dir){
+bool Map::mapCanMove(p_char personaggio,int dir){
 #ifdef debugMap
     cout<<"Entrato dentro il metodo mapCanMove()"<<endl;
 #endif // debugMap
-    Pos p= personaggio.getPos();
-    return mappa[p.mapX][p.mapY].canMove(p.stanzX,p.stanzY,dir);
+    Pos p= personaggio->getPos();
+    return mapMatrix[p.mapX][p.mapY].canMove(p.stanzX,p.stanzY,dir);
 }
-bool Mappa::stanzaEsplorata(int MapX,int MapY){
+bool Map::roomExplored(int MapX,int MapY){
 #ifdef debugMap
     cout<<"Entrato dentro il metodo stanzaEsplorata()"<<endl;
 #endif // debugMap
-    return mappa[MapY][MapX].isExplored();
+    return mapMatrix[MapY][MapX].isExplored();
 }
 
-void Mappa::nuovoOggetto(Character oggetto){
-#ifdef debugMap
-    cout<<"Inziato il metodo nuovoOggetto()"<<endl;
-#endif // debugMap
-   mappa[oggetto.getPos().mapX][oggetto.getPos().mapY].createPos(oggetto.getPos().stanzX,oggetto.getPos().stanzY,oggetto.getSym());
-#ifdef debugMap
-    cout<<"Finito  il metodo nuovoOggetto()"<<endl;
-#endif // debugMap
-}
-std::list<p_char> Mappa::getList(){
+
+std::list<p_char> Map::getList(){
 #ifdef debugMap
     cout<<"Entrato dentro il metodo getList()"<<endl;
 #endif // debugMap
-return Personaggi;
+return characterList;
 }
 
-pers Mappa::getStairsUp(){
+pers Map::getStairsUp(){
 #ifdef debugMap
     cout<<"Entrato dentro il metodo getStairsUp()"<<endl;
 #endif // debugMap
-return  scalasu;
+return  stairsUp;
 }
-pers Mappa::getStairsDown(){
+pers Map::getStairsDown(){
 #ifdef debugMap
     cout<<"Inziato il metodo getStairsDown()"<<endl;
 #endif // debugMap
-return scalagiu;
+return stairDown;
 }
 
- void Mappa::setPrev(Mappa* Map_Pointer){
+ void Map::setPrev(Map* Map_Pointer){
 
    #ifdef debugMap
     cout<<"Entrato dentro il metodo setPreb()"<<endl;
 #endif // debugMap
- prev=Map_Pointer;
+        prev=Map_Pointer;
  }
-Mappa* Mappa::nextMap(){
+Map* Map::nextMap(){
 #ifdef debugMap
     cout<<"Inziato il metodo nextMap()"<<endl;
 #endif // debugMap
-if (next==NULL){
-    Mappa * newmap= new Mappa(nRooms,nLevel,globalnarrative);
-
-    std::cout<<"Ho creato la nuova mappa\n";
-    newmap->stampaMappa();
-
-    std::cout<<"Ho assegnato la nuova mappa al puntatore\n";
-    //newmap.setPrev(Map_P);
-
-    std::cout<<"Ho messo il puntatore dentro il next della mappa corrente\n";
-    next=newmap;
-    newmap->setPrev(this);
-    next->stampaMappa();
-}
-
-    std::cout<<"Ho fatto il return di next\n";
+    if (next==NULL){
+        Map * newmap= new Map(nRooms,nLevel,globalnarrative);
+        next=newmap;
+        newmap->setPrev(this);
+    }
 #ifdef debugMap
     cout<<"Finito il metodo nextMap()"<<endl;
 #endif // debugMap
     return next;
 }
 
-Mappa* Mappa::prevMap(){
+Map* Map::prevMap(){
  #ifdef debugMap
     cout<<"Inziato il metodo prevMap()"<<endl;
 #endif // debugMap
@@ -415,17 +399,17 @@ Mappa* Mappa::prevMap(){
     return prev;
 }
 
-void Mappa::populate(int MapX,int MapY){
+void Map::populate(int MapX,int MapY){
   #ifdef debugMap
     cout<<"Inziato il metodo populate()"<<endl;
 #endif // debugMap
     int nNewMonsters=rand()%100+1;
     ability test;
-    mapPos x=randStanzPos(MapX,MapY);
+    mapPos x=randRoomPos(MapX,MapY);
     p_char p= new MajorCharacter("test",test,x,"blabla",NULL);
 
     p->setSym("R");
-    Personaggi.push_back(p);
+    characterList.push_back(p);
 
 
     //ATTENZIONE SE CRASHA A CASO POTREBBE ESSERE QUESTO PEZZO DI CODICE
@@ -440,7 +424,7 @@ void Mappa::populate(int MapX,int MapY){
 #ifdef debugMapVerbose
     cout<<"Ho creato un nuovo personaggio:"<<p<<"\nQuesti sono tutti i personaggi:\n";
 
-    for (list<p_char>::iterator i = Personaggi.begin(); i != Personaggi.end(); ++i)
+    for (list<p_char>::iterator i = characterList.begin(); i != characterList.end(); ++i)
         cout << *i <<", "<< (*i)->getSym()<< endl;
 #endif // debugMapVerbose
 
@@ -501,7 +485,7 @@ void Mappa::populate(int MapX,int MapY){
 #endif // debugMap
 }
 
-mapPos Mappa::randStanzPos(int MapX,int MapY){
+mapPos Map::randRoomPos(int MapX,int MapY){
   #ifdef debugMap
     cout<<"Inziato il metodo randStanzPos()"<<endl;
 #endif // debugMap

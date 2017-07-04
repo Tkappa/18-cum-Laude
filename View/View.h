@@ -14,7 +14,7 @@ class View{
     public:
         View();
         void print_nameAndStats(Character &c);
-        void print_outputMap(Mappa* CurLevel);
+        void print_outputMap(Map* CurLevel);
         void print_narrative(queue<char*>* narrative);
         void print_inventory(string s);
         void clearoutputMap();

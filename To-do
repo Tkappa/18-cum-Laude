@@ -61,14 +61,13 @@ Necessario:
      
      
     Mappa: 
-  //IGOR, IL PRIMA POSSIBILE, MAX LUNEDI-3  
-  [1]--Rendere la mappa iniziale una lista in modo che si piò andare avanti e indietro tra i livelli
-  [1]--Quando si scopre una nuova stanza viene inizializzata con vari nemici e oggetti, i nemici verranno aggiundi alla lista dei nemici vivi della mappa
-  
-  [3]--Ogni bioma diverso avrà tipi di stanza diverse con grandezze variabili o cose del genere
+ [3]--Ogni bioma diverso avrà tipi di stanza diverse con grandezze variabili o cose del genere
   
   
- [1]Storia:  //Credo di riuscirlo a fare io , devo vedere un attimo come strutturarlo , massimo mercoledi 5 l'ho fatto
+ [X]Storia:  //Credo di riuscirlo a fare io , devo vedere un attimo come strutturarlo , massimo mercoledi 5 l'ho fatto
+     
+    Fatto: è una coda che parte dal controller, ogni volta che viene chiamato stampastoria() ( in teoria 1 volta per turno) svuota la coda e la stampa
+ 
      
     la storia è l'elenco di quello che sta succedendo nel gioco
     -Ad esempio entrando in una nuova stanza si notano 3 nuovi nemici,nella storia apparirà:
@@ -86,8 +85,6 @@ Necessario:
     Quando il personaggio usa un oggetto
     -Giocatore usa Internet Gratis , e recupera 20 punti vita
     
-    Pensavo di farlo con una coda globale, quando succede qualche azione degna di essere aggiunta alla storia viene messa in coda
-    Quando viene eseguito un turn() tutta la coda viene stampata.
     
     
     

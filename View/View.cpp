@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <list>
+#include <queue>
 #include <iostream>
 View::View(){
     refresh();
@@ -16,11 +17,11 @@ View::View(){
     height=(LINES-7);
     starty=2;
     outputMappa=newwin(height,width,starty,startx);
-    height=1;
+    height=5;
     starty=LINES-5;
     storia=newwin(height,width,starty,startx+1);
-    height=4;
-    starty=LINES-4;
+    height=5;
+    starty=LINES-5;
     equip=newwin(height,width,starty,startx);
 }
 
@@ -116,9 +117,16 @@ void View::stampaoutputMappa(Mappa * CurLevel){
 void View::clearoutputMappa(){
     werase(outputMappa);
       }
-void View::stampastoria(string s){
-    const char* cose = s.c_str();
-    mvwprintw(storia,0,0,cose);
+void View::stampastoria(queue<char*>* narrative){
+    werase(storia);
+    int cursY=0;
+    while(!narrative->empty()){
+        char* a=narrative->front();
+        waddstr(storia,a);
+        cursY++;
+        wmove(storia,cursY,0);
+        narrative->pop();
+    }
     wrefresh(storia);
 }
 

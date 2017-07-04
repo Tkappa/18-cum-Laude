@@ -15,7 +15,7 @@ class View{
         View();
         void stampanomeEstat(Character &c);
         void stampaoutputMappa(Mappa* CurLevel);
-        void stampastoria(string s);
+        void stampastoria(queue<char*>* narrative);
         void stampaequip(string s);
         void clearoutputMappa();
 

@@ -8,6 +8,8 @@
 #include "../../model/pc/MajorCharacter.hpp"
 #include <list>
 
+#include <string.h>
+
 #include <cstdlib>
 //Decommentare per vedere i messaggi di debug della creazione della mappa
 //#define debugmappa
@@ -18,9 +20,9 @@ struct posStanza{
     int x,y;
 };
 
-Mappa::Mappa(int n,int nLevelPrec){
+Mappa::Mappa(int n,int nLevelPrec,queue<char*>* narrative){
 
-
+    globalnarrative=narrative;
     next = NULL;
     prev = NULL;
     //Inizializzo il random e vedo quante stanze in più avra questo livello
@@ -323,7 +325,7 @@ return scalagiu;
  }
 Mappa* Mappa::nextMap(){
 if (next==NULL){
-    Mappa * newmap= new Mappa(nRooms,nLevel);
+    Mappa * newmap= new Mappa(nRooms,nLevel,globalnarrative);
 
     std::cout<<"Ho creato la nuova mappa\n";
     newmap->stampaMappa();
@@ -356,6 +358,18 @@ void Mappa::populate(int MapX,int MapY){
 
     p->setSym('R');
     Personaggi.push_back(p);
+
+
+    char* strin= "Vedi '";
+    size_t len = strlen(strin);
+    char* str = new char[len+2];
+    strcpy(str,strin);
+    str[len] = p->getSym();
+    str[len+1] = '\0';
+    strcat(str,"' , ");
+    strcat(str,p->getName().c_str());
+    globalnarrative->push(str);
+
     cout<<"Ho creato un nuovo personaggio:"<<p<<"\nQuesti sono tutti i personaggi:\n";
 
     for (list<p_char>::iterator i = Personaggi.begin(); i != Personaggi.end(); ++i)

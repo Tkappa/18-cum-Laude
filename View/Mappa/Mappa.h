@@ -6,6 +6,7 @@
 #define MAPPA_MAPPA_H
 #include <list>
 #include "Stanza.h"
+#include <queue>
 #include "../../model/pc/Character.hpp"
 
 struct pers{
@@ -30,12 +31,13 @@ class Mappa{
         int nRooms;
         std::list<p_char> Personaggi;
         std::list<p_obj> Oggetti;
+        std::queue<char*>* globalnarrative;
 
     public:
         Mappa* next;
         Mappa* prev;
         //crea una nuova mappa popolata da stanza
-        Mappa(int nRoomsPrec,int nLevel);
+        Mappa(int nRoomsPrec,int nLevel,queue<char*>* narrative);
 //        Mappa(const Mappa& orig);
         //stampa la mappa con cout facendo solo 0 e 1
         void stampaMappa();

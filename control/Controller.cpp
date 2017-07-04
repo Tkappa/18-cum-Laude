@@ -25,7 +25,7 @@ void Controller::launch() {
 
     //crea la struttura dati con 3 stanze base
     Mappa* head;
-    head= new Mappa(1,1);
+    head= new Mappa(1,1,&narrative);
     Mappa* curMap=head;
 
     //crea il personaggio principale
@@ -58,7 +58,8 @@ void Controller::launch() {
     //stampa l'interfaccia utente
     vista.stampanomeEstat(pg);
     vista.stampaoutputMappa(curMap);
-//    vista.stampastoria("Ciao! Questa sara' una grande avventura!");
+    narrative.push("Questa sarà una grande avventura!");
+    vista.stampastoria(&narrative);
     //    vista.stampaequip(pg.getDesc());
     refresh();
 
@@ -76,6 +77,7 @@ void Controller::launch() {
     int mov;
     while (1) {
         c = getch();
+        vista.stampastoria(&narrative);
         //std::cout<<c;
         p1 = pg.getPos();
         p2 = anto.getPos();
@@ -86,7 +88,7 @@ void Controller::launch() {
         //        sprintf(b, "%c: %d\n", c, c);
         //        fputs(b, caratteri);
         //        vista.stampaequip(b);
-        vista.stampaequip(a);
+        //vista.stampaequip(a);
         switch (c) { //se il tasto premuto � "s" oppure freccia sinistra
             case 97:// char 'a'
             case 260:// left
@@ -136,14 +138,14 @@ void Controller::launch() {
                 }
                 break;
             case 102:// char 'f'
-                vista.stampastoria("Premuto \'f\'");
+                //vista.stampastoria("Premuto \'f\'");
                 pg.attack(anto);
                 break;
             case 116:// char 't'
 
                 mov = pg.moveToChar(anto); //non funziona
                 sprintf(b,"Premuto \'t\', dir: %d",mov);
-                vista.stampastoria(b);
+                //vista.stampastoria(b);
                 if (curMap->mapCanMove(pg, mov))
                     curMap->moveChar(pg, mov);
                 vista.stampaoutputMappa(curMap);

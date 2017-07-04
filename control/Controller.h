@@ -31,7 +31,7 @@ protected:
 //    Mappa map;
 //    View vista;
 private:
-    queue<string> narrative;
+    queue<char*> narrative;
 public:
     Controller(int nLevels);
     void launch();

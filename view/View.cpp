@@ -33,7 +33,7 @@ void View::stampanomeEstat(Character & c){
     forza=c.getStats().getStrength();
     intel=c.getStats().getIntelligence();
     weapons w = c.getArmi().front();
-    
+
     char buffer[3];
     //box(nomeEstat,0,0);
 
@@ -69,7 +69,7 @@ void View::stampaequip(string s){
     mvwprintw(equip,1,1,details);
     wrefresh(equip);
 }
-void View::stampaoutputMappa(Mappa livello){
+void View::stampaoutputMappa(Mappa * CurLevel){
     box(outputMappa,0,0);
     wmove(outputMappa,1,3);
     int colMap,rigMap,colSt,rigSt,cursX,cursY,cursBaseY;
@@ -80,10 +80,10 @@ void View::stampaoutputMappa(Mappa livello){
     //stampa la struttura dati della mappa
     for(rigMap=0;rigMap<altezzaMappa;rigMap++){
         for(colMap=0;colMap<lunghezzaMappa;colMap++){
-            if(livello.stanzaEsplorata(colMap,rigMap)){
+            if(CurLevel->stanzaEsplorata(colMap,rigMap)){
                 for(rigSt=0;rigSt<altezzaStanza;rigSt++){
                     for(colSt=0;colSt<lunghezzaStanza;colSt++){
-                        char stamp=livello.getMapChar(colMap,rigMap,colSt,rigSt);
+                        char stamp=CurLevel->getMapChar(colMap,rigMap,colSt,rigSt);
                             waddch(outputMappa,stamp);
                     }
                     cursY++;
@@ -100,11 +100,12 @@ void View::stampaoutputMappa(Mappa livello){
         wmove(outputMappa,cursY,cursX);
     }
 
-    //Stampa tutti i gli oggetti "che si muovono" cosi non modificano la struttura dati
-    std::list<p_char> oggetti;
+    //Stampa tutti i personaggi "che si muovono" cosi non modificano la struttura dati
+    std::list<p_char> pers;
+    pers=CurLevel->getList();
     int printx,printy;
-    oggetti=livello.getList();
-    for (std::list<p_char>::iterator i = oggetti.begin(); i != oggetti.end(); ++i){
+    for (std::list<p_char>::iterator i = pers.begin(); i != pers.end(); ++i){
+            std::cout<<"Sto stampando "<<*i<<" con simbolo:"<<(*i)->getSym()<<"\n";
             printy=3+(*i)->pos.mapY*altezzaStanza+(*i)->pos.stanzY;
             printx=1+(*i)->pos.mapX*lunghezzaStanza+(*i)->pos.stanzX;
             wmove(outputMappa,printx,printy);
@@ -112,6 +113,9 @@ void View::stampaoutputMappa(Mappa livello){
     }
     wrefresh(outputMappa);
 }
+void View::clearoutputMappa(){
+    werase(outputMappa);
+      }
 void View::stampastoria(string s){
     const char* cose = s.c_str();
     mvwprintw(storia,0,0,cose);

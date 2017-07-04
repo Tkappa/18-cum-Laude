@@ -20,6 +20,7 @@
 #include "../model/pc/MajorCharacter.hpp"
 #include "../view/mappa/Mappa.h"
 #include "../view/View.h"
+#include <queue>
 
 using namespace std;
 
@@ -30,6 +31,7 @@ protected:
 //    Mappa map;
 //    View vista;
 private:
+    queue<string> narrative;
 public:
     Controller(int nLevels);
     void launch();

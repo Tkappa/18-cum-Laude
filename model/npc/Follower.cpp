@@ -4,14 +4,15 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   Follower.cpp
  * Author: Master
- * 
+ *
  * Created on 13 maggio 2017, 20.21
  */
 
 #include "Follower.hpp"
+#include <stdio.h>
 
 Follower::Follower() : Character() {}
 Follower::Follower(string n, ability s) : Character(n, s) {}

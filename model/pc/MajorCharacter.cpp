@@ -4,14 +4,15 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   MajorCharacter.cpp
  * Author: Master
- * 
+ *
  * Created on 15 maggio 2017, 16.00
  */
 
 #include <string>
+#include <stdio.h>
 
 using namespace std;
 

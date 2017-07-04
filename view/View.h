@@ -14,9 +14,10 @@ class View{
     public:
         View();
         void stampanomeEstat(Character &c);
-        void stampaoutputMappa(Mappa livello);
+        void stampaoutputMappa(Mappa* CurLevel);
         void stampastoria(string s);
         void stampaequip(string s);
+        void clearoutputMappa();
 
 };
 

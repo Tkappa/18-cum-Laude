@@ -27,7 +27,7 @@ class Stanza{
     bool esiste();
     //Restituisce vero o falso se da quella posizione ti puoi muovere nella direzione specificata
     bool canMove(int x,int y,int dir);
-    //cambia il falore di esplorata in true
+    //cambia il falore di esplorata in true e la popola di mostri/oggetti
     void esplorazione();
     //restituisce il valore di esplorata
     bool isEsplorata();

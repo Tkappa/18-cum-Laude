@@ -7,27 +7,35 @@
 #include <list>
 #include "Stanza.h"
 #include "../../model/pc/Character.hpp"
-struct posizione{
-int mapX,mapY,stanzX,stanzY;
-};
 
 struct pers{
 char nome;
-posizione pos;
+mapPos pos;
+};
+struct obj{
+char nome;
+mapPos pos;
 };
 
-typedef pers* p_pers;
+typedef obj* p_obj;
 typedef Character* p_char;
 const int altezzaMappa=3,lunghezzaMappa=16;
+
 class Mappa{
     protected:
         Stanza mappa[altezzaMappa][lunghezzaMappa];
+        int nLevel;
         pers scalasu;
         pers scalagiu;
-        std::list<p_char> Oggetti;
+        int nRooms;
+        std::list<p_char> Personaggi;
+        std::list<p_obj> Oggetti;
+
     public:
+        Mappa* next;
+        Mappa* prev;
         //crea una nuova mappa popolata da stanza
-        Mappa(int nLivelliPrec);
+        Mappa(int nRoomsPrec,int nLevel);
 //        Mappa(const Mappa& orig);
         //stampa la mappa con cout facendo solo 0 e 1
         void stampaMappa();
@@ -36,9 +44,9 @@ class Mappa{
         //scrive sulla struttura dati di personaggio e lo sposta nella direzione specificata
         void moveChar(Character & personaggio,int dir);
         //mette il personaggio specificato(dovrebbe essere quello principale) sopra le scale che portano su come posizione iniziale
-        void assegnaPosIniziale(Character &personaggio);
+        void assegnaPosIniziale(Character* personaggio);
         //assegna la posizione specificata al personaggio passato per paramentro
-        void assegnaPos(Character &personaggio,int MapX,int MapY,int StX,int StY);
+        void assegnaPos(p_char personaggio,int MapX,int MapY,int StX,int StY);
         //Inserisce nella struttura dati l'oggetto passato
         void nuovoOggetto(Character oggetto);
         //ritorna vero se il personaggio inserito pu� muoversi nella direzione specificata , altimenti falso
@@ -47,7 +55,20 @@ class Mappa{
         bool stanzaEsplorata(int MapX,int MapY);
         //fornisce una copia di "oggetti"
         std::list<p_char> getList();
+        //Restituisce le due scale in modo da prenderne le posizioni
+        pers getStairsUp();
+        pers getStairsDown();
 
+
+        Mappa* nextMap();
+        Mappa* prevMap();
+
+        void setPrev(Mappa* Map_Pointer);
+
+        //riempie la stanza indicata di un numero casuale gi mostri e oggetti
+        void populate(int MapX,int MapY);
+
+        mapPos randStanzPos(int MapX,int MapY);
 };
 
 

@@ -5,6 +5,7 @@
 #include "Stanza.h"
 #include "Mappa.h"
 #include <iostream>
+#include "../../model/pc/MajorCharacter.hpp"
 #include <list>
 
 #include <cstdlib>
@@ -17,14 +18,17 @@ struct posStanza{
     int x,y;
 };
 
-Mappa::Mappa(int n){
+Mappa::Mappa(int n,int nLevelPrec){
 
 
-
+    next = NULL;
+    prev = NULL;
     //Inizializzo il random e vedo quante stanze in più avra questo livello
+    nLevel=nLevelPrec+1;
 
 
     int stanzeAggiuntive= n +(rand()%2+1);
+    nRooms=stanzeAggiuntive;
     //Questa variabile mi servirà dopo per vedere dove spunterà la stanza aggiuntiva
     int randCreazione;
     //Creo la struttura dati in cui verranno tenute le stanze esistenti
@@ -220,6 +224,9 @@ void Mappa::moveChar(Character & personaggio,int dir){
             if(p.stanzX==altezzaStanza/2 && p.stanzY==0){
                 p.mapY=p.mapY-1;
                 p.stanzY=altezzaStanza-1;
+                if(!mappa[p.mapX][p.mapY].isEsplorata()){
+                    populate(p.mapX,p.mapY);
+                }
                 mappa[p.mapX][p.mapY].esplorazione();
             }
             else
@@ -230,6 +237,10 @@ void Mappa::moveChar(Character & personaggio,int dir){
             if(p.stanzX==0 && p.stanzY==lunghezzaStanza/2){
                 p.mapX=p.mapX-1;
                 p.stanzX=altezzaStanza-1;
+
+                if(!mappa[p.mapX][p.mapY].isEsplorata()){
+                    populate(p.mapX,p.mapY);
+                }
                 mappa[p.mapX][p.mapY].esplorazione();
             }
             else
@@ -240,6 +251,10 @@ void Mappa::moveChar(Character & personaggio,int dir){
             if(p.stanzX==lunghezzaStanza/2 && p.stanzY==altezzaStanza-1){
                 p.mapY=p.mapY+1;
                 p.stanzY=0;
+
+                if(!mappa[p.mapX][p.mapY].isEsplorata()){
+                    populate(p.mapX,p.mapY);
+                }
                 mappa[p.mapX][p.mapY].esplorazione();
             }
             else
@@ -250,6 +265,10 @@ void Mappa::moveChar(Character & personaggio,int dir){
             if(p.stanzX==lunghezzaStanza-1 && p.stanzY==altezzaStanza/2){
                 p.mapX=p.mapX+1;
                 p.stanzX=0;
+
+                if(!mappa[p.mapX][p.mapY].isEsplorata()){
+                    populate(p.mapX,p.mapY);
+                }
                 mappa[p.mapX][p.mapY].esplorazione();
             }
             else
@@ -258,25 +277,25 @@ void Mappa::moveChar(Character & personaggio,int dir){
     }
     personaggio.setPos(p);
 }
-void Mappa::assegnaPosIniziale(Character &personaggio){
+void Mappa::assegnaPosIniziale(p_char personaggio){
     //il personaggio iniziale spawnerà sempre sulle scale che portano al livello prima
     Pos p;
     p.mapX=scalasu.pos.mapX;
     p.mapY=scalasu.pos.mapY;
     p.stanzX=scalasu.pos.stanzX;
     p.stanzY=scalasu.pos.stanzY;
-    personaggio.setPos(p);
 
-    Oggetti.push_back(&personaggio);
+    personaggio->setPos(p);
+    Personaggi.push_back(personaggio);
 }
-void Mappa::assegnaPos(Character & personaggio,int MapX,int MapY,int StX,int StY){
+void Mappa::assegnaPos(p_char personaggio,int MapX,int MapY,int StX,int StY){
     Pos p;
     p.mapX=MapX;
     p.mapY=MapY;
     p.stanzX=StX;
     p.stanzY=StY;
-    personaggio.setPos(p);
-    Oggetti.push_back(&personaggio);
+    personaggio->setPos(p);
+    Personaggi.push_back(personaggio);
 }
 bool Mappa::mapCanMove(Character & personaggio,int dir){
     Pos p= personaggio.getPos();
@@ -289,12 +308,121 @@ void Mappa::nuovoOggetto(Character oggetto){
     mappa[oggetto.getPos().mapX][oggetto.getPos().mapY].creaPos(oggetto.getPos().stanzX,oggetto.getPos().stanzY,oggetto.getSym());
 }
 std::list<p_char> Mappa::getList(){
-return Oggetti;
+return Personaggi;
 }
 
+pers Mappa::getStairsUp(){
+return  scalasu;
+}
+pers Mappa::getStairsDown(){
+return scalagiu;
+}
+
+ void Mappa::setPrev(Mappa* Map_Pointer){
+    prev=Map_Pointer;
+ }
+Mappa* Mappa::nextMap(){
+if (next==NULL){
+    Mappa * newmap= new Mappa(nRooms,nLevel);
+
+    std::cout<<"Ho creato la nuova mappa\n";
+    newmap->stampaMappa();
+
+    std::cout<<"Ho assegnato la nuova mappa al puntatore\n";
+    //newmap.setPrev(Map_P);
+
+    std::cout<<"Ho messo il puntatore dentro il next della mappa corrente\n";
+    next=newmap;
+    newmap->setPrev(this);
+    next->stampaMappa();
+}
+
+    std::cout<<"Ho fatto il return di next\n";
+    return next;
+}
+
+Mappa* Mappa::prevMap(){
+    if (!prev){
+        //Schermata di uscita dal dungeon
+    }
+    return prev;
+}
+
+void Mappa::populate(int MapX,int MapY){
+    int nNewMonsters=rand()%100+1;
+    ability test;
+    mapPos x=randStanzPos(MapX,MapY);
+    p_char p= new MajorCharacter("test",test,x,"blabla",NULL);
+
+    p->setSym('R');
+    Personaggi.push_back(p);
+    cout<<"Ho creato un nuovo personaggio:"<<p<<"\nQuesti sono tutti i personaggi:\n";
+
+    for (list<p_char>::iterator i = Personaggi.begin(); i != Personaggi.end(); ++i)
+        cout << *i <<", "<< (*i)->getSym()<< endl;
+    //if(nNewMonsters<=50){
+        //MajorCharacter a= randNPC();
+        //Personaggi.push_back(a);
 
 
+    //}
+    /*else if(nNewMonsters>50 && nNewMonsters<=85){
+        //MajorCharacter a
+        mapPos x=randStanzPos(MapX,MapY);
+    MajorCharacter a("test",test,x,"blabla",NULL);
+     a.setSym('R');
+        for(int i=0;i<2;i++){
+            //a= randNPC();
+            //Personaggi.push_back(a);
+            x= randStanzPos(MapX,MapY);
+            a.setPos(x);
+        Personaggi.push_back(a);
 
+        Personaggi.push_back(a);
+        }
+    }*/
+    /*else if(nNewMonsters>85){
+        //MajorCharacter a
+        for(int i=0;i<3;i++){
+            //a= randNPC();
+            //Personaggi.push_back(a);
+            x= randStanzPos(MapX,MapY);
+        a=new MajorCharacter("pippo",{0,0,0,0},x);
+        a.setSym('R');
+        Personaggi.push_back(a);
+        }
+    }*/
+    /*int nNewObjects=rand()%100+1;
+    if(nNewObjects<=50){
+        //MajorCharacter a= randNPC();
+        //Personaggi.push_back(a);
+
+    }
+    else if(nNewObjects>50 && nNewObjects<=85){
+        //MajorCharacter a
+        for(int i=0;i<2;i++){
+            //a= randNPC(nLevel);
+            //Personaggi.push_back(a);
+        }
+    }
+    else if(nNewObjects>85){
+        //MajorCharacter a
+        for(int i=0;i<3;i++){
+            //a= randNPC();
+            //Personaggi.push_back(a);
+        }
+    }*/
+
+}
+
+mapPos Mappa::randStanzPos(int MapX,int MapY){
+    mapPos x;
+    x.mapX=MapX;
+    x.mapY=MapY;
+    x.stanzX=1+(rand()%(altezzaStanza-2));
+    x.stanzY=1+(rand()%(lunghezzaStanza-2));
+    return x;
+}
 
 
 //TURORIAL LISTE c++

@@ -24,24 +24,26 @@ void Controller::launch() {
     srand((unsigned) time(&t));
 
     //crea la struttura dati con 3 stanze base
-    Mappa map(10);
+    Mappa* head;
+    head= new Mappa(1,1);
+    Mappa* curMap=head;
 
     //crea il personaggio principale
     ability mainpc;
     Pos p = {0, 0, 0, 0};
 
-    Follower gino("Gino", mainpc);
-    gino.setSym('f');
-
-    MajorCharacter pg("Mario", mainpc, p, "Il Campione.", &gino);
+    //Follower gino("Gino", mainpc);
+    //gino.setSym('f');
+    MajorCharacter pg("Mario", mainpc, p, "Il Campione.", NULL);
     MajorCharacter anto("Antonio", mainpc, p, "L'antagonista", NULL);
+
+    Character * punt_pg=&pg;
     //Character * punt= &pg;
     pg.setSym('@');
     anto.setSym('x');
     //    pg.setFollower(f);
-    map.assegnaPosIniziale(anto);
-    map.assegnaPosIniziale(gino);
-    map.assegnaPosIniziale(pg);
+    //curMap.assegnaPosIniziale(anto);
+    curMap->assegnaPosIniziale(punt_pg);
 
     //setup di ncurses , queste ci vogliono sempre
     initscr(); //inizializza ncurses
@@ -55,7 +57,7 @@ void Controller::launch() {
         View vista;
     //stampa l'interfaccia utente
     vista.stampanomeEstat(pg);
-    vista.stampaoutputMappa(map);
+    vista.stampaoutputMappa(curMap);
 //    vista.stampastoria("Ciao! Questa sara' una grande avventura!");
     //    vista.stampaequip(pg.getDesc());
     refresh();
@@ -74,6 +76,7 @@ void Controller::launch() {
     int mov;
     while (1) {
         c = getch();
+        //std::cout<<c;
         p1 = pg.getPos();
         p2 = anto.getPos();
         l1 = pg.getStats().getLife();
@@ -88,41 +91,62 @@ void Controller::launch() {
             case 97:// char 'a'
             case 260:// left
                 //controlla se si puo muovere in quella posizione
-                if (map.mapCanMove(pg, 1))
+                if (curMap->mapCanMove(pg, 1))
                     // e in tal caso muovilo verso la posizione
-                    map.moveChar(pg, 1);
-                vista.stampaoutputMappa(map);
+                    curMap->moveChar(pg, 1);
+                vista.stampaoutputMappa(curMap);
                 break;
             case 100:// char 'd'
             case 261:// right
-                if (map.mapCanMove(pg, 3))
-                    map.moveChar(pg, 3);
-                vista.stampaoutputMappa(map);
+                if (curMap->mapCanMove(pg, 3))
+                    curMap->moveChar(pg, 3);
+                vista.stampaoutputMappa(curMap);
                 break;
             case 119:// char 'w'
             case 259:// su
-                if (map.mapCanMove(pg, 2))
-                    map.moveChar(pg, 2);
-                vista.stampaoutputMappa(map);
+                if (curMap->mapCanMove(pg, 2))
+                    curMap->moveChar(pg, 2);
+                vista.stampaoutputMappa(curMap);
                 break;
             case 115:// char 's'
             case 258:// giu
-                if (map.mapCanMove(pg, 4))
-                    map.moveChar(pg, 4);
-                vista.stampaoutputMappa(map);
+                if (curMap->mapCanMove(pg, 4))
+                    curMap->moveChar(pg, 4);
+                vista.stampaoutputMappa(curMap);
+                break;
+            case 62:{//char >
+                pers stairs=curMap->getStairsDown();
+                if (stairs.pos.mapX==pg.getPos().mapX&&stairs.pos.mapY==pg.getPos().mapY && stairs.pos.stanzX==pg.getPos().stanzX && stairs.pos.stanzY==pg.getPos().stanzY){
+                    curMap=curMap->nextMap();
+                    curMap->assegnaPosIniziale(punt_pg);
+                }}
+                vista.clearoutputMappa();
+                vista.stampaoutputMappa(curMap);
+                break;
+            case 60://char <
+                {pers stairs=curMap->getStairsUp();
+                if (stairs.pos.mapX==pg.getPos().mapX&&stairs.pos.mapY==pg.getPos().mapY && stairs.pos.stanzX==pg.getPos().stanzX && stairs.pos.stanzY==pg.getPos().stanzY){
+                    curMap=curMap->prevMap();
+                    stairs=curMap->getStairsDown();
+                    mapPos x=stairs.pos;
+                    curMap->assegnaPos(punt_pg,x.mapX,x.mapY,x.stanzX,x.stanzY);
+                }
+                vista.clearoutputMappa();
+                vista.stampaoutputMappa(curMap);
+                }
                 break;
             case 102:// char 'f'
                 vista.stampastoria("Premuto \'f\'");
                 pg.attack(anto);
                 break;
             case 116:// char 't'
-                
+
                 mov = pg.moveToChar(anto); //non funziona
                 sprintf(b,"Premuto \'t\', dir: %d",mov);
                 vista.stampastoria(b);
-                if (map.mapCanMove(pg, mov))
-                    map.moveChar(pg, mov);
-                vista.stampaoutputMappa(map);
+                if (curMap->mapCanMove(pg, mov))
+                    curMap->moveChar(pg, mov);
+                vista.stampaoutputMappa(curMap);
                 break;
         }
         if (c == 113)// char 'q'

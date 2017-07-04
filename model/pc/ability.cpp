@@ -1,6 +1,7 @@
 
 #include "ability.h"
 #include <string>
+#include <stdio.h>
 
 using namespace std;
 

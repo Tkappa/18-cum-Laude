@@ -40,7 +40,7 @@ void View::print_nameAndStats(Character & c){
     vita=c.getStats().getLife();
     forza=c.getStats().getStrength();
     intel=c.getStats().getIntelligence();
-    weapons w = c.getArmi().front();
+    Item w = c.getObject().front();
 
     char buffer[3];
 

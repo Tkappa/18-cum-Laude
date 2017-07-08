@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include "control/Controller.h"
 #include <stdio.h>
-
+using namespace std;
 
 
 int main(int argc, char *argv[]) {
@@ -10,5 +10,6 @@ int main(int argc, char *argv[]) {
 
 //    c.testFollower();
 //    c.testAttack();
+
     return 0;
 }

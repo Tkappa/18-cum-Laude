@@ -45,6 +45,20 @@ void Controller::launch() {
     //curMap.assegnaPosIniziale(anto);
     curMap->assignInizialPosition_toPlayer(punt_pg);
 
+    // creo diversi Item e l'oggetto inventario in cui inserirli
+
+    Item *i= Item::randomItem(2);
+    Item *l= Item::randomItem(2);
+    Item *m= Item::randomItem(2);
+    //cout<<"ho creato l'oggetto: "<<i->getName()<<" - valore: "<<i->getValue()<<" tipo: "<<i->getType()<<endl;
+
+    inventory inv=inventory();
+
+    inv.addItem(*i);
+    inv.addItem(*l);
+    inv.addItem(*m);
+
+
     //setup di ncurses , queste ci vogliono sempre
     initscr(); //inizializza ncurses
     clear(); //pulisce la console
@@ -54,9 +68,10 @@ void Controller::launch() {
     keypad(stdscr, TRUE); //offre la possibilit� di usare tasti speciali (freccette etc..)
 
     //inizializzazione della classe view
-        View vista;
+    View vista;
     //stampa l'interfaccia utente
     vista.print_nameAndStats(pg);
+   // vista.print_inventory(inv.inventoryToStr());
     vista.print_outputMap(curMap);
     narrative.push("Questa sarà una grande avventura!");
     vista.print_narrative(&narrative);

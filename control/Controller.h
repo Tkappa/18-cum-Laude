@@ -20,6 +20,7 @@
 #include "../model/pc/MajorCharacter.hpp"
 #include "../view/mappa/Mappa.h"
 #include "../view/View.h"
+#include "../model/pc/inventory.h"
 #include <queue>
 
 using namespace std;

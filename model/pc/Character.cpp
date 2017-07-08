@@ -23,8 +23,8 @@ Character::Character() {
     this->stats;
     //this->stats = {5, 5, 5};
     this->pos = {0, 0, 0, 0};
-    weapons w;
-    this->armi.push_back(w);
+    Item w;
+    this->object.push_back(w);
     this->desc = "Descrizione di prova";
 }
 
@@ -33,8 +33,8 @@ Character::Character(string n, ability s) {
     this->stats = s;
     this->alive = true;
     this->pos = {0, 0, 0, 0};
-    weapons w;
-    this->armi.push_back(w);
+    Item w;
+    this->object.push_back(w);
     this->desc = "Descrizione di prova";
 }
 
@@ -144,8 +144,8 @@ ability Character::getStats() {
     return stats;
 }
 
-list<weapons> Character::getArmi() {
-    return armi;
+list<Item> Character::getObject() {
+    return object;
 }
 
 string Character::getName() {

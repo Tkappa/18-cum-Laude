@@ -35,7 +35,7 @@ public:
     bool isAlive();
     ability getStats();
     void setStats(ability & s);
-    list<weapons> getArmi();
+    list<Item> getObject();
     string getName();
     string getDesc();
     void setDesc(string s);
@@ -48,7 +48,7 @@ protected:
     string name;
     string desc;
     ability stats;
-    list<weapons> armi;
+    list<Item> object;
     string sym;
     bool alive;
 };

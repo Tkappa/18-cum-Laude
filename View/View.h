@@ -5,6 +5,8 @@
 #include <ncurses/curses.h>
 #include "mappa/Mappa.h"
 #include "../model/pc/Character.hpp"
+#include "../model/pc/inventory.h"
+
 class View{
     protected:
         WINDOW * nameAndStats;

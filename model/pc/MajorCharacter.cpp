@@ -47,7 +47,7 @@ void MajorCharacter::setPos(Pos newPos) {
 string MajorCharacter::toStr() {
     char buf[5];
     string s = "Character \"" + this->name + "\": {\n\tStatistics: {\n\t\tlife: ";
-    sprintf(buf, "%d", this->getStats().getLife());
+    /*sprintf(buf, "%d", this->getStats().getLife());
     s += buf;
     s += ",\n\t\tstrength: ";
     sprintf(buf, "%d", this->getStats().getStrength());
@@ -74,7 +74,7 @@ string MajorCharacter::toStr() {
     s += "\n\t";
     s += this->follower != NULL ? this->follower->toStr() : "Follower: NULL";
     s += "\n}\n\n";
-
+*/
     return s;
 }
 
@@ -143,14 +143,14 @@ ability MajorCharacter::setUpAbilities(int statsAmount) {
     // se la somma delle caratteristiche del personaggio è <= 3
     // assegno ad ognuna delle 3 caratteristiche il valore 1
     if (statsAmount <= 3) {
-        stats.setIntelligence(1);
+        stats.setDefense(1);
         stats.setStrength(1);
         stats.setLife(1);
     } else {
         // assegno casualmente una parte dei valori delle caratteristiche
         // se il valore fosse minore di 1, assegno 1 di default
         int intelligenceAmount = rand() % statsAmount + 1;
-        stats.setIntelligence(intelligenceAmount < 1 ? 1 : intelligenceAmount);
+        stats.setDefense(intelligenceAmount < 1 ? 1 : intelligenceAmount);
 
         statsAmount -= intelligenceAmount;
         int strengthAmount = rand() % statsAmount + 1;

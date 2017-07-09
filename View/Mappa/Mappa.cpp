@@ -408,7 +408,7 @@ void Map::populate(int MapX,int MapY){
     int nNewMonsters=rand()%100+1;
     ability test;
     mapPos x=randRoomPos(MapX,MapY);
-    p_char p= new MajorCharacter("test",test,x,"blabla",NULL);
+    p_char p= new MajorCharacter(piazza_verdi,nLevel+1);
 
     p->setSym("R");
     characterList.push_back(p);

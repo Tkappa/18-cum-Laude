@@ -40,7 +40,7 @@ public:
     void testAttack();
     void dati(char buf[]);
     void movement(int dir);
-
+    MajorCharacter pgInitialization(View curview);
     //da rimuovere e mettere nella gestione degli input
     void loot(p_char pg, Map* curMap);
     bool drop(p_char pg,char c,Map* curMap);

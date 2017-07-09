@@ -20,9 +20,9 @@ View::View(){
     refresh();
 
 
-    int height = 1;
+    int height = 2;
 	int width = COLS;
-	int starty = 1;
+	int starty = 0;
 	int startx = 0;
 
     nameAndStats=newwin(height,width,starty,startx+1);
@@ -51,6 +51,7 @@ View::View(){
 }
 
 void View::print_nameAndStats(p_char c){
+
     //QUA SI INTERFACCIA CON PG
     werase(nameAndStats);
     const char* nomechar;
@@ -92,7 +93,9 @@ void View::print_nameAndStats(p_char c){
     wprintw(nameAndStats,"+");
     sprintf(buffer,"%d",fulldefen-defen);
     wprintw(nameAndStats,buffer);
-    wprintw(nameAndStats,")| Arma: ");
+    wprintw(nameAndStats,")");
+    wmove(nameAndStats,1,0);
+    wprintw(nameAndStats,"Arma: ");
     wprintw(nameAndStats,c->getCurWeapon()->getName().c_str());
     wprintw(nameAndStats,"| Armatura: ");
     wprintw(nameAndStats,c->getCurArmor()->getName().c_str());

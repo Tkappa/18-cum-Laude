@@ -2,10 +2,15 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <ncurses/curses.h>
+#ifdef __APPLE__ && __MACH__
+    #include <ncurses.h>
+#else
+    #include <ncurses/curses.h>
+#endif
+
 #include "mappa/Mappa.h"
 #include "../model/pc/Character.hpp"
-#include "../model/pc/inventory.h"
+#include "../model/pc/inventory.hpp"
 
 class View{
     protected:

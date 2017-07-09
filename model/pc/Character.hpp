@@ -18,7 +18,7 @@
 #include <list>
 #include "environment.hpp"
 #include "ability.h"
-#include "inventory.h"
+#include "inventory.hpp"
 using namespace std;
 
 typedef Item* p_item;

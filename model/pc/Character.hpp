@@ -18,7 +18,6 @@
 #include <list>
 #include "environment.hpp"
 #include "ability.h"
-#include "weapons.h"
 #include "inventory.h"
 using namespace std;
 

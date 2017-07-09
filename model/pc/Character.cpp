@@ -85,7 +85,8 @@ Character::Character(string n, ability s, Pos p, string d) : Character(n, s, p) 
 }
 
 void Character::addMoney(int amount){
-money+=amount;}
+money+=amount;
+}
 bool Character::move(int direction) {
     // origine in alto a sinistra
     // variabili che conterranno, se sono state effettuate operazioni valide, la nuova posizione del personaggio

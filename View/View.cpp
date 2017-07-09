@@ -1,6 +1,7 @@
 #include "View.h"
 #include <ncurses/curses.h>
 #include <stdlib.h>
+#include <stdlib.h>
 #include <cstdlib>
 #include <list>
 #include <queue>
@@ -37,6 +38,14 @@ View::View(){
     height=5;
     starty=LINES-5;
     winventory=newwin(height,width,starty,startx);
+
+    height=5;
+    starty=LINES/2-3;
+    width/=2;
+    width+=20;
+    startx=width-20-width/2;
+    death=newwin(height,width,starty,startx);
+
 }
 
 void View::print_nameAndStats(p_char c){
@@ -220,4 +229,29 @@ void View::print_narrative(queue<char*>* narrativequeue){
     }
     wrefresh(narrative);
 }
+
+void View::print_death(p_char pgprincipale ,p_char omicida){
+    box(death,0,0);
+    wmove(death,1,1);
+    const int  nflavour=3;
+    string messaggio;
+    string flavourtext[nflavour]={"I tuoi genitori devono essere molto fieri di te..","Mi dicono che al burger king stanno assumendo","Tanto non volevi veramente farla"};
+    if(omicida==nullptr){
+        messaggio="Hai perso tutta la tua voglia di studiare e hai abbandonato gli studi";
+    }
+    else{
+        messaggio=omicida->getName();
+        messaggio+=" ti ha convinto che forse l'università non fa per te.";
+    }
+    waddstr(death,messaggio.c_str());
+    wmove(death,2,1);
+    int c=rand()%nflavour;
+    waddstr(death,flavourtext[c].c_str());
+
+    wmove(death,3,1);
+    messaggio="Premere qualsiasi tasto per terminare l'avventura...";
+    waddstr(death,messaggio.c_str());
+    wrefresh(death);
+
+    }
 

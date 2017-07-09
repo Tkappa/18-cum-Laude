@@ -76,6 +76,10 @@ void Controller::launch() {
 
     //inizializzazione della classe view
     View vista;
+
+
+
+
     //stampa l'interfaccia utente
     vista.print_nameAndStats(punt_pg);
    // vista.print_inventory(inv.inventoryToStr());
@@ -201,7 +205,11 @@ void Controller::launch() {
             case 108://char l
                 loot(punt_pg,curMap);
                 break;
-
+            case 109://char m
+                vista.print_death(punt_pg);
+                c=getch();
+                exit(1);
+                break;
         }
         if (c == 113)// char 'q'
             break;
@@ -383,4 +391,8 @@ void Controller::testAttack() {
     //    mario.attack(anto);
     //    cout << mario.toStr();
     //    cout << anto.toStr();
+}
+
+p_char pgInitialization(View curview){
+   //q curview.print
 }

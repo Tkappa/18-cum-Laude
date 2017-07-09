@@ -89,7 +89,9 @@ string MajorCharacter::toStr() {
 
     // con questa formula la vita differisce di +- 1/3 rispetto al livello corrente
     cout<<"sto per calcolare statsAmount"<<endl;
-    int statsAmount = 1;
+    int amount=currentLevel+1-deltaStats;
+    int randamont= rand()%deltaStats*2;
+    int statsAmount = amount+randamont;
     //currentLevel + ((rand() % (deltaStats * 2)) + 1 - deltaStats);
     cout<<"Ho fatto stats amount"<<endl;
     string filePath = SEDE_CENTRALE;

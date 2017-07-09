@@ -1,5 +1,11 @@
 #include "View.h"
-#include <ncurses/curses.h>
+
+#ifdef __APPLE__ && __MACH__
+    #include <ncurses.h>
+#else
+    #include <ncurses/curses.h>
+#endif
+
 #include <stdlib.h>
 #include <cstdlib>
 #include <list>
@@ -15,7 +21,7 @@
 
 View::View(){
 
-    //Per adesso non è ancora resizible quindi i valori sono costanti
+    //Per adesso non ï¿½ ancora resizible quindi i valori sono costanti
     refresh();
 
 

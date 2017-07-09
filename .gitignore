@@ -1,2 +1,7 @@
 .DS_Store
-
+.idea/
+CMakeLists.txt
+build/
+cmake-build-debug/
+dist/
+*.o

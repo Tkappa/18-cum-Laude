@@ -344,7 +344,7 @@ bool Map::roomExplored(int MapX,int MapY){
 }
 
 
-std::list<p_char> Map::getList(){
+std::list<p_char> Map::getListChar(){
 #ifdef debugMap
     cout<<"Entrato dentro il metodo getList()"<<endl;
 #endif // debugMap
@@ -399,6 +399,8 @@ Map* Map::prevMap(){
     return prev;
 }
 
+std::list<p_item> Map::getListItem(){
+return objectList;}
 void Map::populate(int MapX,int MapY){
   #ifdef debugMap
     cout<<"Inziato il metodo populate()"<<endl;
@@ -410,6 +412,10 @@ void Map::populate(int MapX,int MapY){
 
     p->setSym("R");
     characterList.push_back(p);
+
+    mapPos itemx=randRoomPos(MapX,MapY);
+    p_item i=new Item(2,itemx);
+    objectList.push_back(i);
 
 
     //ATTENZIONE SE CRASHA A CASO POTREBBE ESSERE QUESTO PEZZO DI CODICE
@@ -500,6 +506,9 @@ mapPos Map::randRoomPos(int MapX,int MapY){
     return x;
 }
 
+void Map::addItem(p_item a){
+    this->objectList.push_back(a);
+}
 
 //TURORIAL LISTE c++
 /*

@@ -6,7 +6,7 @@
 #define MAPPA_STANZA_H
 
 #include <string>
-const int roomHeight=5,roomLenght=5;
+const int roomHeight=7,roomLenght=7;
 
 class Room{
     protected:

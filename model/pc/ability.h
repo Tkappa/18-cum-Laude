@@ -11,8 +11,8 @@ class ability {
 public:
     ability();
     //inizializza le abilita del personaggio in base alla facolta scelta
-    void setIntelligence(int n);
-    int getIntelligence();
+    void setDefense(int n);
+    int getDefense();
     void setStrength(int n);
     int getStrength();
     int getLife();
@@ -24,7 +24,7 @@ public:
     string to_str();
 
 protected:
-    int intelligence;
+    int defense;
     int strength;
     int life;
 };

@@ -6,13 +6,13 @@
 using namespace std;
 
 ability::ability() {
-    this->intelligence = 5;
+    this->defense = 5;
     this->strength = 5;
     this->life = 10;
 }
 
-void ability::setIntelligence(int n) {
-    this->intelligence = n;
+void ability::setDefense(int n) {
+    this->defense = n;
 }
 
 void ability::setStrength(int n) {
@@ -23,8 +23,8 @@ void ability::setLife(int n) {
     this->life = n;
 }
 
-int ability::getIntelligence() {
-    return intelligence;
+int ability::getDefense() {
+    return defense;
 }
 
 int ability::getStrength() {
@@ -51,7 +51,7 @@ string ability::to_str() {
     sprintf(b, "%d", strength);
     s += b;
     s = "\nIntel: ";
-    sprintf(b, "%d", intelligence);
+    sprintf(b, "%d", defense);
     s += b;
     s += "\n";
 }

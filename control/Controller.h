@@ -40,6 +40,12 @@ public:
     void testAttack();
     void dati(char buf[]);
     void movement(int dir);
+
+    //da rimuovere e mettere nella gestione degli input
+    void loot(p_char pg, Map* curMap);
+    bool drop(p_char pg,char c,Map* curMap);
+    bool equip(p_char pg, char c);
+    bool use(p_char pg, char c);
 };
 
 #endif /* CONTROLLER_H */

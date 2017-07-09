@@ -212,7 +212,16 @@ void Controller::launch() {
                 break;
         }
         if (c == 113)// char 'q'
-            break;
+        {
+            vista.print_exitconfirmation();
+            c=getch();
+            if(c=='y'||c=='Y'){
+                break;
+            }
+            vista.print_outputMap(curMap);
+
+        }
+
 
     if(turno){
         vista.print_narrative(&narrative);
@@ -395,4 +404,67 @@ void Controller::testAttack() {
 
 p_char pgInitialization(View curview){
    //q curview.print
+   char* name;
+   int c;
+   Pos p = {0, 0, 0, 0};
+   ability ab;
+   //curview.print_introduction(); //Qui chiede di scrivere il nome
+   getstr(name);
+
+   //curview.print_classselection(); //Qui chiedera di scrivere un carattere correispettivo alla classe
+
+   bool corretto=false;
+   int soldiagg=0;
+   while(!corretto){
+        c=getchar();
+        switch(c){
+        case 1:  //a -> ingeneria HIGH FORZA E VITA, LOW RESTO
+            ab.setLife(20);
+            ab.setStrength(5);
+            ab.setDefense(2);
+            corretto=true;
+        break;
+        case 2: //b-> lingue  HIGH DEF E VITA,LOW RESTO
+            ab.setLife(20);
+            ab.setStrength(2);
+            ab.setDefense(5);
+            corretto=true;
+        break;
+        case 3: //c-> scienze Tutto nedio
+            ab.setLife(15);
+            ab.setStrength(3);
+            ab.setDefense(3);
+
+            corretto=true;
+        break;
+        case 4: //d->umanistiche HIGH VITA E SOLDI,LOW RESTO
+
+            ab.setLife(20);
+            ab.setStrength(2);
+            ab.setDefense(2);
+            soldiagg=50;
+
+            corretto=true;
+        break;
+        case 5: //e->fuoricorso LOW TUTTO INIZI CON UN DEBITO
+            ab.setLife(10);
+            ab.setStrength(1);
+            ab.setDefense(1);
+            soldiagg=-50;
+
+            corretto=true;
+        break;
+        case 6: //f->medicina HIGH FORZA E DEF,LOW RESTO
+            ab.setLife(10);
+            ab.setStrength(5);
+            ab.setDefense(5);
+            corretto=true;
+        break;
+    }
+   }
+   //MajorCharacter::MajorCharacter(string n, ability s, Pos p, string d, Follower* f)
+   string nome(name);
+   p_char pg=new MajorCharacter(nome,ab,p,"",NULL);
+
+return pg;
 }

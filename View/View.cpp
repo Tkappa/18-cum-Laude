@@ -46,6 +46,8 @@ View::View(){
     startx=width-20-width/2;
     death=newwin(height,width,starty,startx);
 
+    exitconfirmation=newwin(height,width,starty,startx);
+
 }
 
 void View::print_nameAndStats(p_char c){
@@ -255,3 +257,10 @@ void View::print_death(p_char pgprincipale ,p_char omicida){
 
     }
 
+void View::print_exitconfirmation(){
+    box(exitconfirmation,0,0);
+    wmove(exitconfirmation,1,1);
+    string messaggio="Confermi di voler uscire? y/n";
+    waddstr(exitconfirmation,messaggio.c_str());
+    wrefresh(exitconfirmation);
+}

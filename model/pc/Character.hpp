@@ -19,8 +19,10 @@
 #include "environment.hpp"
 #include "ability.h"
 #include "weapons.h"
+#include "inventory.h"
 using namespace std;
 
+typedef Item* p_item;
 class Character {
 public:
     Character();
@@ -33,9 +35,11 @@ public:
     Pos getPos();
     virtual void setPos(Pos newPos);
     bool isAlive();
-    ability getStats();
+    ability getBaseStats();
+    ability getFullStats();
     void setStats(ability & s);
-    list<weapons> getArmi();
+
+    void setFullStats(ability & s);
     string getName();
     string getDesc();
     void setDesc(string s);
@@ -43,12 +47,30 @@ public:
     void setSym(string sym);
     virtual string toStr();
 
+    void addMoney(int amount);
+
+    p_item getCurWeapon();
+    void setCurWeapon(p_item weapon);
+    p_item equipWeapon(p_item weapon);
+
+    p_item getCurArmor();
+    void setCurArmor(p_item weapon);
+    p_item equipArmor(p_item weapon);
+    int getMoney();
+
+    void setMoney(int i);
     Pos pos;
+    inventory getInventory();
+    inventory pg_inventory;
 protected:
+
+    int money;
     string name;
     string desc;
-    ability stats;
-    list<weapons> armi;
+    ability basestats;
+    ability fullstats;
+    p_item curWeapon;
+    p_item curArmor;
     string sym;
     bool alive;
 };

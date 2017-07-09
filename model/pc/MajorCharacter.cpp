@@ -34,16 +34,17 @@ void MajorCharacter::setPos(Pos newPos) {
     this->pos = newPos;
 }
 
+
 string MajorCharacter::toStr() {
     char buf[5];
     string s = "Character \"" + this->name + "\": {\n\tStatistics: {\n\t\tlife: ";
-    sprintf(buf, "%d", this->getStats().getLife());
+    sprintf(buf, "%d", this->getBaseStats().getLife());
     s += buf;
     s += ",\n\t\tstrength: ";
-    sprintf(buf, "%d", this->getStats().getStrength());
+    sprintf(buf, "%d", this->getBaseStats().getStrength());
     s += buf;
     s += ",\n\t\tintelligence: ";
-    sprintf(buf, "%d", this->getStats().getIntelligence());
+//    sprintf(buf, "%d", this->getBaseStats().getIntelligence());
     s += buf;
     s += "\n\t}\n\tPos: {\n\t\tMap [ ";
     sprintf(buf, "%d", this->pos.mapX);

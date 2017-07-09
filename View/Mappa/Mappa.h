@@ -13,12 +13,9 @@ struct pers{
 string nome;
 mapPos pos;
 };
-struct obj{
-char nome;
-mapPos pos;
-};
 
-typedef obj* p_obj;
+
+typedef Item* p_item;
 typedef Character* p_char;
 const int mapHeight=3,mapLenght=16;
 
@@ -29,11 +26,12 @@ class Map{
         pers stairsUp;
         pers stairDown;
         int nRooms;
-        std::list<p_char> characterList;
-        std::list<p_obj> objectList;
         std::queue<char*>* globalnarrative;
 
     public:
+
+        std::list<p_char> characterList;
+        std::list<p_item> objectList;
         //Puntatori alla mappa precedente e successiva
         Map* next;
         Map* prev;
@@ -55,8 +53,10 @@ class Map{
         bool mapCanMove(p_char personaggio,int dir);
         //ritorna il valore di "esplorato" della stanza in quelle coordinate
         bool roomExplored(int MapX,int MapY);
-        //fornisce una copia di "oggetti"
-        std::list<p_char> getList();
+        //fornisce una copia di "personaggi"
+        std::list<p_char> getListChar();
+        //fornisce una lista di item
+        std::list<p_item> getListItem();
         //Restituisce le due scale in modo da prenderne le posizioni
         pers getStairsUp();
         pers getStairsDown();
@@ -72,6 +72,8 @@ class Map{
         void populate(int MapX,int MapY);
         //Metodo utile a populate per mettere una posizione casuale nella stanza all'oggetto creato
         mapPos randRoomPos(int MapX,int MapY);
+
+        void addItem(p_item a);
 };
 
 

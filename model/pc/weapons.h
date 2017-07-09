@@ -5,24 +5,20 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include "Item.h"
 
 using namespace std;
 
-class weapons
+class weapons: public Item
 {
     public:
         weapons();
+        weapons(int level, string names[]);
         virtual ~weapons();
-        //genera un nome casuale per l'oggetto trovato
-        string weap_name();
-        string getName();
-        int getValue();
 
-        int random();
 
-private:
-       string weap;
-        int value;
+protected:
+
 
 };
 

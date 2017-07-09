@@ -20,21 +20,59 @@ using namespace std;
 
 Character::Character() {
     this->name = "Flaffy";
-    this->stats;
+    this->basestats;
     //this->stats = {5, 5, 5};
     this->pos = {0, 0, 0, 0};
-    weapons w;
-    this->armi.push_back(w);
+    //Item w;
+    //this->object.push_back(w);
     this->desc = "Descrizione di prova";
+    this->money=0;
+    this->fullstats=basestats;
+}
+p_item Character::getCurWeapon(){
+return curWeapon;
+}
+
+void Character::setMoney(int i){
+money=i;}
+void Character::setCurWeapon(p_item weapon){
+curWeapon=weapon;
+}
+
+p_item Character::equipWeapon(p_item weapon){
+    p_item temp=curWeapon;
+    curWeapon=weapon;
+    fullstats.setStrength(basestats.getStrength()+curWeapon->getValue());
+    return temp;
+    }
+
+p_item Character::getCurArmor(){
+return curArmor;
+}
+
+void Character::setCurArmor(p_item armor){
+curArmor=armor;}
+
+int Character::getMoney(){
+return money;}
+
+p_item Character::equipArmor(p_item armor){
+p_item temp=curArmor;
+    curArmor=armor;
+    fullstats.setDefense(basestats.getDefense()+curArmor->getValue());
+    return temp;}
+
+inventory Character::getInventory(){
+return pg_inventory;
 }
 
 Character::Character(string n, ability s) {
     this->name = n;
-    this->stats = s;
+    this->basestats = s;
     this->alive = true;
     this->pos = {0, 0, 0, 0};
-    weapons w;
-    this->armi.push_back(w);
+    //Item w;
+    //this->object.push_back(w);
     this->desc = "Descrizione di prova";
 }
 
@@ -46,6 +84,8 @@ Character::Character(string n, ability s, Pos p, string d) : Character(n, s, p) 
     desc = d;
 }
 
+void Character::addMoney(int amount){
+money+=amount;}
 bool Character::move(int direction) {
     // origine in alto a sinistra
     // variabili che conterranno, se sono state effettuate operazioni valide, la nuova posizione del personaggio
@@ -97,32 +137,37 @@ int Character::moveToChar(Character & otherChar) {
 }
 
 void Character::setStats(ability & s) {
-    stats.setIntelligence(s.getIntelligence());
-    stats.setStrength(s.getStrength());
-    stats.setLife(s.getLife());
+    basestats.setDefense(s.getDefense());
+    basestats.setStrength(s.getStrength());
+    basestats.setLife(s.getLife());
 }
+ void Character::setFullStats(ability & s){
+    fullstats.setDefense(s.getDefense());
+    fullstats.setStrength(s.getStrength());
+    fullstats.setLife(s.getLife());
+ }
 
 bool Character::attack(Character & otherChar) {
     bool ok = false;
     //    if (otherChar == NULL) ok = false;
     //    else {
-    ability temp = this->getStats();
+    ability temp = this->getBaseStats();
     cout << temp.getLife();
 #ifdef DEBUG
 #endif
-    temp.setLife(temp.getLife() - otherChar.getStats().getStrength());
+    temp.setLife(temp.getLife() - otherChar.getBaseStats().getStrength());
     this->setStats(temp);
 #ifdef DEBUG
     ability deb = this->getStats();
     cout << deb.toStr();
 #endif
-    this->alive = this->getStats().getLife() > 0;
+    this->alive = this->getBaseStats().getLife() > 0;
 
-    temp = otherChar.getStats();
-    temp.setLife(temp.getLife() - this->getStats().getStrength());
+    temp = otherChar.getBaseStats();
+    temp.setLife(temp.getLife() - this->getBaseStats().getStrength());
     //temp.seotherChar.getStats().getLife() -= this->getStats().getLife();
     otherChar.setStats(temp);
-    otherChar.alive = otherChar.getStats().getLife() > 0;
+    otherChar.alive = otherChar.getBaseStats().getLife() > 0;
     //        ok = true;
     //    }
     return ok;
@@ -140,13 +185,14 @@ bool Character::isAlive() {
     return alive;
 }
 
-ability Character::getStats() {
-    return stats;
+ability Character::getBaseStats() {
+    return basestats;
+}
+ability Character::getFullStats() {
+    return fullstats;
 }
 
-list<weapons> Character::getArmi() {
-    return armi;
-}
+
 
 string Character::getName() {
     return name;
@@ -172,15 +218,15 @@ void Character::setSym(string sym) {
     char buf[5];
     //s += to_string(this->stats.life);
     string s = "Character " + this->name + " - life: ";
-    sprintf(buf, "%d", this->stats.getLife());
+    sprintf(buf, "%d", this->basestats.getLife());
     s += buf;
     //s += to_string(this->stats.strength);
     s += ", strength: ";
-    sprintf(buf, "%d", this->stats.getStrength());
+    sprintf(buf, "%d", this->basestats.getStrength());
     s += buf;
     //s += to_string(this->stats.intelligence);
     s += ", intelligence: ";
-    sprintf(buf, "%d", this->stats.getIntelligence());
+//    sprintf(buf, "%d", this->basestats.getIntelligence());
     s += buf;
     //s += to_string(this->currentPos.x);
     s += ", x: ";

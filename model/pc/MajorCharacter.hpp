@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   MajorCharacter.hpp
  * Author: Master
  *
@@ -20,6 +20,8 @@
 
 using namespace std;
 
+typedef Item* p_item;
+
 class MajorCharacter : public Character {
 public:
 //    MajorCharacter();
@@ -27,9 +29,12 @@ public:
 //    MajorCharacter(string n, ability s, Pos p);
 //    MajorCharacter(string n, ability s, Pos p, string d);
     MajorCharacter(string n, ability s, Pos p, string desc, Follower* f);
+
     void setFollower(Follower* f);
     void setPos(Pos newPos);
 //    string string toStr() override;
+
+
     string toStr();
 
 protected:

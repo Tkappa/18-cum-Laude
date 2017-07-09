@@ -1,23 +1,48 @@
-
-/*#include <curses.h>
+/*
+#include <ncurses/curses.h>
 #include "View/Mappa/Mappa.h"
 #include "View/View.h"
+#include "model/pc/Item.h"
+#include "model/pc/inventory.h"
 #include <iostream>
 
 #include <time.h>
 #include <cstdlib>
-*/
+using namespace std;
+
 //Per farlo funzionare bisogna scaricare la libreria ncurses e mettere tra le opzioni del --->LINKER<--- "-lncurses", vedi http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/helloworld.html
 
 //commentato tutto per non dare conflitti con altri eventuali main
-/*int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     //crea il random
     time_t t;
     srand((unsigned)time(&t));
 
+    Item *i= Item::randomItem(2);
+    Item *l= Item::randomItem(2);
+    Item *m= Item::randomItem(2);
+    cout<<"ho creato l'oggetto: "<<i->getName()<<" - valore: "<<i->getValue()<<" tipo: "<<i->getType()<<endl;
+
+    inventory inv=inventory();
+
+    inv.addItem(*i);
+    inv.addItem(*l);
+    inv.addItem(*m);
+
+    cout<<"Inventario iniziale: "<<endl<<inv.inventoryToStr()<<endl;
+
+    cout<<"Arma da eliminare: ";
+    int n;
+    cin>>n;
+    inv.deleteItem(n);
+
+
+    cout<<"Inventario finale: "<<endl<<inv.inventoryToStr()<<endl;
+
+
     //crea la struttura dati con 3 stanze base
-    Mappa pippo(10);
+    /*Mappa pippo(10);
 
     //crea il personaggio principale
     pers giovanni;
@@ -82,6 +107,7 @@
 	}
 
 	refresh();
+
     return 0;
 }
 */

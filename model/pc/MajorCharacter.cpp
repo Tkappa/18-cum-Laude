@@ -105,12 +105,17 @@ string MajorCharacter::toStr() {
     }
 
     // ottengo i nomi contenuti nel file relativo al bioma
+    cout<<"prima di readNames"<<endl;
     auto names = readNamesFrom(filePath);
-
+    cout<<"dopo di readNames"<<endl;
+    cout<<"sto per assegnare il nome.."<<endl;
+    string name = names[rand() % names.size() + 1];
+    cout<<"nome:"<<name<<endl;
     ability stats = setUpAbilities(statsAmount);
 
-    string name = names[rand() % names.size() + 1];
+
     cout<<"Ho nome e stats e sto per andare nel costruttore character";
+    cout<<"Il piccolino si chiama:"<<name;
     Character(name,stats);
     cout<<"Sono uscito dal costruttore charachter";
 }

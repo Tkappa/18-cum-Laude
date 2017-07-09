@@ -7,16 +7,59 @@ Ho già mandato la mail a lanese per chiedergli come funziona e le varie date.
 
 Necessario:
 
+DA FARE::
+
 
     NPC:
- [1]--funzione randNPC( bioma, livello_attuale) //STEFANO, IL PRIMA POSSIBILE, MAX MERCOLEDI-5
+ [1]--funzione randNPC( bioma, livello_attuale) //STEFANO [[[[AGGIUSTARE LA BRANCH NEW-NPC CHE NON VA]
         crea e restituisce un NPC unico con statistiche casuali relative al livello e un nome casuale relativo al bioma
         Per il nome e statistiche mettete delle cose a caso che verranno migliorate nella fase [3]
     
  [2]--Fare in modo che il follower non stia attaccato al culo del personaggio ma si muova indipendentemente , seguendo però il giocatore
     
+  Controller/Gestione del gioco:
+ [1]--Funzione Turn() //GIUSEPPE, IL PRIMA POSSIBILE, MAX MERCOLEDI-5
+        Fa muovere tutti gli NPC nella lista degli NPC vivi della Mappa, facendogli eseguire tutti i vari attacchi in caso debbano attaccare
+        Inoltre stampa tutta la storia
+ [2]--Gestione degli input [[HO GIA CREATO LA BASE IO, BASTA SPOSTARE IL MEGA SWITCH IN UNA CLASSE A PARTE E FARE QUELLE CHE MANCANO]]
+        Gestire gli input , ogni volta che viene premuto un tasto valido viene eseguita la corrispettiva azione:
+        Azioni che reputo necessarie:
+            -Movimento(con wasd o le freccette)(fatto)
+                  Muove il personaggio e fa passare il turno()
+            -Inventario:(fatto tutte e tre)
+                  Fa vedere a schermo l'inventario sostituendolo alla storia
+                  Il turn() verrà eseguito al conseguimento con successo di una delle 3 azioni , e non per ogni tasto premuto.
+                  Si potrà accedere all'inventario in 3 modi( quindi 3 tasti diversi): 
+                        1)Usa , l'oggetto selezionato ( se valido , cioè se è un consumabile) viene usato e tolto dall'inventario
+                        2)Equipaggia, l'oggetto selezionato( se valido , cioè arma o armatura) viene equipaggiato al posto di quello attuale, che viene rimesso nell'inventario
+                        3)Lascia, l'oggetto selezionato viene buttato a terra (TODO [4] se si lasciano più oggetti nella stessa casella invece di sovrascriverli visualizzare una lista, però non sprecarci tempo prima che tutto il resto sia fatto)
+            -Aiuto:
+                 Visualizzarà la schermata di tutorial , non fa passare il turn()
+            -Avanzamento al prossimo livello , ritorno a quello precedente ( rispettivamente > e <)(fatto)
+                 Se si è sulla casella giusta ( le scale) si passa al prossimo livello o si torna a quello precedente
+            -Aspettare
+                 Fa passare il turn()
+            -Raccogliere l'oggetto(fatto)
+                 Se il giocatore è sopra la casella dell'oggetto , questo viene aggiunto all'inventario, fa passare il turn()
+             //Eventuali altre?
+
+VIEW:
+[1] Renderlo dinamica rispetto alle console / creare una console di dimensione fissa per tutti
+     
+    Mappa: 
+ [3]--Ogni bioma diverso avrà tipi di stanza diverse con grandezze variabili o cose del genere
+  
+[2]Schermata di creazione personaggio , schermata di morte e schermata di fine gioco
+
+
+Piccole correzzioni da fare:
+   Commentare bene
+    Aggiungere i push a NARRATIVE dove non l'ho gia messo
     
-    Oggetti/Inventario:
+    
+    
+FATTO:
+Oggetti/Inventario:
  [1]--funzione randItem(livello_attuale) //VALENTINA, IL PRIMA POSSIBILE, MAX GIOVEDI-6
         decide casualmente se restituire una di tre cose: 1)Un arma 2)Un armatura 3)Soldi
         Per il nome e statistiche mettete delle cose a caso che verranno migliorate nella fase [3]
@@ -32,37 +75,6 @@ Necessario:
  
  [1]--Pensare a come fare oggetti come pozioni/consumabili e crearne la classe 
  
- 
-    Controller/Gestione del gioco:
- [1]--Funzione Turn() //GIUSEPPE, IL PRIMA POSSIBILE, MAX MERCOLEDI-5
-        Fa muovere tutti gli NPC nella lista degli NPC vivi della Mappa, facendogli eseguire tutti i vari attacchi in caso debbano attaccare
-        Inoltre stampa tutta la storia
- [2]--Gestione degli input
-        Gestire gli input , ogni volta che viene premuto un tasto valido viene eseguita la corrispettiva azione:
-        Azioni che reputo necessarie:
-            -Movimento(con wasd o le freccette)
-                  Muove il personaggio e fa passare il turno()
-            -Inventario:
-                  Fa vedere a schermo l'inventario sostituendolo alla storia
-                  Il turn() verrà eseguito al conseguimento con successo di una delle 3 azioni , e non per ogni tasto premuto.
-                  Si potrà accedere all'inventario in 3 modi( quindi 3 tasti diversi): 
-                        1)Usa , l'oggetto selezionato ( se valido , cioè se è un consumabile) viene usato e tolto dall'inventario
-                        2)Equipaggia, l'oggetto selezionato( se valido , cioè arma o armatura) viene equipaggiato al posto di quello attuale, che viene rimesso nell'inventario
-                        3)Lascia, l'oggetto selezionato viene buttato a terra (TODO [4] se si lasciano più oggetti nella stessa casella invece di sovrascriverli visualizzare una lista, però non sprecarci tempo prima che tutto il resto sia fatto)
-            -Aiuto:
-                 Visualizzarà la schermata di tutorial , non fa passare il turn()
-            -Avanzamento al prossimo livello , ritorno a quello precedente ( rispettivamente > e <)
-                 Se si è sulla casella giusta ( le scale) si passa al prossimo livello o si torna a quello precedente
-            -Aspettare
-                 Fa passare il turn()
-            -Raccogliere l'oggetto
-                 Se il giocatore è sopra la casella dell'oggetto , questo viene aggiunto all'inventario, fa passare il turn()
-             //Eventuali altre?
-     
-     
-    Mappa: 
- [3]--Ogni bioma diverso avrà tipi di stanza diverse con grandezze variabili o cose del genere
-  
   
  [X]Storia:  //Credo di riuscirlo a fare io , devo vedere un attimo come strutturarlo , massimo mercoledi 5 l'ho fatto
      
@@ -84,17 +96,6 @@ Necessario:
     
     Quando il personaggio usa un oggetto
     -Giocatore usa Internet Gratis , e recupera 20 punti vita
-    
-    
-    
-    
- [2]Schermata di creazione personaggio , schermata di morte e schermata di fine gioco
-    
-    
-    
-
-    
-    
     
     
     

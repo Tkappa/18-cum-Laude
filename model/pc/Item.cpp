@@ -1,6 +1,4 @@
 #include "Item.h"
-#include "weapons.h"
-#include "Armor.h"
 #include "environment.hpp"
 #include <iostream>
 

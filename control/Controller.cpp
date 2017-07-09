@@ -80,18 +80,14 @@ void Controller::launch() {
     vista.print_nameAndStats(punt_pg);
    // vista.print_inventory(inv.inventoryToStr());
     vista.print_outputMap(curMap);
-    narrative.push("Questa sarà una grande avventura!");
+    char iniz[500]="Questa sara' una grande avventura!";
+    narrative.push(iniz);
     vista.print_narrative(&narrative);
     //    vista.stampaequip(pg.getDesc());
     refresh();
 
 
-    char b[40];
-    char a[80];
-    int l1;
-    int l2;
-    Pos p1;
-    Pos p2;
+
     //    FILE* caratteri = fopen("data/getch", "w");
     //    if (caratteri == NULL) vista.stampaequip("NULL");
     //Questo � un abbozzo di movimento
@@ -100,17 +96,7 @@ void Controller::launch() {
     bool turno= true;
     while (1) {
         c = getch();
-        //std::cout<<c;
-        p1 = pg.getPos();
-        p2 = anto.getPos();
-        l1 = pg.getBaseStats().getLife();
-        l2 = anto.getBaseStats().getLife();
-        sprintf(b, "%c: %d %d %d %d\t%c: %d %d %d %d", pg.getSym(), p1.mapX, p1.mapY, p1.stanzX, p1.stanzY, anto.getSym(), p2.mapX, p2.mapY, p2.stanzX, p2.stanzY);
-        sprintf(a, "%s\t%c: %d\t%c: %d", b, pg.getSym(), l1, anto.getSym(), l2);
-        //        sprintf(b, "%c: %d\n", c, c);
-        //        fputs(b, caratteri);
-        //        vista.stampaequip(b);
-        //vista.stampaequip(a);
+
         switch (c) { //se il tasto premuto � "s" oppure freccia sinistra
             case 97:// char 'a'
             case 260:// left
@@ -166,7 +152,6 @@ void Controller::launch() {
             case 116:// char 't'
 
                 mov = pg.moveToChar(anto); //non funziona
-                sprintf(b,"Premuto \'t\', dir: %d",mov);
                 //vista.stampastoria(b);
                 if (curMap->mapCanMove(punt_pg, mov))
                     curMap->moveChar(punt_pg, mov);
@@ -253,7 +238,7 @@ void Controller::loot(p_char pg, Map* curMap){
                 items.remove((*i));
                 pg->addMoney(temp->getValue());
                 char* str= new char[400];
-                strcat(str,"Raccogli '");
+                strcpy(str,"Raccogli '");
                 char buf[10];
                 sprintf(buf,"%d",temp->getValue());
                 strcat(str,buf);
@@ -265,7 +250,7 @@ void Controller::loot(p_char pg, Map* curMap){
 
                         items.remove((*i));
                         char* str= new char[400];
-                        strcat(str,"Raccogli '");
+                        strcpy(str,"Raccogli '");
                         strcat(str,temp->getName().c_str());
                         strcat(str,"' da terra , e' un");
                         switch(temp->getType()){

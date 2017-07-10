@@ -15,9 +15,13 @@ class View{
         WINDOW * winventory;
         WINDOW * death;
         WINDOW * exitconfirmation;
+        WINDOW * introduction;
+        WINDOW * classselection;
     public:
         View();
+        void print_introduction();
         void print_exitconfirmation();
+        void print_classselection();
         void print_death(p_char pgprincipale ,p_char omicida=nullptr);
         void print_nameAndStats(p_char c);
         void print_outputMap(Map* CurLevel);

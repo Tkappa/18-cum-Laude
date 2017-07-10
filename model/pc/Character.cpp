@@ -28,6 +28,7 @@ Character::Character() {
     this->desc = "Descrizione di prova";
     this->money=0;
     this->fullstats=basestats;
+    inventory pg_inventory();
 }
 p_item Character::getCurWeapon(){
 return curWeapon;
@@ -51,15 +52,20 @@ return curArmor;
 }
 
 void Character::setCurArmor(p_item armor){
-curArmor=armor;}
+curArmor=armor;
+}
 
 int Character::getMoney(){
 return money;}
 
 p_item Character::equipArmor(p_item armor){
-p_item temp=curArmor;
+    p_item temp=curArmor;
+    cout<<"messo in temp current";
     curArmor=armor;
+
+    cout<<"Messo in current il parametro";
     fullstats.setDefense(basestats.getDefense()+curArmor->getValue());
+    cout<<"Aggiornato le statistiche";
     return temp;}
 
 inventory Character::getInventory(){

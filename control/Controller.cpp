@@ -266,7 +266,15 @@ bool Controller::drop(p_char pg,char c,Map* curMap){
     string tempchar="a";
     tempchar[0]=c;
     std::list<p_item> pg_inventorytemp=pg->pg_inventory.getInventory();
-    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body*/){
+    p_item tempp=pg->pg_inventory.deleteItem(tempchar);
+    if(tempp!=nullptr){
+        tempp->position=pg->getPos();
+        curMap->addItem(tempp);
+        return true;
+    }
+    return false;
+    /*
+    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body){
         if(tempchar==(*i)->getInventoryId()){
             std::list<p_item>::iterator new_i = i;
             ++new_i;
@@ -286,9 +294,11 @@ bool Controller::drop(p_char pg,char c,Map* curMap){
         }
     }
     return false;
+    */
     }
 
 bool Controller::equip(p_char pg, char c){
+    //fare la stessa cosa che ho fatto con drop per ottimizzare;
     string tempchar="a";
     tempchar[0]=c;
     std::list<p_item> pg_inventorytemp=pg->pg_inventory.getInventory();
@@ -307,12 +317,16 @@ bool Controller::equip(p_char pg, char c){
                     break;
                 case 2:
                     add=pg->equipArmor(temp);
+                    cout<<add->getName()<<endl;
                     break;
             }
+            cout<<"sto per fare deleteitem";
             pg->pg_inventory.deleteItem(tempchar);
+            cout<<"sto per fare AddItem";
             pg->pg_inventory.addItem(add);
-
+            cout<<"sto per scambiare i putantori";
             i=new_i;
+            cout<<"sto per ritornare true";
             return true;
         }
         else{
@@ -368,10 +382,11 @@ MajorCharacter Controller::pgInitialization(View curview){
    int c;
    Pos p = {0, 0, 0, 0};
    ability ab;
-   //curview.print_introduction(); //Qui chiede di scrivere il nome
+   curview.print_introduction(); //Qui chiede di scrivere il nome
+   move(1,2);
    getstr(name);
 
-   //curview.print_classselection(); //Qui chiedera di scrivere un carattere correispettivo alla classe
+   curview.print_classselection(); //Qui chiedera di scrivere un carattere correispettivo alla classe
 
    bool corretto=false;
    int soldiagg=0;

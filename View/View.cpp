@@ -48,6 +48,62 @@ View::View(){
 
     exitconfirmation=newwin(height,width,starty,startx);
 
+    height=2;
+    starty=0;
+    width=COLS;
+    startx=1;
+
+    introduction=newwin(height,width,starty,startx);
+
+    starty=height;
+    height=10;
+    classselection=newwin(height,width,starty,startx);
+
+
+
+}
+void View::print_introduction(){
+    werase(introduction);
+    string message="Oh giovane ignaro diplomando , in cosa ti sei cacciato? Qual'e' il tuo nome?";
+
+    wprintw(introduction,message.c_str());
+    wmove(introduction,1,0);
+    message=">";
+    wmove(introduction,1,0);
+    wprintw(introduction,message.c_str());
+    wrefresh(introduction);
+
+
+}
+void View::print_classselection(){
+    werase(classselection);
+    string message="Tanto il tuo nome non importa piu' da oggi sarai Matricola 000052423. E in che facolta vorresti iscriverti?";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,1,0);
+    message="(a) Voglio iscrivermi a ingegnieria, non mi piace itagliano! (Alta forza di volonta e morale)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,2,0);
+    message="(b) Voglio iscrivermi a giurisprudenza, tanto non e' a numero chiuso!(Alta Morale e concentrazione)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,3,0);
+    message="(c) Voglio iscrivermi a scienze, mi obbligano i miei! (Tutto nella media)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,4,0);
+    message="(d) Voglio inseguire le mie passioni (Umanistica)! (Alto morale e parti con dei CFU pagati dal papi)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,5,0);
+    message="(e) In realta' sono fuoricorso e voglio riprendere.. (PAZZO! Tutte le statistiche al minimo e un debito di 50 CFU)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,6,0);
+    message="(f) Voglio iscrivermi a medicina, non mi piace vivere! (Alta forza di volonta e concentrazione)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,7,0);
+    message="Premi la lettera corrispondente alla scelta per immatricolarti";
+    wprintw(classselection,message.c_str());
+
+
+    wrefresh(classselection);
+
 }
 
 void View::print_nameAndStats(p_char c){

@@ -1,6 +1,8 @@
 #include "inventory.h"
 
-
+inventory::inventory(){
+    list<p_item> listw;
+}
 
 bool inventory:: addItem(p_item a){
     if(listw.size()<8){
@@ -14,21 +16,36 @@ bool inventory:: addItem(p_item a){
 
 }
 list<p_item> inventory::getInventory(){
-return listw;}
+return listw;
+}
 
-void inventory:: deleteItem(string id) {
+p_item inventory:: deleteItem(string id) {
     int offset = 0;
-    bool find=0;
-
+    bool found=false;
+    bool ciclodopofound=false;
+    p_item temp=nullptr;
    for(list<Item* >::iterator i=listw.begin(); i!=listw.end();++i){
+        if(found) ciclodopofound=true;
+        cout<<endl<<"sto controllando: "<<(*i)->getName()<<endl;
         string tempId=(*i)->getInventoryId();
+        cout<<tempId<<"<- attuale , quello che cerco ->"<<id<<endl;
         if( id == tempId){
+            cout<<"L'ho trovato e lo sto per cancellare"<<endl;
+            temp=*i;
             this->listw.erase(i);
             offset=-1;
+            found=true;
+            cout<<"Cancellato e messo find a true"<<endl;
         }
+        else if(ciclodopofound){
         tempId[0]+=offset;
+        cout<<"Sto per cambiare l'id a "<<(*i)->getName()<<" NuovoId:"<<tempId<<endl;
+
         (*i)->setInventoryId(tempId);
+        }
    }
+   cout<<"sto per fare il return di: "<<temp->getName();
+   return temp;
 }
 
 string inventory:: inventoryToStr() {

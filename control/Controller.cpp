@@ -171,6 +171,11 @@ noecho(); //toglie gli input a schermo
                 c=getch();
                 exit(1);
                 break;
+            case 110://char n
+                vista.print_victory();
+                c=getch();
+                exit(1);
+                break;
         }
         if (c == 113)// char 'q'
         {

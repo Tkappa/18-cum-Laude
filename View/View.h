@@ -17,8 +17,11 @@ class View{
         WINDOW * exitconfirmation;
         WINDOW * introduction;
         WINDOW * classselection;
+        WINDOW * victory;
     public:
         View();
+
+        void print_victory();
         void print_introduction();
         void print_exitconfirmation();
         void print_classselection();

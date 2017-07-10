@@ -45,7 +45,7 @@ View::View(){
     width+=20;
     startx=width-20-width/2;
     death=newwin(height,width,starty,startx);
-
+    victory=newwin(height,width,starty,startx);
     exitconfirmation=newwin(height,width,starty,startx);
 
     height=2;
@@ -62,6 +62,7 @@ View::View(){
 
 
 }
+
 void View::print_introduction(){
     werase(introduction);
     string message="Oh giovane ignaro diplomando , in cosa ti sei cacciato? Qual'e' il tuo nome?";
@@ -316,6 +317,22 @@ void View::print_death(p_char pgprincipale ,p_char omicida){
 
     }
 
+void View::print_victory(){
+box(victory,0,0);
+    wmove(victory,1,1);
+    const int  nflavour=3;
+    string messaggio;
+    messaggio="Congratulazioni , ti sei laureato!";
+    waddstr(victory,messaggio.c_str());
+    wmove(victory,2,1);
+    messaggio="Adesso ti tocca cercare lavoro, o hai intenzione di fare la magistrale?";
+    waddstr(victory,messaggio.c_str());
+
+    wmove(victory,3,1);
+    messaggio="Premere qualsiasi tasto per terminare l'avventura...";
+    waddstr(victory,messaggio.c_str());
+    wrefresh(victory);
+}
 void View::print_exitconfirmation(){
     box(exitconfirmation,0,0);
     wmove(exitconfirmation,1,1);

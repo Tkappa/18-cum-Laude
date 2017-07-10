@@ -410,7 +410,6 @@ void Map::populate(int MapX,int MapY){
     mapPos x=randRoomPos(MapX,MapY);
     p_char p= new MajorCharacter(piazza_verdi,nLevel+1);
     p->setPos(x);
-    p->setSym("R");
     characterList.push_back(p);
 
     mapPos itemx=randRoomPos(MapX,MapY);

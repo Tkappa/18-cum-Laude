@@ -124,7 +124,9 @@ string MajorCharacter::toStr() {
     ability stats = setUpAbilities(statsAmount);
 
     string name = namesVector[rand() % namesVector.size()];
+    string symb=name.substr(0,1);
 
+    this->setSym(symb);
      this->name = name;
      this->setStats(stats);
      this->follower = NULL;

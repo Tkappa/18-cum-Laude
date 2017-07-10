@@ -11,10 +11,7 @@ DA FARE::
 
 
     NPC:
- [1]--funzione randNPC( bioma, livello_attuale) //STEFANO [[[[AGGIUSTARE LA BRANCH NEW-NPC CHE NON VA]
-        crea e restituisce un NPC unico con statistiche casuali relative al livello e un nome casuale relativo al bioma
-        Per il nome e statistiche mettete delle cose a caso che verranno migliorate nella fase [3]
-    
+ Aggiustare MoveTo in modo che tenga in considerazione anche quando si è in stanze diverse
  [2]--Fare in modo che il follower non stia attaccato al culo del personaggio ma si muova indipendentemente , seguendo però il giocatore
     
   Controller/Gestione del gioco:
@@ -53,17 +50,11 @@ Impossibile renderlo dinamico , semplicemnte fare che stampa errore se è troppo
  al cambio del bioma c'è un livello con solo il negoziante che ti vende le cose
  Come ultimo livello c'è il magnifico rettore che ti da la laurea , il gioco finisce quando equipaggi la laurea
   
-[2]Schermata di creazione personaggio , schermata di morte e schermata di fine gioco [nella branch story-and-menus]
-
 
 
 Piccole correzzioni da fare:
    Commentare bene
-    Aggiungere i push a NARRATIVE dove non l'ho gia messo
     quando si sale le scale al livello 0 uccidere il personaggio
-    STATSBASE VITA e' LA VITA MASSIMA
-    STATSFULL VITA è LA VITA ATTUALE
-    Se si usa la pozione  statsfull non può andare sopra allo statsbase , cambiare l'uso delle pozioni per seguire
     
     
     

@@ -19,7 +19,6 @@
 using namespace std;
 
 Character::Character() {
-    this->name = "Flaffy";
     this->basestats;
     //this->stats = {5, 5, 5};
     this->pos = {0, 0, 0, 0};
@@ -28,6 +27,7 @@ Character::Character() {
     this->desc = "Descrizione di prova";
     this->money=0;
     this->fullstats=basestats;
+    this->alive = this->basestats.getLife() > 0;
 }
 p_item Character::getCurWeapon(){
 return curWeapon;

@@ -24,6 +24,25 @@
 using namespace std;
 
 
+vector<string> CENTRO_SOCIALE = { "CentroSociale1",  "CentroSociale2",  "CentroSociale3",  "CentroSociale4",
+                                  "CentroSociale5",  "CentroSociale6",  "CentroSociale7",  "CentroSociale8",
+                                  "CentroSociale9"  };
+
+vector<string> SEDE_CENTRALE = { "SedeCentrale1",  "SedeCentrale2",  "SedeCentrale3",  "SedeCentrale4",
+                                 "SedeCentrale5",  "SedeCentrale6",  "SedeCentrale7",  "SedeCentrale8",
+                                 "SedeCentrale9"  };
+
+vector<string> FACOLTA = { "Facolta1",  "Facolta2",  "Facolta3",  "Facolta4",
+                           "Facolta5",  "Facolta6",  "Facolta7",  "Facolta8",
+                           "Facolta9"  };
+
+vector<string> PIAZZA_VERDI = { "PiazzaVerdi1",  "PiazzaVerdi2",  "PiazzaVerdi3",  "PiazzaVerdi4",
+                                "PiazzaVerdi5",  "PiazzaVerdi6",  "PiazzaVerdi7",  "PiazzaVerdi8",
+                                "PiazzaVerdi9"  };
+
+
+MajorCharacter::MajorCharacter() : Character() {}
+
 MajorCharacter::MajorCharacter(string n, ability s) : Character(n, s) {
     this->follower = NULL;
 }
@@ -47,13 +66,13 @@ void MajorCharacter::setPos(Pos newPos) {
 string MajorCharacter::toStr() {
     char buf[5];
     string s = "Character \"" + this->name + "\": {\n\tStatistics: {\n\t\tlife: ";
-    /*sprintf(buf, "%d", this->getStats().getLife());
+    sprintf(buf, "%d", this->basestats.getLife());
     s += buf;
     s += ",\n\t\tstrength: ";
-    sprintf(buf, "%d", this->getStats().getStrength());
+    sprintf(buf, "%d", this->basestats.getStrength());
     s += buf;
     s += ",\n\t\tintelligence: ";
-    sprintf(buf, "%d", this->getStats().getIntelligence());
+    sprintf(buf, "%d", this->basestats.getDefense());
     s += buf;
     s += "\n\t}\n\tPos: {\n\t\tMap [ ";
     sprintf(buf, "%d", this->pos.mapX);
@@ -74,73 +93,42 @@ string MajorCharacter::toStr() {
     s += "\n\t";
     s += this->follower != NULL ? this->follower->toStr() : "Follower: NULL";
     s += "\n}\n\n";
-*/
+
     return s;
 }
 
 
 
- MajorCharacter::MajorCharacter(bioma currentZone, int currentLevel):Character() {
+ MajorCharacter::MajorCharacter(bioma currentZone, int currentLevel) : MajorCharacter() {
     srand(time(nullptr));
-    cout<<"Sono nel costruttore del majorchar"<<endl;
+
     // la somma dei valori delle statistiche del personaggio viene impostata in relazione al livello
     // ed il suo valore si discosta dal livello per al massimo un terzo del valore di quest'ultimo
     int deltaStats = currentLevel / 3;
 
     // con questa formula la vita differisce di +- 1/3 rispetto al livello corrente
-    cout<<"sto per calcolare statsAmount"<<endl;
-    int amount=currentLevel+1-deltaStats;
-    int randamont= rand()%deltaStats*2;
+    int amount = currentLevel+1-deltaStats;
+    int randamont = deltaStats != 0 ? rand() % deltaStats * 2 : 0;
     int statsAmount = amount+randamont;
-    //currentLevel + ((rand() % (deltaStats * 2)) + 1 - deltaStats);
-    cout<<"Ho fatto stats amount"<<endl;
-    string filePath = SEDE_CENTRALE;
+
+    auto namesVector = SEDE_CENTRALE;
 
     if (currentZone == centro_sociale) {
-        filePath = CENTRO_SOCIALE;
+        namesVector = CENTRO_SOCIALE;
     } else if (currentZone == facolta) {
-        filePath = FACOLTA;
+        namesVector = FACOLTA;
     } else if (currentZone == piazza_verdi) {
-        filePath = PIAZZA_VERDI;
+        namesVector = PIAZZA_VERDI;
     }
 
-    // ottengo i nomi contenuti nel file relativo al bioma
-    cout<<"prima di readNames"<<endl;
-    auto names = readNamesFrom(filePath);
-    cout<<"dopo di readNames"<<endl;
-    cout<<"sto per assegnare il nome.."<<endl;
-    //string name = names[rand() % names.size() + 1];
-    cout<<"nome:"<<name<<endl;
     ability stats = setUpAbilities(statsAmount);
 
+    string name = namesVector[rand() % namesVector.size() + 1];
 
-    cout<<"Ho nome e stats e sto per andare nel costruttore character";
-    cout<<"Il piccolino si chiama:"<<name;
-    string name="piero";
-    setStats(stats);
-    setName(name);
-    //Character(name,stats);
-    cout<<"Sono uscito dal costruttore charachter";
-}
-
-
-vector<string> MajorCharacter::readNamesFrom(string fileName) {
-
-    // apro lo stream verso il file selezionato
-    ifstream infile(fileName);
-    if(!infile){
-        cout<<endl<<"Non esiste il file"<<endl;
-    }
-    // vettore contenente tutti i nomi dei file
-    vector<string> names;
-
-    string currentLine;
-    while (getline(infile, currentLine)) {
-        names.push_back(currentLine);
-    }
-
-    return names;
-}
+     this->name = name;
+     this->setStats(stats);
+     this->follower = NULL;
+ }
 
 
 ability MajorCharacter::setUpAbilities(int statsAmount) {

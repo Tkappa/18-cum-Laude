@@ -14,10 +14,12 @@
 #ifndef MAJORCHARACTER_HPP
 #define MAJORCHARACTER_HPP
 
+/*
 #define CENTRO_SOCIALE "../model/res/centro_sociale.txt"
 #define FACOLTA "../model/res/facolta.txt"
 #define PIAZZA_VERDI "../model/res/piazza_verdi.txt"
 #define SEDE_CENTRALE "../model/res/sede_centrale.txt"
+ */
 
 #include <string>
 #include <vector>
@@ -29,7 +31,6 @@
 
 using namespace std;
 
-
 enum bioma {
     centro_sociale = 1, facolta, piazza_verdi, sede_centrale
 };
@@ -37,7 +38,7 @@ enum bioma {
 
 class MajorCharacter : public Character {
 public:
-//    MajorCharacter();
+    MajorCharacter();
     MajorCharacter(bioma a,int nLivelli);
     MajorCharacter(string n, ability s);
 //    MajorCharacter(string n, ability s, Pos p);
@@ -48,15 +49,10 @@ public:
 //    string string toStr() override;
     string toStr();
 
-    // ritorna un NPC casuale sulla base del bioma passato e del livello corrente
-    // in cui si trova il giocatore; ad un livello maggiore corrispondono NPC più potenti
-    static MajorCharacter randNPC(bioma currentZone, int currentLevel);
-
 protected:
     Follower* follower;
 
 private:
-    static vector<string> readNamesFrom(string fileName);
     static ability setUpAbilities(int statsAmount);
 };
 

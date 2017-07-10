@@ -121,12 +121,9 @@ string MajorCharacter::toStr() {
         namesVector = PIAZZA_VERDI;
     }
 
-     if (statsAmount < 3)
-         statsAmount = 3;
-
     ability stats = setUpAbilities(statsAmount);
 
-    string name = namesVector[rand() % namesVector.size() + 1];
+    string name = namesVector[rand() % namesVector.size()];
 
      this->name = name;
      this->setStats(stats);

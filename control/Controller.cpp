@@ -275,7 +275,7 @@ void Controller::loot(p_char pg, Map* curMap){
                     }
                     else{
                         ++i;
-                        char* bla;
+                        char* bla= new char[400];
                         strcpy(bla,"Hai l'inventario pieno e non puoi raccogliere niente");
                         narrative.push(bla);
                     }

@@ -176,6 +176,7 @@ void Controller::launch() {
 
         }
 
+
     if(turno){
         vista.print_narrative(&narrative);
         vista.print_nameAndStats(punt_pg);

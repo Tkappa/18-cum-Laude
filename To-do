@@ -45,61 +45,25 @@ DA FARE::
 
 VIEW:
 [1] Renderlo dinamica rispetto alle console / creare una console di dimensione fissa per tutti
+Impossibile renderlo dinamico , semplicemnte fare che stampa errore se è troppo piccolo (120,30)
      
     Mappa: 
  [3]--Ogni bioma diverso avrà tipi di stanza diverse con grandezze variabili o cose del genere
+ ogni tot mappe il bioma cambia
+ al cambio del bioma c'è un livello con solo il negoziante che ti vende le cose
+ Come ultimo livello c'è il magnifico rettore che ti da la laurea , il gioco finisce quando equipaggi la laurea
   
-[2]Schermata di creazione personaggio , schermata di morte e schermata di fine gioco
+[2]Schermata di creazione personaggio , schermata di morte e schermata di fine gioco [nella branch story-and-menus]
+
 
 
 Piccole correzzioni da fare:
    Commentare bene
     Aggiungere i push a NARRATIVE dove non l'ho gia messo
+    quando si sale le scale al livello 0 uccidere il personaggio
+    STATSBASE VITA e' LA VITA MASSIMA
+    STATSFULL VITA è LA VITA ATTUALE
+    Se si usa la pozione  statsfull non può andare sopra allo statsbase , cambiare l'uso delle pozioni per seguire
     
     
     
-FATTO:
-Oggetti/Inventario:
- [1]--funzione randItem(livello_attuale) //VALENTINA, IL PRIMA POSSIBILE, MAX GIOVEDI-6
-        decide casualmente se restituire una di tre cose: 1)Un arma 2)Un armatura 3)Soldi
-        Per il nome e statistiche mettete delle cose a caso che verranno migliorate nella fase [3]
-        quindi bisogna creare le funzioni:
-          -- randWeapon(livello_attuale)
-              crea e restituisce un arma con statistiche casuali relative al livello e un nome casuale
-          -- randArmor(livello_attuale)
-              crea e restituisce un armatura con statistiche casuali relative al livello e un nome casuale
-    
- [2]--Creare il sistema di inventario che conterrà tutti gli oggetti raccolti dal giocatore con un limite arbitrario da stabilire
-      ogni oggetto avrà come identificatore una lettera a caso della tastiera(magari partire da a e andare alfabeticamente avanti)
- [2]--Fare vedere l'inventario in NCurses
- 
- [1]--Pensare a come fare oggetti come pozioni/consumabili e crearne la classe 
- 
-  
- [X]Storia:  //Credo di riuscirlo a fare io , devo vedere un attimo come strutturarlo , massimo mercoledi 5 l'ho fatto
-     
-    Fatto: è una coda che parte dal controller, ogni volta che viene chiamato stampastoria() ( in teoria 1 volta per turno) svuota la coda e la stampa
- 
-     
-    la storia è l'elenco di quello che sta succedendo nel gioco
-    -Ad esempio entrando in una nuova stanza si notano 3 nuovi nemici,nella storia apparirà:
-    -Giocatore vede "Z"-Grande Punkabbestia
-    -Giocatore vede "L"-Lanese
-    -Giocatore vede "R"-Il Magnifico Rettore
-    
-    Quando un nemico attacca il giocatore sarà il messaggio che dice quanto ha attaccato/ quanto ha subito di danno
-    -Lanese attacca il giocatore per 6 punti vita
-    -Giocatore attacca lanese per 3 punti vita
-    
-    Quando il personaggio raccoglie un oggetto verrà scritto cosa è
-    -Giocatore raccoglie Libro di Fisica +2
-    
-    Quando il personaggio usa un oggetto
-    -Giocatore usa Internet Gratis , e recupera 20 punti vita
-    
-    
-    
-    
-    
-        
-     

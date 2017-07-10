@@ -10,7 +10,7 @@ bool inventory:: addItem(p_item a){
         temp[0]=97+listw.size();
         //cout<<"aggiunto elemento di id: "<<temp<<" all'inventario"<<endl;
         a->setInventoryId(temp);
-        this->listw.push_back(a);
+        listw.push_back(a);
         return true;}
     return false;
 
@@ -20,32 +20,32 @@ return listw;
 }
 
 p_item inventory:: deleteItem(string id) {
-    int offset = 0;
-    bool found=false;
-    bool ciclodopofound=false;
+    int offset=0;
     p_item temp=nullptr;
-   for(list<Item* >::iterator i=listw.begin(); i!=listw.end();++i){
-        if(found) ciclodopofound=true;
-        cout<<endl<<"sto controllando: "<<(*i)->getName()<<endl;
-        string tempId=(*i)->getInventoryId();
-        cout<<tempId<<"<- attuale , quello che cerco ->"<<id<<endl;
-        if( id == tempId){
-            cout<<"L'ho trovato e lo sto per cancellare"<<endl;
-            temp=*i;
-            this->listw.erase(i);
-            offset=-1;
-            found=true;
-            cout<<"Cancellato e messo find a true"<<endl;
-        }
-        else if(ciclodopofound){
-        tempId[0]+=offset;
-        cout<<"Sto per cambiare l'id a "<<(*i)->getName()<<" NuovoId:"<<tempId<<endl;
+    std::list<p_item>:: iterator eliminatore;
+    std::list<p_item>:: iterator i=listw.begin();
+    bool trovato=false;
 
-        (*i)->setInventoryId(tempId);
+
+
+    while(i!=listw.end()){
+        string controllo=(*i)->getInventoryId();
+        if(trovato){
+            controllo[0]+=offset;
+            (*i)->setInventoryId(controllo);
         }
-   }
-   cout<<"sto per fare il return di: "<<temp->getName();
-   return temp;
+        if(controllo==id&&!trovato){
+            temp=*i;
+            eliminatore=i++;
+            listw.erase(eliminatore);
+            trovato=true;
+        }
+        else{
+            ++i;
+        }
+//        cout<<"Indirizzo di i:"<<*i<<" Indirizzo di list.end() "<<listw.end()<<endl;
+    }
+    return temp;
 }
 
 string inventory:: inventoryToStr() {

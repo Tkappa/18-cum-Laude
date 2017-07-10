@@ -132,7 +132,11 @@ void View::print_nameAndStats(p_char c){
     wprintw(nameAndStats," Vita: ");
     sprintf(buffer,"%d",fullvita);
     wprintw(nameAndStats,buffer);
-    wprintw(nameAndStats," Forza: ");
+
+    wprintw(nameAndStats," (MAX: ");
+    sprintf(buffer,"%d",vita);
+    wprintw(nameAndStats,buffer);
+    wprintw(nameAndStats,") Forza: ");
     sprintf(buffer,"%d",fullforza);
     wprintw(nameAndStats,buffer);
     wprintw(nameAndStats,"(");

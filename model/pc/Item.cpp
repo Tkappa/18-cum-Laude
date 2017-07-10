@@ -13,20 +13,20 @@ Item::Item()
 
 
 Item::Item(int level,mapPos i_pos){
-    string weapons[7]={"g","h","i","l","m","n","o"};
-    string armors[7]={"a","b","c","d","e","f","g"};
+    string weapons[7]={"spada","arco","test","piede","braccio","lolo","equitalia"};
+    string armors[7]={"tshirt","lavitafaschifo","colonna","aiuto","ippopotamo","temporaneo","ciaomamma"};
     int i;
     i=random()%4;
     Item* a;
     if(i==0){
         name=generateName(weapons);//genero un'arma
-        value=level+(random()%3);
+        value=1+level+(random()%3);
         type=WEAPON;
         symb="w";
     }
     if(i==1){
         name=generateName(armors);//genero un armatura
-        value=level+(random()%3);
+        value=1+level+(random()%3);
         type=ARMOR;
         symb="a";
     }
@@ -61,8 +61,8 @@ Item::Item(int level,mapPos i_pos){
 
 }
 Item::Item(int level){
-    string weapons[7]={"g","h","i","l","m","n","o"};
-    string armors[7]={"a","b","c","d","e","f","g"};
+    string weapons[7]={"spada","arco","test","piede","braccio","lolo","equitalia"};
+    string armors[7]={"tshirt","lavitafaschifo","colonna","aiuto","ippopotamo","temporaneo","ciaomamma"};
     int i;
     i=random()%2;
     Item* a;

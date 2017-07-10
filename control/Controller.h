@@ -45,7 +45,6 @@ public:
     void loot(p_char pg, Map* curMap);
     bool drop(p_char pg,char c,Map* curMap);
     bool equip(p_char pg, char c);
-    bool use(p_char pg, char c);
 };
 
 #endif /* CONTROLLER_H */

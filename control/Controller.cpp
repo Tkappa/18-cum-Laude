@@ -51,22 +51,18 @@ void Controller::launch() {
     p_char punt_pg=&pg;
     curMap->assignInizialPosition_toPlayer(punt_pg);
 
-noecho(); //toglie gli input a schermo
+    noecho(); //toglie gli input a schermo
 
     //stampa l'interfaccia utente
     vista.print_nameAndStats(punt_pg);
-   // vista.print_inventory(inv.inventoryToStr());
+
     vista.print_outputMap(curMap);
     char iniz[500]="Questa sara' una grande avventura!";
     narrative.push(iniz);
     vista.print_narrative(&narrative);
-    //    vista.stampaequip(pg.getDesc());
+
     refresh();
 
-
-
-    //    FILE* caratteri = fopen("data/getch", "w");
-    //    if (caratteri == NULL) vista.stampaequip("NULL");
     //Questo � un abbozzo di movimento
     int c;
     int mov;
@@ -122,11 +118,11 @@ noecho(); //toglie gli input a schermo
                 vista.print_outputMap(curMap);
                 }
                 break;
-            case 105://char i
+            case 105://char i ( visualizza l'inventario
                 vista.print_inventory(pg.getInventory(),SEE);
                 turno = false;
                 break;
-            case 103://char g
+            case 103://char g //Selezione dell'oggetto da buttare a terra
                 {vista.print_inventory(pg.getInventory(),DROP);
                 bool finished=false;
                 while(!finished){
@@ -134,12 +130,11 @@ noecho(); //toglie gli input a schermo
                     if (c=='k'){finished=true;}
                     if(drop(punt_pg,c,curMap)){
                         finished=true;
-                        //aggiungere a narrative " Hai buttato per terra $OGGETTO
                     }
                 }
                 }
                 break;
-            case 101://char e
+            case 101://char e  selezione dell'oggetto da equipaggiare
                 {vista.print_inventory(pg.getInventory(),EQUIP);
                 bool finished=false;
                 while(!finished){
@@ -147,37 +142,24 @@ noecho(); //toglie gli input a schermo
                     if (c=='k'){finished=true;}
                     if(equip(punt_pg,c)){
                         finished=true;
-                        //aggiungere a narrative " Hai Equipaggiato  $OGGETTO
                     }
                 }
                 }break;
-            case 117://char e
-                {vista.print_inventory(pg.getInventory(),USE);
-                bool finished=false;
-                while(!finished){
-                    c=getch();
-                    if (c=='k'){finished=true;}
-                    if(use(punt_pg,c)){
-                        finished=true;
-                        //aggiungere a narrative " Hai Equipaggiato  $OGGETTO
-                    }
-                }
-                }break;
-            case 108://char l
+            case 108://char l raccoglie l'oggetto da terra
                 loot(punt_pg,curMap);
                 break;
-            case 109://char m
+            case 109://char m  suicidio
                 vista.print_death(punt_pg);
                 c=getch();
                 exit(1);
                 break;
-            case 110://char n
+            case 110://char n vittoria
                 vista.print_victory();
                 c=getch();
                 exit(1);
                 break;
         }
-        if (c == 113)// char 'q'
+        if (c == 113)// char 'q'  per uscire
         {
             vista.print_exitconfirmation();
             c=getch();
@@ -278,95 +260,67 @@ bool Controller::drop(p_char pg,char c,Map* curMap){
         return true;
     }
     return false;
-    /*
-    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body){
-        if(tempchar==(*i)->getInventoryId()){
-            std::list<p_item>::iterator new_i = i;
-            ++new_i;
-
-            (*i)->position=pg->getPos();
-            p_item tempp=(*i);
-
-            pg_inventorytemp.remove((*i));
-            pg->pg_inventory.deleteItem(tempchar);
-            curMap->addItem(tempp);
-            i=new_i;
-
-            return true;
-        }
-        else{
-            ++i;
-        }
-    }
-    return false;
-    */
     }
 
 bool Controller::equip(p_char pg, char c){
-    //fare la stessa cosa che ho fatto con drop per ottimizzare;
     string tempchar="a";
     tempchar[0]=c;
+    char* msg= new char[500];
+    bool usedpotion=false;
     std::list<p_item> pg_inventorytemp=pg->pg_inventory.getInventory();
-    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body*/){
-        if(tempchar==(*i)->getInventoryId()&&((*i)->getType()==1 || (*i)->getType()==2)){
-            std::list<p_item>::iterator new_i = i;
-            ++new_i;
-
-
+    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();++i){
+        if(tempchar==(*i)->getInventoryId()&&((*i)->getType()!=3)){
             p_item temp=(*i);
             p_item add;
             switch((*i)->getType()){
-                case 1:
+                case 1:{
                     add=pg->equipWeapon(temp);
-                    cout<<add->getName()<<endl;
+                    strcpy(msg,"Hai equipaggiato ");
+                    strcat(msg,temp->getName().c_str());
+                    strcat(msg, " come arma!");
+                }
                     break;
-                case 2:
+                case 2:{
                     add=pg->equipArmor(temp);
-                    cout<<add->getName()<<endl;
+                    strcpy(msg,"Hai equipaggiato ");
+                    strcat(msg,temp->getName().c_str());
+                    strcat(msg, " come armatura!");
+                }
+                    break;
+
+                case 4:
+                    int curlife=pg->getFullStats().getLife();
+                    int maxlife=pg->getBaseStats().getLife();
+                    int value=(*i)->getValue();
+                    ability temp=pg->getFullStats();
+                    curlife+=value;
+                    int dif=value;
+                    if (curlife>maxlife){
+                        dif=(curlife-dif)-maxlife;
+                        curlife=maxlife;
+                    }
+                    temp.setLife(curlife);
+                    pg->setFullStats(temp);
+                    usedpotion=true;
+                    strcpy(msg,"Hai usato una ");
+                    strcat(msg,(*i)->getName().c_str());
+                    strcat(msg, " e hai guadagnato ");
+                    char buffer[3];
+                    sprintf(buffer,"%d",dif);
+                    strcat(msg,buffer);
+                    strcat(msg," punti vita!" );
                     break;
             }
-            cout<<"sto per fare deleteitem";
+            //Qua si assume che si è ancora nella classe controller e quindi si ha un accesso a narrative, passateglielo come paramentro se no
+            narrative.push(msg);
             pg->pg_inventory.deleteItem(tempchar);
-            cout<<"sto per fare AddItem";
-            pg->pg_inventory.addItem(add);
-            cout<<"sto per scambiare i putantori";
-            i=new_i;
-            cout<<"sto per ritornare true";
+            if(!usedpotion){ pg->pg_inventory.addItem(add);}
             return true;
-        }
-        else{
-            ++i;
         }
     }
     return false;
 }
 
-bool Controller::use(p_char pg, char c){
-    string tempchar="a";
-    tempchar[0]=c;
-    std::list<p_item> pg_inventorytemp=pg->pg_inventory.getInventory();
-    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body*/){
-        if(tempchar==(*i)->getInventoryId()&&(*i)->getType()==4){
-            std::list<p_item>::iterator new_i = i;
-            ++new_i;
-            int life=pg->getFullStats().getLife();
-            cout<<life<<endl;
-            int value=(*i)->getValue();
-            cout<<value<<endl;
-            ability temp=pg->getFullStats();
-            temp.setLife(life+value);
-            pg->setFullStats(temp);
-            pg->pg_inventory.deleteItem(tempchar);
-            //AGGIUNGERE A NARRAZIONE "HAI BEVUTO POZIONE"
-            i=new_i;
-            return true;
-        }
-        else{
-            ++i;
-        }
-    }
-    return false;
-}
 
 void Controller::testAttack() {
     ability s;

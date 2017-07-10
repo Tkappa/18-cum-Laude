@@ -42,60 +42,33 @@ void Controller::launch() {
     head= new Map(1,1,&narrative);
     Map* curMap=head;
 
-    //crea il personaggio principale
-    ability mainpc;
-    Pos p = {0, 0, 0, 0};
-
-    //Follower gino("Gino", mainpc);
-    //gino.setSym('f');
-    MajorCharacter pg("Mario", mainpc, p, "Il Campione.", NULL);
-    MajorCharacter anto("Antonio", mainpc, p, "L'antagonista", NULL);
-
-    Character * punt_pg=&pg;
-
-    //Character * punt= &pg;
-    pg.setSym("@");
-
-    punt_pg->setCurWeapon(new Item("Spada di legno",0,WEAPON));
-    punt_pg->setCurArmor(new Item("Armatura di Immaginazione",0,ARMOR));
-    punt_pg->getCurArmor()->setSym("a");
-    punt_pg->getCurWeapon()->setSym("w");
-    punt_pg->setMoney(0);
-
-    anto.setSym("x");
-    //    pg.setFollower(f);
-    //curMap.assegnaPosIniziale(anto);
-    curMap->assignInizialPosition_toPlayer(punt_pg);
-
-
-    //cout<<"ho creato l'oggetto: "<<i->getName()<<" - valore: "<<i->getValue()<<" tipo: "<<i->getType()<<endl;
-
-
-
     //setup di ncurses , queste ci vogliono sempre
     initscr(); //inizializza ncurses
     clear(); //pulisce la console
-    noecho(); //toglie gli input a schermo
     cbreak(); // toglie la necessita di premere invio ad ogni comando
     curs_set(0); //toglie il cursore
     keypad(stdscr, TRUE); //offre la possibilit� di usare tasti speciali (freccette etc..)
 
     //inizializzazione della classe view
     View vista;
+
+    //creazione del personaggio
+    MajorCharacter pg=pgInitialization(vista);
+    p_char punt_pg=&pg;
+    curMap->assignInizialPosition_toPlayer(punt_pg);
+
+    noecho(); //toglie gli input a schermo
+
     //stampa l'interfaccia utente
     vista.print_nameAndStats(punt_pg);
-   // vista.print_inventory(inv.inventoryToStr());
+
     vista.print_outputMap(curMap);
     char iniz[500]="Questa sara' una grande avventura!";
     narrative.push(iniz);
     vista.print_narrative(&narrative);
-    //    vista.stampaequip(pg.getDesc());
+
     refresh();
 
-
-
-    //    FILE* caratteri = fopen("data/getch", "w");
-    //    if (caratteri == NULL) vista.stampaequip("NULL");
     //Questo � un abbozzo di movimento
     int c;
     int mov;
@@ -151,23 +124,11 @@ void Controller::launch() {
                 vista.print_outputMap(curMap);
                 }
                 break;
-            case 102:// char 'f'
-                //vista.stampastoria("Premuto \'f\'");
-                pg.attack(anto);
-                break;
-            case 116:// char 't'
-
-                mov = pg.moveToChar(anto); //non funziona
-                //vista.stampastoria(b);
-                if (curMap->mapCanMove(punt_pg, mov))
-                    curMap->moveChar(punt_pg, mov);
-                vista.print_outputMap(curMap);
-                break;
-            case 105://char i
+            case 105://char i ( visualizza l'inventario
                 vista.print_inventory(pg.getInventory(),SEE);
                 turno = false;
                 break;
-            case 103://char g
+            case 103://char g //Selezione dell'oggetto da buttare a terra
                 {vista.print_inventory(pg.getInventory(),DROP);
                 bool finished=false;
                 while(!finished){
@@ -175,12 +136,11 @@ void Controller::launch() {
                     if (c=='k'){finished=true;}
                     if(drop(punt_pg,c,curMap)){
                         finished=true;
-                        //aggiungere a narrative " Hai buttato per terra $OGGETTO
                     }
                 }
                 }
                 break;
-            case 101://char e
+            case 101://char e  selezione dell'oggetto da equipaggiare
                 {vista.print_inventory(pg.getInventory(),EQUIP);
                 bool finished=false;
                 while(!finished){
@@ -188,29 +148,33 @@ void Controller::launch() {
                     if (c=='k'){finished=true;}
                     if(equip(punt_pg,c)){
                         finished=true;
-                        //aggiungere a narrative " Hai Equipaggiato  $OGGETTO
                     }
                 }
                 }break;
-            case 117://char e
-                {vista.print_inventory(pg.getInventory(),USE);
-                bool finished=false;
-                while(!finished){
-                    c=getch();
-                    if (c=='k'){finished=true;}
-                    if(use(punt_pg,c)){
-                        finished=true;
-                        //aggiungere a narrative " Hai Equipaggiato  $OGGETTO
-                    }
-                }
-                }break;
-            case 108://char l
+            case 108://char l raccoglie l'oggetto da terra
                 loot(punt_pg,curMap);
                 break;
+            case 109://char m  suicidio
+                vista.print_death(punt_pg);
+                c=getch();
+                exit(1);
+                break;
+            case 110://char n vittoria
+                vista.print_victory();
+                c=getch();
+                exit(1);
+                break;
+        }
+        if (c == 113)// char 'q'  per uscire
+        {
+            vista.print_exitconfirmation();
+            c=getch();
+            if(c=='y'||c=='Y'){
+                break;
+            }
+            vista.print_outputMap(curMap);
 
         }
-        if (c == 113)// char 'q'
-            break;
 
     if(turno){
         vista.print_narrative(&narrative);
@@ -275,7 +239,7 @@ void Controller::loot(p_char pg, Map* curMap){
                     }
                     else{
                         ++i;
-                        char* bla= new char[400];
+                        char* bla=new char[500];
                         strcpy(bla,"Hai l'inventario pieno e non puoi raccogliere niente");
                         narrative.push(bla);
                     }
@@ -294,24 +258,11 @@ bool Controller::drop(p_char pg,char c,Map* curMap){
     string tempchar="a";
     tempchar[0]=c;
     std::list<p_item> pg_inventorytemp=pg->pg_inventory.getInventory();
-    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body*/){
-        if(tempchar==(*i)->getInventoryId()){
-            std::list<p_item>::iterator new_i = i;
-            ++new_i;
-
-            (*i)->position=pg->getPos();
-            p_item tempp=(*i);
-
-            pg_inventorytemp.remove((*i));
-            pg->pg_inventory.deleteItem(tempchar);
-            curMap->addItem(tempp);
-            i=new_i;
-
-            return true;
-        }
-        else{
-            ++i;
-        }
+    p_item tempp=pg->pg_inventory.deleteItem(tempchar);
+    if(tempp!=nullptr){
+        tempp->position=pg->getPos();
+        curMap->addItem(tempp);
+        return true;
     }
     return false;
     }
@@ -319,63 +270,62 @@ bool Controller::drop(p_char pg,char c,Map* curMap){
 bool Controller::equip(p_char pg, char c){
     string tempchar="a";
     tempchar[0]=c;
+    char* msg= new char[500];
+    bool usedpotion=false;
     std::list<p_item> pg_inventorytemp=pg->pg_inventory.getInventory();
-    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body*/){
-        if(tempchar==(*i)->getInventoryId()&&((*i)->getType()==1 || (*i)->getType()==2)){
-            std::list<p_item>::iterator new_i = i;
-            ++new_i;
-
-
+    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();++i){
+        if(tempchar==(*i)->getInventoryId()&&((*i)->getType()!=3)){
             p_item temp=(*i);
             p_item add;
             switch((*i)->getType()){
-                case 1:
+                case 1:{
                     add=pg->equipWeapon(temp);
-                    cout<<add->getName()<<endl;
+                    strcpy(msg,"Hai equipaggiato ");
+                    strcat(msg,temp->getName().c_str());
+                    strcat(msg, " come arma!");
+                }
                     break;
-                case 2:
+                case 2:{
                     add=pg->equipArmor(temp);
+                    strcpy(msg,"Hai equipaggiato ");
+                    strcat(msg,temp->getName().c_str());
+                    strcat(msg, " come armatura!");
+                }
+                    break;
+
+                case 4:
+                    int curlife=pg->getFullStats().getLife();
+                    int maxlife=pg->getBaseStats().getLife();
+                    int value=(*i)->getValue();
+                    ability temp=pg->getFullStats();
+                    curlife+=value;
+                    int dif=value;
+                    if (curlife>maxlife){
+                        dif=(curlife-dif)-maxlife;
+                        curlife=maxlife;
+                    }
+                    temp.setLife(curlife);
+                    pg->setFullStats(temp);
+                    usedpotion=true;
+                    strcpy(msg,"Hai usato una ");
+                    strcat(msg,(*i)->getName().c_str());
+                    strcat(msg, " e hai guadagnato ");
+                    char buffer[3];
+                    sprintf(buffer,"%d",dif);
+                    strcat(msg,buffer);
+                    strcat(msg," punti vita!" );
                     break;
             }
+            //Qua si assume che si è ancora nella classe controller e quindi si ha un accesso a narrative, passateglielo come paramentro se no
+            narrative.push(msg);
             pg->pg_inventory.deleteItem(tempchar);
-            pg->pg_inventory.addItem(add);
-
-            i=new_i;
+            if(!usedpotion){ pg->pg_inventory.addItem(add);}
             return true;
-        }
-        else{
-            ++i;
         }
     }
     return false;
 }
 
-bool Controller::use(p_char pg, char c){
-    string tempchar="a";
-    tempchar[0]=c;
-    std::list<p_item> pg_inventorytemp=pg->pg_inventory.getInventory();
-    for (std::list<p_item>::iterator i = pg_inventorytemp.begin(); i != pg_inventorytemp.end();/* si incrementa nel body*/){
-        if(tempchar==(*i)->getInventoryId()&&(*i)->getType()==4){
-            std::list<p_item>::iterator new_i = i;
-            ++new_i;
-            int life=pg->getFullStats().getLife();
-            cout<<life<<endl;
-            int value=(*i)->getValue();
-            cout<<value<<endl;
-            ability temp=pg->getFullStats();
-            temp.setLife(life+value);
-            pg->setFullStats(temp);
-            pg->pg_inventory.deleteItem(tempchar);
-            //AGGIUNGERE A NARRAZIONE "HAI BEVUTO POZIONE"
-            i=new_i;
-            return true;
-        }
-        else{
-            ++i;
-        }
-    }
-    return false;
-}
 
 void Controller::testAttack() {
     ability s;
@@ -389,4 +339,79 @@ void Controller::testAttack() {
     //    mario.attack(anto);
     //    cout << mario.toStr();
     //    cout << anto.toStr();
+}
+
+MajorCharacter Controller::pgInitialization(View curview){
+   char name[500];
+   int c;
+   Pos p = {0, 0, 0, 0};
+   ability ab;
+   curview.print_introduction(); //Qui chiede di scrivere il nome
+   move(1,2);
+   getstr(name);
+
+   curview.print_classselection(); //Qui chiedera di scrivere un carattere correispettivo alla classe
+
+   bool corretto=false;
+   int soldiagg=0;
+   while(!corretto){
+        c=getchar();
+        switch(c){
+        case 97:  //a -> ingeneria HIGH FORZA E VITA, LOW RESTO
+            ab.setLife(20);
+            ab.setStrength(5);
+            ab.setDefense(2);
+            corretto=true;
+        break;
+        case 98: //b-> lingue  HIGH DEF E VITA,LOW RESTO
+            ab.setLife(20);
+            ab.setStrength(2);
+            ab.setDefense(5);
+            corretto=true;
+        break;
+        case 99: //c-> scienze Tutto nedio
+            ab.setLife(15);
+            ab.setStrength(3);
+            ab.setDefense(3);
+
+            corretto=true;
+        break;
+        case 100: //d->umanistiche HIGH VITA E SOLDI,LOW RESTO
+
+            ab.setLife(20);
+            ab.setStrength(2);
+            ab.setDefense(2);
+            soldiagg=50;
+
+            corretto=true;
+        break;
+        case 101: //e->fuoricorso LOW TUTTO INIZI CON UN DEBITO
+            ab.setLife(10);
+            ab.setStrength(1);
+            ab.setDefense(1);
+            soldiagg=-50;
+
+            corretto=true;
+        break;
+        case 102: //f->medicina HIGH FORZA E DEF,LOW RESTO
+            ab.setLife(10);
+            ab.setStrength(5);
+            ab.setDefense(5);
+            corretto=true;
+        break;
+    }
+   }
+   //MajorCharacter::MajorCharacter(string n, ability s, Pos p, string d, Follower* f)
+   string nome(name);
+   MajorCharacter pg(nome,ab,p,"",NULL);
+
+    pg.setMoney(soldiagg);
+    pg.setCurWeapon(new Item("Spada di legno",0,WEAPON));
+    pg.setCurArmor(new Item("Armatura di Immaginazione",0,ARMOR));
+    pg.getCurArmor()->setSym("a");
+    pg.getCurWeapon()->setSym("w");
+    pg.setSym("@");
+    pg.setFullStats(ab);
+
+return pg;
 }

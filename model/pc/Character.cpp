@@ -27,7 +27,7 @@ Character::Character() {
     this->desc = "Descrizione di prova";
     this->money=0;
     this->fullstats=basestats;
-    this->alive = this->basestats.getLife() > 0;
+    inventory pg_inventory();
 }
 p_item Character::getCurWeapon(){
 return curWeapon;
@@ -51,15 +51,20 @@ return curArmor;
 }
 
 void Character::setCurArmor(p_item armor){
-curArmor=armor;}
+curArmor=armor;
+}
 
 int Character::getMoney(){
 return money;}
 
 p_item Character::equipArmor(p_item armor){
-p_item temp=curArmor;
+    p_item temp=curArmor;
+    cout<<"messo in temp current";
     curArmor=armor;
+
+    cout<<"Messo in current il parametro";
     fullstats.setDefense(basestats.getDefense()+curArmor->getValue());
+    cout<<"Aggiornato le statistiche";
     return temp;}
 
 inventory Character::getInventory(){
@@ -85,7 +90,8 @@ Character::Character(string n, ability s, Pos p, string d) : Character(n, s, p) 
 }
 
 void Character::addMoney(int amount){
-money+=amount;}
+money+=amount;
+}
 bool Character::move(int direction) {
     // origine in alto a sinistra
     // variabili che conterranno, se sono state effettuate operazioni valide, la nuova posizione del personaggio

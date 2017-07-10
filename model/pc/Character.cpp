@@ -242,3 +242,6 @@ void Character::setSym(string sym) {
     return s;
 }
 
+void Character::setName(string s){
+    name=s;
+}

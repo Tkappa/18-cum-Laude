@@ -121,6 +121,9 @@ string MajorCharacter::toStr() {
         namesVector = PIAZZA_VERDI;
     }
 
+     if (statsAmount < 3)
+         statsAmount = 3;
+
     ability stats = setUpAbilities(statsAmount);
 
     string name = namesVector[rand() % namesVector.size() + 1];
@@ -147,11 +150,11 @@ ability MajorCharacter::setUpAbilities(int statsAmount) {
     } else {
         // assegno casualmente una parte dei valori delle caratteristiche
         // se il valore fosse minore di 1, assegno 1 di default
-        int intelligenceAmount = rand() % statsAmount + 1;
+        int intelligenceAmount = statsAmount > 0 ? rand() % statsAmount + 1 : 1;
         stats.setDefense(intelligenceAmount < 1 ? 1 : intelligenceAmount);
 
         statsAmount -= intelligenceAmount;
-        int strengthAmount = rand() % statsAmount + 1;
+        int strengthAmount = statsAmount > 0 ? rand() % statsAmount + 1 : 1;
         stats.setStrength(strengthAmount < 1 ? 1 : strengthAmount);
 
         int lifeAmount = statsAmount - strengthAmount;

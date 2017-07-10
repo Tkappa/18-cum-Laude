@@ -18,7 +18,7 @@
 #include <list>
 #include "environment.hpp"
 #include "ability.h"
-#include "inventory.h"
+#include "inventory.hpp"
 using namespace std;
 
 typedef Item* p_item;
@@ -37,7 +37,7 @@ public:
     ability getBaseStats();
     ability getFullStats();
     void setStats(ability & s);
-
+    void setName(string s);
     void setFullStats(ability & s);
     string getName();
     string getDesc();

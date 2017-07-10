@@ -10,7 +10,7 @@
 
 #include "mappa/Mappa.h"
 #include "../model/pc/Character.hpp"
-#include "../model/pc/inventory.h"
+#include "../model/pc/inventory.hpp"
 
 class View{
     protected:

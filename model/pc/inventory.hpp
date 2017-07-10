@@ -3,7 +3,7 @@
 #define INVENTORY_H
 
 
-#include "Item.h"
+#include "Item.hpp"
 #include <iostream>
 #include <string>
 #include <stdio.h>

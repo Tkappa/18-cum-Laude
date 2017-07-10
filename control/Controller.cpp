@@ -8,6 +8,7 @@
 #include <iostream>
 #include <time.h>
 #include <cstdlib>
+#include "../model/pc/Item.hpp"
 #include "../model/pc/Character.hpp"
 #include "../model/pc/MajorCharacter.hpp"
 #include "../model/npc/Follower.hpp"

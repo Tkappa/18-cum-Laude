@@ -57,6 +57,26 @@ void Room::createDoor(int Direction){
     }
 }
 
+//direzione è il lato in cui verrà creata la porta, 1=sinista,2=su,3=destra,4=giu
+bool Room::hasDoor(int Direction){
+    //Avevo dimenticato che esistevano gli switch , che bel mondo in cui viviamo
+    switch (Direction){
+        case 1: //sinistra
+            return room[roomHeight/2][0]=='.';
+            break;
+        case 2: //su
+            return room[0][roomHeight/2]=='.';
+            break;
+        case 3: //destra
+            return room[roomHeight/2][roomLenght-1]=='.';
+            break;
+        case 4: //giu
+            return room[roomHeight-1][roomLenght/2]=='.';
+            break;
+    }
+    return false;
+}
+
 void Room::createPos(int x,int y,std::string symbol){
     //aggiorna la posizione
     room[x][y]=symbol[0];

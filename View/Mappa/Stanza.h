@@ -33,6 +33,8 @@ class Room{
     void exploration();
     //restituisce il valore di explored
     bool isExplored();
+    //Restituisce vero se in quella direzione c'è una porta
+    bool hasDoor(int Direction);
 };
 
 

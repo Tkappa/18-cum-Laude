@@ -32,6 +32,7 @@ Controller::Controller(int nLevels) {
     //    map = tmpMap;
 }
 
+
 void Controller::launch() {
     //crea il random
     time_t t;
@@ -74,6 +75,15 @@ void Controller::launch() {
     int mov;
     bool turno= true;
     while (1) {
+        for (auto character : curMap->characterList) {
+            if (character->getSym() != pg.getSym()) {
+                int direction = character->moveToChar(&pg, curMap->getRoomForCoord(character->pos.mapX, character->pos.mapY));
+
+                if (curMap->mapCanMove(character, direction))
+                    curMap->moveChar(character, direction);
+            }
+        }
+
         c = getch();
 
         switch (c) { //se il tasto premuto � "s" oppure freccia sinistra
@@ -175,11 +185,7 @@ void Controller::launch() {
             }
             vista.print_outputMap(curMap);
 
-        } /*else {
-            for (auto character : curMap->characterList) {
-                character->moveToChar(&pg, curMap->getRoomForCoord(character->pos.mapX, character->pos.mapY));
-            }
-        }*/
+        }
 
 
     if(turno){

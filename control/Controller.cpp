@@ -165,6 +165,7 @@ void Controller::launch() {
                 exit(1);
                 break;
         }
+
         if (c == 113)// char 'q'  per uscire
         {
             vista.print_exitconfirmation();
@@ -174,7 +175,11 @@ void Controller::launch() {
             }
             vista.print_outputMap(curMap);
 
-        }
+        } /*else {
+            for (auto character : curMap->characterList) {
+                character->moveToChar(&pg, curMap->getRoomForCoord(character->pos.mapX, character->pos.mapY));
+            }
+        }*/
 
 
     if(turno){

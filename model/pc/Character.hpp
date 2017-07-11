@@ -19,6 +19,8 @@
 #include "environment.hpp"
 #include "ability.h"
 #include "inventory.hpp"
+#include "../../View/Mappa/Stanza.h"
+
 using namespace std;
 
 typedef Item* p_item;
@@ -29,7 +31,7 @@ public:
     Character(string n, ability s, Pos p);
     Character(string n, ability s, Pos p, string d);
     bool move(int direction);
-    int moveToChar(Character & otherChar);
+    int moveToChar(Character * otherChar, Room room);
     bool attack(Character & otherChar);
     Pos getPos();
     virtual void setPos(Pos newPos);

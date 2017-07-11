@@ -19,7 +19,6 @@
 using namespace std;
 
 Character::Character() {
-    this->basestats;
     //this->stats = {5, 5, 5};
     this->pos = {0, 0, 0, 0};
     //Item w;

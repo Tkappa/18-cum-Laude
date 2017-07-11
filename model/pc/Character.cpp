@@ -121,7 +121,11 @@ bool Character::move(int direction) {
 
 int Character::moveToChar(Character *otherChar, Room room) {
 
-    srand(time(nullptr));
+    // ----------------------------------------------------------
+    // ----------- LE POSIZIONI X ED Y SONO INVERTITE -----------
+    // ----------------------------------------------------------
+
+    srand((uint) time(nullptr));
 
     // stanze in cui si trovano il personaggio principale e l'NPC corrente
 //    Room otherCharRoom = map.getRoomForCoord(otherChar.pos.mapX, otherChar.pos.mapY);
@@ -141,26 +145,26 @@ int Character::moveToChar(Character *otherChar, Room room) {
         bool oneRoomNearY = abs(dy_room) == 1;
 
         // se sono più distanti di una stanza sia sull'asse x che y ritorno una direzione a caso
-        if (!oneRoomNearX && !oneRoomNearY)
+        if ((!oneRoomNearX && !oneRoomNearY) || (oneRoomNearX && oneRoomNearY))
             return rand() % 4 + 1;
 
         // se sono nelle stanze una di fianco all'altra sull'asse x
         if (oneRoomNearX) {
-            int direction = dx_room < 0 ? 3 : 1;    // 3 = destra; 1 = sinistra
+            int direction = dx_room < 0 ? 4 : 2;    // 4 = giù; 2 = su
             bool hasDoorInDirection = room.hasDoor(direction);
 
             if (hasDoorInDirection) {
-                int targetPosX = direction == 3 ? roomLenght : 0;
-                targetPos = {targetPosX, roomHeight / 2, 0, 0};
+                int targetPosX = direction == 4 ? roomHeight : 0;
+                targetPos = { 0, 0, targetPosX, roomLenght / 2 };
             }
 
         } else {    // oneRoomNearY == true, una stanza sopra l'altra sull'asse y
-            int direction = dy_room < 0 ? 4 : 2;    // 4 = giù; 2 = su
+            int direction = dy_room < 0 ? 3 : 1;    // 3 = destra; 1 = sinistra
             bool hasDoorInDirection = room.hasDoor(direction);
 
             if (hasDoorInDirection) {
-                int targetPosY = direction == 4 ? roomHeight : 0;
-                targetPos = {roomLenght / 2, targetPosY, 0, 0};
+                int targetPosY = direction == 3 ? roomLenght : 0;
+                targetPos = { 0, 0, roomHeight / 2, targetPosY };
             }
         }
 
@@ -180,16 +184,16 @@ int Character::moveToChar(Character *otherChar, Room room) {
     bool moveOnXAxis = dx > dy;
 
     if (moveOnXAxis) { // considero l'asse x
-        if (sourcePos.stanzX > targetPos.stanzX) { // se il personaggio corrente è più a destra
-            return 1; // vado a sinistra
+        if (sourcePos.stanzX < targetPos.stanzX) { // se il personaggio corrente è più in alto
+            return 4; // vado in giù
         } else {
-            return 3; // altrimenti vado a destra
+            return 2; // altrimenti vado in su
         }
     } else {
-        if (sourcePos.stanzY > targetPos.stanzY) { // se il personaggio corrente è più in basso
-            return 2; // mi muovo verso l'alto
+        if (sourcePos.stanzY < targetPos.stanzY) { // se il personaggio corrente è più a sinistra
+            return 3; // mi muovo verso destra
         } else {
-            return 4; // mi muovo verso il basso
+            return 1; // mi muovo verso sinistra
         }
     }
 }

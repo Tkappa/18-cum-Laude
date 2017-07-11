@@ -511,8 +511,6 @@ void Map::addItem(p_item a){
 
 
 Room Map::getRoomForCoord(int posX, int posY) {
-    if (posX < 0 || posY < 0 || posX > roomLenght || posY > roomHeight)
-        exit(999);
 
     return mapMatrix[posX][posY];
 }

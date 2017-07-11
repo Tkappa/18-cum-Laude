@@ -16,6 +16,7 @@
 #include <cstdio>
 #include "Character.hpp"
 
+
 using namespace std;
 
 Character::Character() {
@@ -26,7 +27,7 @@ Character::Character() {
     this->desc = "Descrizione di prova";
     this->money=0;
     this->fullstats=basestats;
-    this->alive = this->basestats.getLife() > 0;
+    inventory pg_inventory();
 }
 p_item Character::getCurWeapon(){
 return curWeapon;
@@ -50,15 +51,20 @@ return curArmor;
 }
 
 void Character::setCurArmor(p_item armor){
-curArmor=armor;}
+curArmor=armor;
+}
 
 int Character::getMoney(){
 return money;}
 
 p_item Character::equipArmor(p_item armor){
-p_item temp=curArmor;
+    p_item temp=curArmor;
+    cout<<"messo in temp current";
     curArmor=armor;
+
+    cout<<"Messo in current il parametro";
     fullstats.setDefense(basestats.getDefense()+curArmor->getValue());
+    cout<<"Aggiornato le statistiche";
     return temp;}
 
 inventory Character::getInventory(){
@@ -84,7 +90,8 @@ Character::Character(string n, ability s, Pos p, string d) : Character(n, s, p) 
 }
 
 void Character::addMoney(int amount){
-money+=amount;}
+money+=amount;
+}
 bool Character::move(int direction) {
     // origine in alto a sinistra
     // variabili che conterranno, se sono state effettuate operazioni valide, la nuova posizione del personaggio
@@ -112,22 +119,74 @@ bool Character::move(int direction) {
     return false;
 }
 
-int Character::moveToChar(Character & otherChar) {
-    // differenza tra le componenti x ed y dei due personaggi
-    int dx = abs(this->pos.stanzX - otherChar.pos.stanzX);
-    int dy = abs(this->pos.stanzY - otherChar.pos.stanzY);
+int Character::moveToChar(Character *otherChar, Room room) {
+
+    srand(time(nullptr));
+
+    // stanze in cui si trovano il personaggio principale e l'NPC corrente
+//    Room otherCharRoom = map.getRoomForCoord(otherChar.pos.mapX, otherChar.pos.mapY);
+
+    // (dx_room < 0) => stanza dell'altro personaggio a destra rispetto a questa
+    int dx_room = this->pos.mapX - otherChar->pos.mapX;
+    // (dy_room < 0) => stanza dell'altro personaggio sotto a questa
+    int dy_room = this->pos.mapY - otherChar->pos.mapY;
+
+    Pos sourcePos = this->pos, targetPos;
+
+    if (dx_room != 0 || dy_room != 0) {
+        // stanze diverse
+
+        // ------ se i due personaggi sono distanti al massimo 1 stanza ------
+        bool oneRoomNearX = abs(dx_room) == 1;
+        bool oneRoomNearY = abs(dy_room) == 1;
+
+        // se sono più distanti di una stanza sia sull'asse x che y ritorno una direzione a caso
+        if (!oneRoomNearX && !oneRoomNearY)
+            return rand() % 4 + 1;
+
+        // se sono nelle stanze una di fianco all'altra sull'asse x
+        if (oneRoomNearX) {
+            int direction = dx_room < 0 ? 3 : 1;    // 3 = destra; 1 = sinistra
+            bool hasDoorInDirection = room.hasDoor(direction);
+
+            if (hasDoorInDirection) {
+                int targetPosX = direction == 3 ? roomLenght : 0;
+                targetPos = {targetPosX, roomHeight / 2, 0, 0};
+            }
+
+        } else {    // oneRoomNearY == true, una stanza sopra l'altra sull'asse y
+            int direction = dy_room < 0 ? 4 : 2;    // 4 = giù; 2 = su
+            bool hasDoorInDirection = room.hasDoor(direction);
+
+            if (hasDoorInDirection) {
+                int targetPosY = direction == 4 ? roomHeight : 0;
+                targetPos = {roomLenght / 2, targetPosY, 0, 0};
+            }
+        }
+
+        // decido se muovermi sull'asse verticale o orizzonatale, anche a seconda della presenza di porte
+        // mi muovo nella direzione della porta
+    } else {
+        targetPos = otherChar->pos;
+    }
+
+    // stessa stanza, o stanze diverse ma considero la porta come destinazione verso cui muoversi
+
+    // differenza tra le componenti x ed y delle due posizioni
+    int dx = abs(sourcePos.stanzX - targetPos.stanzX);
+    int dy = abs(sourcePos.stanzY - targetPos.stanzY);
 
     // asse su cui muoversi, a seconda di quale dove esiste la distanza maggiore
     bool moveOnXAxis = dx > dy;
 
     if (moveOnXAxis) { // considero l'asse x
-        if (this->pos.stanzX > otherChar.pos.stanzX) { // se il personaggio corrente è più a destra
+        if (sourcePos.stanzX > targetPos.stanzX) { // se il personaggio corrente è più a destra
             return 1; // vado a sinistra
         } else {
             return 3; // altrimenti vado a destra
         }
     } else {
-        if (this->pos.stanzY > otherChar.pos.stanzY) { // se il personaggio corrente è più in basso
+        if (sourcePos.stanzY > targetPos.stanzY) { // se il personaggio corrente è più in basso
             return 2; // mi muovo verso l'alto
         } else {
             return 4; // mi muovo verso il basso

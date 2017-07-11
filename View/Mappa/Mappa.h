@@ -74,6 +74,9 @@ class Map{
         mapPos randRoomPos(int MapX,int MapY);
 
         void addItem(p_item a);
+
+        // restituisce la stanza nella posizione specificata
+        Room getRoomForCoord(int posX, int posY);
 };
 
 

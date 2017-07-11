@@ -18,8 +18,19 @@ class View{
         WINDOW * outputMap;
         WINDOW * narrative;
         WINDOW * winventory;
+        WINDOW * death;
+        WINDOW * exitconfirmation;
+        WINDOW * introduction;
+        WINDOW * classselection;
+        WINDOW * victory;
     public:
         View();
+
+        void print_victory();
+        void print_introduction();
+        void print_exitconfirmation();
+        void print_classselection();
+        void print_death(p_char pgprincipale ,p_char omicida=nullptr);
         void print_nameAndStats(p_char c);
         void print_outputMap(Map* CurLevel);
         void print_narrative(queue<char*>* narrative);

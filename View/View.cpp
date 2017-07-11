@@ -7,6 +7,7 @@
 #endif
 
 #include <stdlib.h>
+#include <stdlib.h>
 #include <cstdlib>
 #include <list>
 #include <queue>
@@ -25,9 +26,9 @@ View::View(){
     refresh();
 
 
-    int height = 1;
+    int height = 2;
 	int width = COLS;
-	int starty = 1;
+	int starty = 0;
 	int startx = 0;
 
     nameAndStats=newwin(height,width,starty,startx+1);
@@ -43,9 +44,77 @@ View::View(){
     height=5;
     starty=LINES-5;
     winventory=newwin(height,width,starty,startx);
+
+    height=5;
+    starty=LINES/2-3;
+    width/=2;
+    width+=20;
+    startx=width-20-width/2;
+    death=newwin(height,width,starty,startx);
+    victory=newwin(height,width,starty,startx);
+    exitconfirmation=newwin(height,width,starty,startx);
+
+    height=2;
+    starty=0;
+    width=COLS;
+    startx=1;
+
+    introduction=newwin(height,width,starty,startx);
+
+    starty=height;
+    height=10;
+    classselection=newwin(height,width,starty,startx);
+
+
+
+}
+
+void View::print_introduction(){
+    werase(introduction);
+    string message="Oh giovane ignaro diplomando , in cosa ti sei cacciato? Qual'e' il tuo nome?";
+
+    wprintw(introduction,message.c_str());
+    wmove(introduction,1,0);
+    message=">";
+    wmove(introduction,1,0);
+    wprintw(introduction,message.c_str());
+    wrefresh(introduction);
+
+
+}
+void View::print_classselection(){
+    werase(classselection);
+    string message="Tanto il tuo nome non importa piu' da oggi sarai Matricola 000052423. E in che facolta vorresti iscriverti?";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,1,0);
+    message="(a) Voglio iscrivermi a ingegnieria, non mi piace itagliano! (Alta forza di volonta e morale)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,2,0);
+    message="(b) Voglio iscrivermi a giurisprudenza, tanto non e' a numero chiuso!(Alta Morale e concentrazione)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,3,0);
+    message="(c) Voglio iscrivermi a scienze, mi obbligano i miei! (Tutto nella media)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,4,0);
+    message="(d) Voglio inseguire le mie passioni (Umanistica)! (Alto morale e parti con dei CFU pagati dal papi)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,5,0);
+    message="(e) In realta' sono fuoricorso e voglio riprendere.. (PAZZO! Tutte le statistiche al minimo e un debito di 50 CFU)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,6,0);
+    message="(f) Voglio iscrivermi a medicina, non mi piace vivere! (Alta forza di volonta e concentrazione)";
+    wprintw(classselection,message.c_str());
+    wmove(classselection,7,0);
+    message="Premi la lettera corrispondente alla scelta per immatricolarti";
+    wprintw(classselection,message.c_str());
+
+
+    wrefresh(classselection);
+
 }
 
 void View::print_nameAndStats(p_char c){
+
     //QUA SI INTERFACCIA CON PG
     werase(nameAndStats);
     const char* nomechar;
@@ -69,7 +138,11 @@ void View::print_nameAndStats(p_char c){
     wprintw(nameAndStats," Vita: ");
     sprintf(buffer,"%d",fullvita);
     wprintw(nameAndStats,buffer);
-    wprintw(nameAndStats," Forza: ");
+
+    wprintw(nameAndStats," (MAX: ");
+    sprintf(buffer,"%d",vita);
+    wprintw(nameAndStats,buffer);
+    wprintw(nameAndStats,") Forza: ");
     sprintf(buffer,"%d",fullforza);
     wprintw(nameAndStats,buffer);
     wprintw(nameAndStats,"(");
@@ -87,7 +160,9 @@ void View::print_nameAndStats(p_char c){
     wprintw(nameAndStats,"+");
     sprintf(buffer,"%d",fulldefen-defen);
     wprintw(nameAndStats,buffer);
-    wprintw(nameAndStats,")| Arma: ");
+    wprintw(nameAndStats,")");
+    wmove(nameAndStats,1,0);
+    wprintw(nameAndStats,"Arma: ");
     wprintw(nameAndStats,c->getCurWeapon()->getName().c_str());
     wprintw(nameAndStats,"| Armatura: ");
     wprintw(nameAndStats,c->getCurArmor()->getName().c_str());
@@ -227,3 +302,51 @@ void View::print_narrative(queue<char*>* narrativequeue){
     wrefresh(narrative);
 }
 
+void View::print_death(p_char pgprincipale ,p_char omicida){
+    box(death,0,0);
+    wmove(death,1,1);
+    const int  nflavour=3;
+    string messaggio;
+    string flavourtext[nflavour]={"I tuoi genitori devono essere molto fieri di te..","Mi dicono che al burger king stanno assumendo","Tanto non volevi veramente farla"};
+    if(omicida==nullptr){
+        messaggio="Hai perso tutta la tua voglia di studiare e hai abbandonato gli studi";
+    }
+    else{
+        messaggio=omicida->getName();
+        messaggio+=" ti ha convinto che forse l'università non fa per te.";
+    }
+    waddstr(death,messaggio.c_str());
+    wmove(death,2,1);
+    int c=rand()%nflavour;
+    waddstr(death,flavourtext[c].c_str());
+
+    wmove(death,3,1);
+    messaggio="Premere qualsiasi tasto per terminare l'avventura...";
+    waddstr(death,messaggio.c_str());
+    wrefresh(death);
+
+    }
+
+void View::print_victory(){
+box(victory,0,0);
+    wmove(victory,1,1);
+    const int  nflavour=3;
+    string messaggio;
+    messaggio="Congratulazioni , ti sei laureato!";
+    waddstr(victory,messaggio.c_str());
+    wmove(victory,2,1);
+    messaggio="Adesso ti tocca cercare lavoro, o hai intenzione di fare la magistrale?";
+    waddstr(victory,messaggio.c_str());
+
+    wmove(victory,3,1);
+    messaggio="Premere qualsiasi tasto per terminare l'avventura...";
+    waddstr(victory,messaggio.c_str());
+    wrefresh(victory);
+}
+void View::print_exitconfirmation(){
+    box(exitconfirmation,0,0);
+    wmove(exitconfirmation,1,1);
+    string messaggio="Confermi di voler uscire? y/n";
+    waddstr(exitconfirmation,messaggio.c_str());
+    wrefresh(exitconfirmation);
+}

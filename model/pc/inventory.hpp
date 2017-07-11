@@ -16,13 +16,13 @@ class inventory {
 public:
 
     //crea una lista di armi
-
+    inventory();
     list<p_item> listw;
     list<p_item> getInventory();
     //aggiunge un arma all'equipaggiamento del personaggio
     bool addItem(p_item a);
     //rimuove l'arma corrispondente ad un intero dato in input dall'inventario
-    void deleteItem(string c);
+    p_item deleteItem(string c);
 
     //converte in stringa l'inventario
     string inventoryToStr();

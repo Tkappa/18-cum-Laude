@@ -1,6 +1,8 @@
 #include "inventory.hpp"
 
-
+inventory::inventory(){
+    list<p_item> listw;
+}
 
 bool inventory:: addItem(p_item a){
     if(listw.size()<8){
@@ -8,27 +10,42 @@ bool inventory:: addItem(p_item a){
         temp[0]=97+listw.size();
         //cout<<"aggiunto elemento di id: "<<temp<<" all'inventario"<<endl;
         a->setInventoryId(temp);
-        this->listw.push_back(a);
+        listw.push_back(a);
         return true;}
     return false;
 
 }
 list<p_item> inventory::getInventory(){
-return listw;}
+return listw;
+}
 
-void inventory:: deleteItem(string id) {
-    int offset = 0;
-    bool find=0;
+p_item inventory:: deleteItem(string id) {
+    int offset=0;
+    p_item temp=nullptr;
+    std::list<p_item>:: iterator eliminatore;
+    std::list<p_item>:: iterator i=listw.begin();
+    bool trovato=false;
 
-   for(list<Item* >::iterator i=listw.begin(); i!=listw.end();++i){
-        string tempId=(*i)->getInventoryId();
-        if( id == tempId){
-            this->listw.erase(i);
-            offset=-1;
+
+
+    while(i!=listw.end()){
+        string controllo=(*i)->getInventoryId();
+        if(trovato){
+            controllo[0]+=offset;
+            (*i)->setInventoryId(controllo);
         }
-        tempId[0]+=offset;
-        (*i)->setInventoryId(tempId);
-   }
+        if(controllo==id&&!trovato){
+            temp=*i;
+            eliminatore=i++;
+            listw.erase(eliminatore);
+            trovato=true;
+        }
+        else{
+            ++i;
+        }
+//        cout<<"Indirizzo di i:"<<*i<<" Indirizzo di list.end() "<<listw.end()<<endl;
+    }
+    return temp;
 }
 
 string inventory:: inventoryToStr() {

@@ -46,6 +46,8 @@ public:
     bool drop(p_char pg,char c,Map* curMap);
     bool equip(p_char pg, char c);
     int buy(p_char pg,char c,Map* curMap);
+    void turn(p_char player,Map* curMap,int player_direction,View vista);
+    int combat(p_char attacker, p_char defender);
 
 };
 

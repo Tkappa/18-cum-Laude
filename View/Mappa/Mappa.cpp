@@ -588,14 +588,6 @@ Room Map::getRoomForCoord(int posX, int posY) {
     return mapMatrix[posX][posY];
 }
 
-
-//TURORIAL LISTE c++
-/*
-    std::list<posStanza> listStanze; crei la lista
-    posStanza a; crei un elemento
-    a.x=2;
-    a.y=4;
-    listStanze.push_back(a); lo metti alla fine
-    for (list<posStanza>::iterator i = listStanze.begin(); i != listStanze.end(); ++i) stampi tutti i valori
-        std::cout << (*i).x << endl;
- */
+int Map::getNLevel(){
+return nLevel;
+}

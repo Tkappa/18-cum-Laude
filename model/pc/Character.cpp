@@ -20,10 +20,9 @@
 using namespace std;
 
 Character::Character() {
-    //this->stats = {5, 5, 5};
+
     this->pos = {0, 0, 0, 0};
-    //Item w;
-    //this->object.push_back(w);
+    this->alive = true;
     this->desc = "Descrizione di prova";
     this->money=0;
     this->fullstats=basestats;
@@ -31,6 +30,10 @@ Character::Character() {
 }
 p_item Character::getCurWeapon(){
 return curWeapon;
+}
+
+void Character::setAlive(bool isalive){
+alive=isalive;
 }
 
 void Character::setMoney(int i){
@@ -303,4 +306,33 @@ void Character::setSym(string sym) {
 
 void Character::setName(string s){
     name=s;
+}
+
+bool Character::willCollide(Character * x,int d){
+    int xaxis=0,yaxis=0;
+    switch(d){
+        case Direction::left:
+            yaxis= -1;
+        break;
+
+        case Direction::right:
+            yaxis= 1;
+        break;
+
+        case Direction::up:
+            xaxis= -1;
+        break;
+
+        case Direction::down:
+            xaxis=1;
+        break;
+        default:
+        break;
+        }
+    //cout<<"posx+xaxis: "<<(pos.stanzX+xaxis)<<" xaxis: "<<xaxis<<" posy+yaxis: "<<pos.stanzY+yaxis<<" yaxis: "<<yaxis<<endl;
+
+    if(pos.mapX==x->getPos().mapX && pos.mapY==x->getPos().mapY && (pos.stanzX+xaxis)==x->getPos().stanzX && (pos.stanzY+yaxis)==x->getPos().stanzY )
+        return true;
+    return false;
+
 }

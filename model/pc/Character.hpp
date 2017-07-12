@@ -58,6 +58,8 @@ public:
     void setCurArmor(p_item weapon);
     p_item equipArmor(p_item weapon);
     int getMoney();
+    bool willCollide(Character * x,int d);
+    void setAlive(bool isalive);
 
     void setMoney(int i);
     Pos pos;

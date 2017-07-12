@@ -100,8 +100,6 @@ string MajorCharacter::toStr() {
 
 
  MajorCharacter::MajorCharacter(bioma currentZone, int currentLevel) : MajorCharacter() {
-    srand(time(nullptr));
-
     // la somma dei valori delle statistiche del personaggio viene impostata in relazione al livello
     // ed il suo valore si discosta dal livello per al massimo un terzo del valore di quest'ultimo
     int deltaStats = currentLevel / 3;
@@ -129,13 +127,13 @@ string MajorCharacter::toStr() {
     this->setSym(symb);
      this->name = name;
      this->setStats(stats);
+     this->setFullStats(stats);
      this->follower = NULL;
  }
 
 
 ability MajorCharacter::setUpAbilities(int statsAmount) {
 
-    srand(time(nullptr));
 
     // imposto le abilità del personaggio
     ability stats;

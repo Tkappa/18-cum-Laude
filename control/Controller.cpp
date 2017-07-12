@@ -40,7 +40,7 @@ void Controller::launch() {
 
     //crea la struttura dati con 3 stanze base
     Map* head;
-    head= new Map(1,1,&narrative,open_day);
+    head= new Map(1,0,&narrative,open_day);
     Map* curMap=head;
 
     //setup di ncurses , queste ci vogliono sempre
@@ -81,16 +81,10 @@ void Controller::launch() {
     c=getch();
     vista.print_outputMap(curMap);
 
+    Direction player_dir;
+
     while (1) {
-        for (auto character : curMap->characterList) {
-            if (character->getSym() != pg.getSym()) {
-                int direction = character->moveToChar(&pg, curMap->getRoomForCoord(character->pos.mapX, character->pos.mapY));
-
-                if (curMap->mapCanMove(character, direction))
-                    curMap->moveChar(character, direction);
-            }
-        }
-
+        player_dir=stop;
         c = getch();
 
         switch (c) { //se il tasto premuto � "s" oppure freccia sinistra
@@ -99,26 +93,26 @@ void Controller::launch() {
                 //controlla se si puo muovere in quella posizione
                 if (curMap->mapCanMove(punt_pg, 1))
                     // e in tal caso muovilo verso la posizione
-                    curMap->moveChar(punt_pg, 1);
-                vista.print_outputMap(curMap);
+                    player_dir=Direction::left;
+                //vista.print_outputMap(curMap);
                 break;
             case 100:// char 'd'
             case 261:// right
                 if (curMap->mapCanMove(punt_pg, 3))
-                    curMap->moveChar(punt_pg, 3);
-                vista.print_outputMap(curMap);
+                    player_dir=Direction::right;
+                //vista.print_outputMap(curMap);
                 break;
             case 119:// char 'w'
             case 259:// su
                 if (curMap->mapCanMove(punt_pg, 2))
-                    curMap->moveChar(punt_pg, 2);
-                vista.print_outputMap(curMap);
+                    player_dir=Direction::up;
+                //vista.print_outputMap(curMap);
                 break;
             case 115:// char 's'
             case 258:// giu
                 if (curMap->mapCanMove(punt_pg, 4))
-                    curMap->moveChar(punt_pg, 4);
-                vista.print_outputMap(curMap);
+                    player_dir=Direction::down;
+                //vista.print_outputMap(curMap);
                 break;
             case 62:{//char >
                 pers stairs=curMap->getStairsDown();
@@ -130,12 +124,20 @@ void Controller::launch() {
                 vista.print_outputMap(curMap);
                 break;
             case 60://char <
-                {pers stairs=curMap->getStairsUp();
+                {
+                pers stairs=curMap->getStairsUp();
                 if (stairs.pos.mapX==pg.getPos().mapX&&stairs.pos.mapY==pg.getPos().mapY && stairs.pos.stanzX==pg.getPos().stanzX && stairs.pos.stanzY==pg.getPos().stanzY){
+                    if(curMap->getNLevel()==1){
+                        vista.print_death(punt_pg);
+                        c=getch();
+                        exit(1);
+                    }
+                    else{
                     curMap=curMap->prevMap();
                     stairs=curMap->getStairsDown();
                     mapPos x=stairs.pos;
                     curMap->assingPosition(punt_pg,x.mapX,x.mapY,x.stanzX,x.stanzY);
+                    }
                 }
                 vista.clearoutputMap();
                 vista.print_outputMap(curMap);
@@ -221,18 +223,23 @@ void Controller::launch() {
             if(c=='y'||c=='Y'){
                 break;
             }
-            vista.print_outputMap(curMap);
 
         }
 
 
     if(turno){
+        turn(punt_pg,curMap,player_dir,vista);
+        if(!punt_pg->isAlive()){
+            c=getch();
+            break;
+        }
         vista.print_narrative(&narrative);
         vista.print_nameAndStats(punt_pg);
-    }
+        vista.print_outputMap(curMap);
+
+        }
     turno=true;
     }
-
     refresh();
 }
 
@@ -496,3 +503,116 @@ MajorCharacter Controller::pgInitialization(View curview){
 
 return pg;
 }
+
+void Controller::turn(p_char player,Map* curMap,int player_direction,View vista){
+//controllare fuori se il giocatore e' morto
+    bool playerattacked=false;
+    std::list<p_char>:: iterator eliminatore;
+    std::list<p_char>:: iterator enemy=curMap->characterList.begin();
+
+    //PlayerAction
+    while(enemy!=curMap->characterList.end()){
+        if ((*enemy)->getSym() != player->getSym()) {
+                if(player->willCollide((*enemy),player_direction)){
+                    int combatoutput=combat(player,(*enemy));
+                    if(combatoutput==1){
+                        eliminatore=enemy++;
+                        curMap->characterList.erase(eliminatore);
+                    }
+                    else ++enemy;
+                    playerattacked=true;
+                }
+                else ++enemy;
+    }
+    else ++enemy;
+    }
+    if(!playerattacked){
+        int player_dir=player_direction;
+        curMap->moveChar(player, player_dir);
+    }
+
+
+    //EnemiesAction
+    enemy=curMap->characterList.begin();
+    bool enemyattacked=false;
+    while(enemy!=curMap->characterList.end()){
+        if ((*enemy)->getSym() != player->getSym()) {
+            enemyattacked=false;
+            int enemy_direction = (*enemy)->moveToChar(player, curMap->getRoomForCoord((*enemy)->pos.mapX, (*enemy)->pos.mapY));
+            int noise=rand()%100;
+            if(noise>70){
+                enemy_direction=rand()%5;
+            }
+            if((*enemy)->willCollide(player,enemy_direction)){
+                    int combatoutput=combat((*enemy),player);
+                    if(combatoutput==1){
+                        vista.print_death(player,(*enemy));
+                    }
+                    enemyattacked=true;
+                }
+            if(!enemyattacked){
+                int enemy_dir=enemy_direction;
+                if(curMap->mapCanMove((*enemy), enemy_dir))
+                    {curMap->moveChar((*enemy), enemy_dir);}
+            }
+
+        }
+        ++enemy;
+
+}}
+    /**/
+
+int Controller::combat(p_char attacker, p_char defender){
+    int attHP,defHP,attSTR,defSTR,attDEF,defDEF;
+
+    attHP=attacker->getFullStats().getLife();
+    defHP=defender->getFullStats().getLife();
+
+
+    defDEF=defender->getFullStats().getDefense();
+
+    attSTR=attacker->getFullStats().getStrength();
+    int newattSTR=attacker->getFullStats().getStrength()-defDEF;
+
+    if(newattSTR<0) newattSTR=0;
+
+    int attNewHp,defNewHp;
+
+    defNewHp=defHP-newattSTR;
+
+    ability def_temp;
+    def_temp.setLife(defNewHp);
+    def_temp.setStrength(defSTR);
+    def_temp.setDefense(defDEF);
+    defender->setFullStats(def_temp);
+
+    char* str= new char[400];
+
+    char buf[10];
+
+    strcpy(str,attacker->getName().c_str());
+    strcat(str," ha attaccato ");
+    strcat(str,defender->getName().c_str());
+    strcat(str," e ha inflitto ");
+    sprintf(buf,"%d",newattSTR);
+    strcat(str,buf);
+    strcat(str," danni. (Att:");
+    sprintf(buf,"%d",attSTR);
+    strcat(str,buf);
+    strcat(str,"- Dif:");
+    sprintf(buf,"%d",defDEF);
+    strcat(str,buf);
+    strcat(str,")");
+
+    narrative.push(str);
+
+    if(defNewHp<0){
+        defender->setAlive(false);
+        //difensore morto
+        return 1;
+    }
+    //nessuno è morto
+    return 0;
+
+}
+

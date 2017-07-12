@@ -81,7 +81,7 @@ class Map{
         mapPos randRoomPos(int MapX,int MapY);
         bool checkIfStore();
         void addItem(p_item a);
-
+        int getNLevel();
 
         // restituisce la stanza nella posizione specificata
         Room getRoomForCoord(int posX, int posY);

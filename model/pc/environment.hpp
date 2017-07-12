@@ -15,7 +15,7 @@
 #define ENVIRONMENT_HPP
 
 enum Direction {
-    left = 1, up, right, down
+    stop=0, left = 1, up, right, down
 };
 
 typedef struct mapPos {

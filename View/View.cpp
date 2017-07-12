@@ -306,12 +306,11 @@ void View::clearoutputMap(){
       }
 void View::print_narrative(queue<char*>* narrativequeue){
     werase(narrative);
-    int cursY=0;
+    int cursY=1;
     while(!narrativequeue->empty()){
         char* a=narrativequeue->front();
         waddstr(narrative,a);
-        cursY++;
-        wmove(narrative,cursY,0);
+        wmove(narrative,cursY++,0);
         narrativequeue->pop();
     }
     wrefresh(narrative);

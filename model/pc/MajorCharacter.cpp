@@ -24,7 +24,7 @@
 using namespace std;
 
 
-vector<string> CENTRO_SOCIALE = { "CentroSociale1",  "CentroSociale2",  "CentroSociale3",  "CentroSociale4",
+vector<string> OPEN_DAY = { "CentroSociale1",  "CentroSociale2",  "CentroSociale3",  "CentroSociale4",
                                   "CentroSociale5",  "CentroSociale6",  "CentroSociale7",  "CentroSociale8",
                                   "CentroSociale9"  };
 
@@ -113,8 +113,8 @@ string MajorCharacter::toStr() {
 
     auto namesVector = SEDE_CENTRALE;
 
-    if (currentZone == centro_sociale) {
-        namesVector = CENTRO_SOCIALE;
+    if (currentZone == open_day) {
+        namesVector = OPEN_DAY;
     } else if (currentZone == facolta) {
         namesVector = FACOLTA;
     } else if (currentZone == piazza_verdi) {

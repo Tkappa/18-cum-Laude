@@ -7,12 +7,14 @@
 #include <list>
 #include "Stanza.h"
 #include <queue>
+#include "../../model/pc/MajorCharacter.hpp"
 #include "../../model/pc/Character.hpp"
 
 struct pers{
 string nome;
 mapPos pos;
 };
+
 
 
 typedef Item* p_item;
@@ -22,14 +24,17 @@ const int mapHeight=3,mapLenght=16;
 class Map{
     protected:
         Room mapMatrix[mapHeight][mapLenght];
+        bool isStore;
         int nLevel;
         pers stairsUp;
         pers stairDown;
+        bioma biome;
         int nRooms;
         std::queue<char*>* globalnarrative;
 
     public:
 
+        inventory store;
         std::list<p_char> characterList;
         std::list<p_item> objectList;
         //Puntatori alla mappa precedente e successiva
@@ -37,7 +42,9 @@ class Map{
         Map* prev;
 
         //crea una nuova mappa popolata da stanza
-        Map(int nRoomsPrec,int nLevel,queue<char*>* narrative);
+        Map(int nRoomsPrec,int nLevel,queue<char*>* narrative,bioma x);
+        //Crea una mappa di tipo speciale
+        Map(int n,int nLevelPrec,queue<char*>* narrative, int maptype);
 //        Mappa(const Mappa& orig);
         //stampa la mappa con cout facendo solo 0 e 1
         void printMap();
@@ -74,6 +81,8 @@ class Map{
         mapPos randRoomPos(int MapX,int MapY);
 
         void addItem(p_item a);
+
+        bool checkIfStore();
 };
 
 

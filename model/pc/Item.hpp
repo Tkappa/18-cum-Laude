@@ -23,7 +23,7 @@ class Item
         Item();
         Item(int level);
         Item(int level,mapPos position);
-        Item( string name, int value,int type);
+        Item(string name, int value,int type);
         virtual ~Item();
 
         static int random();
@@ -38,6 +38,8 @@ class Item
         string getSym();
         void setInventoryId(string c);
         string getInventoryId();
+        void setPos(mapPos x);
+        int getPrice();
 
         //decide che tipo di oggetto generare
         static Item* randomItem(int level);
@@ -48,6 +50,7 @@ class Item
         string name;
         int value;
         int type;
+        int price;
         string symb;
         string inventoryId;
 };

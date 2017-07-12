@@ -15,23 +15,30 @@ bool inventory:: addItem(p_item a){
     return false;
 
 }
+p_item inventory::getByID(string id){
+    for(std::list<p_item>::iterator i=listw.begin(); i!=listw.end();++i){
+        if((*i)->getInventoryId()==id){
+            p_item temp=*i;
+            return temp;
+        }
+    }
+    return nullptr;
+}
 list<p_item> inventory::getInventory(){
 return listw;
 }
 
 p_item inventory:: deleteItem(string id) {
-    int offset=0;
+    int offset=1;
     p_item temp=nullptr;
     std::list<p_item>:: iterator eliminatore;
     std::list<p_item>:: iterator i=listw.begin();
     bool trovato=false;
 
-
-
     while(i!=listw.end()){
         string controllo=(*i)->getInventoryId();
         if(trovato){
-            controllo[0]+=offset;
+            controllo[0]-=offset;
             (*i)->setInventoryId(controllo);
         }
         if(controllo==id&&!trovato){
@@ -72,7 +79,9 @@ string inventory:: inventoryToStr() {
     return s;
 */}
 
-
+int inventory::getSize(){
+return listw.size();
+}
 
 
 

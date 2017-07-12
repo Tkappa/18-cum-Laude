@@ -15,7 +15,7 @@
 #define MAJORCHARACTER_HPP
 
 /*
-#define CENTRO_SOCIALE "../model/res/centro_sociale.txt"
+
 #define FACOLTA "../model/res/facolta.txt"
 #define PIAZZA_VERDI "../model/res/piazza_verdi.txt"
 #define SEDE_CENTRALE "../model/res/sede_centrale.txt"
@@ -32,7 +32,7 @@
 using namespace std;
 
 enum bioma {
-    centro_sociale = 1, facolta, piazza_verdi, sede_centrale
+    open_day = 1, facolta, piazza_verdi, sede_centrale
 };
 
 

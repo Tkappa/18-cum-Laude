@@ -18,7 +18,7 @@
 #define SEE 1
 #define DROP 2
 #define EQUIP 3
-#define USE 4
+#define BUY 4
 
 View::View(){
 
@@ -36,6 +36,7 @@ View::View(){
     height=(LINES-7);
     starty=2;
     outputMap=newwin(height,width,starty,startx);
+    help=newwin(height,width,starty,startx);
 
     height=5;
     starty=LINES-5;
@@ -135,14 +136,14 @@ void View::print_nameAndStats(p_char c){
     wmove(nameAndStats,0,0);
     wprintw(nameAndStats,"Nome: ");
     wprintw(nameAndStats,nomechar);
-    wprintw(nameAndStats," Vita: ");
+    wprintw(nameAndStats," Morale: ");
     sprintf(buffer,"%d",fullvita);
     wprintw(nameAndStats,buffer);
 
     wprintw(nameAndStats," (MAX: ");
     sprintf(buffer,"%d",vita);
     wprintw(nameAndStats,buffer);
-    wprintw(nameAndStats,") Forza: ");
+    wprintw(nameAndStats,") Forza di volonta': ");
     sprintf(buffer,"%d",fullforza);
     wprintw(nameAndStats,buffer);
     wprintw(nameAndStats,"(");
@@ -151,7 +152,7 @@ void View::print_nameAndStats(p_char c){
     wprintw(nameAndStats,"+");
     sprintf(buffer,"%d",fullforza-forza);
     wprintw(nameAndStats,buffer);
-    wprintw(nameAndStats,") Difesa: ");
+    wprintw(nameAndStats,") Concentrazione: ");
     sprintf(buffer,"%d",fulldefen);
     wprintw(nameAndStats,buffer);
     wprintw(nameAndStats,"(");
@@ -176,6 +177,11 @@ void View::print_nameAndStats(p_char c){
 void View::print_inventory(inventory pg_inventoryfull,int status){
 
     werase(winventory);
+    int height=5;
+    int width = COLS;
+	int startx = 0;
+    int starty=LINES-5;
+    winventory=newwin(height,width,starty,startx);
     wmove(winventory,0,3);
     switch(status){
         case SEE:
@@ -187,8 +193,14 @@ void View::print_inventory(inventory pg_inventoryfull,int status){
         case EQUIP:
             waddstr(winventory,"Stai per equipaggiare un oggetto, premi la lettera corrispondente per equipaggiarlo, oppure k per annullare:");
             break;
-        case USE:
-            waddstr(winventory,"Stai per usare una pozione, premi la lettera corrispondente per usarla, oppure k per annullare:");
+        case BUY:
+            height=6;
+            starty=(LINES/2)-5;
+            startx=4;
+            width=COLS-7;
+            winventory=newwin(height,width,starty,startx);
+            box(winventory,0,0);
+            waddstr(winventory,"Benvenuto nella bottega del tutor, premi la lettera corrispondente all'oggetto per acquistarlo o k per annullare:");
 
             break;
 
@@ -207,17 +219,20 @@ void View::print_inventory(inventory pg_inventoryfull,int status){
             strcat(stampstring,buf);
             switch((*i)->getType()){
                 case 1: //arma
-                    strcat(stampstring," a Forza)");
+                    strcat(stampstring," a Forza di volonta')");
                     break;
                 case 2: //armatura
-                    strcat(stampstring," a Difesa)");
+                    strcat(stampstring," a Concentrazione)");
                     break;
                 case 4: //Pozione
-                    strcat(stampstring," a Vita)");
+                    strcat(stampstring," a Morale)");
                     break;
                 }
-            //cout<<"sto stampando l'inventario : "<<stampstring<<endl;
-
+            if(status==BUY){
+                strcat(stampstring," Prezzo: ");
+                sprintf(buf,"%d",(*i)->getPrice());
+                strcat(stampstring,buf);
+            }
             wmove(winventory,cursY,cursX);
             waddstr(winventory,stampstring);
             cursY++;
@@ -349,4 +364,68 @@ void View::print_exitconfirmation(){
     string messaggio="Confermi di voler uscire? y/n";
     waddstr(exitconfirmation,messaggio.c_str());
     wrefresh(exitconfirmation);
+}
+
+void View::print_help(){
+    box(help,0,0);
+    int curY=2;
+    wmove(help,curY,1);
+    string messaggio;
+    messaggio="Benvenuto in 18 e Lode! Il gioco satirico universitario.";
+    curY++;
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Il tuo scopo e' sopravvivere ad ogni livello fino ad arrivare al livello 15 , dove ti aspetta la tua laurea.";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Ti puoi muovere utilizzando le freccette o wasd";
+     waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="In ogni livello inizi dalle scale che portano su '<' e il tuo scopo e arrivare alle scale che portano giu '>'";
+     waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Quando sei sopra una scala premi il corrispettivo tasto per usarla (> o <)";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="I livelli sono pieni di distrazioni che cercano di non farti studiare(Lettere maiuscole)e oggetti(lettere minuscole)";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Per attaccare una distrazione basta camminarci contro (Lo stesso vale per loro verso di te!)";
+     waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Per raccogliere i vari oggetti dovrai premere il tasto 'l' quando ci sei sopra";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Per vedere il tuo inventario basta premere il tasto 'i'";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Per equipaggiare o usare un oggetto dovrai premere il tasto 'e'";
+     waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Per buttare oggetti a terra dovrai premere il tasto 'g'";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Quando sarai al ricevimento con il tutor dovrai premere il tasto 't' per vedere come ti puo aiutare(Costa CFU)";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+
+     messaggio="La tua vita e' il tuo Morale , quando questo scende a 0 deciderai di lasciare gli studi, perdendo";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+
+     messaggio="Combatti le distrazioni usando la tua forza di volonta'";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+
+     messaggio="Ti difendi dalle distazioni usando la tua concentrazione";
+     waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
+     messaggio="Puoi visualizzare questa schermata in qualsiasi momento premendo il tasto 'h'";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);wmove(help,curY++,1);wmove(help,curY++,1);
+     messaggio="Buona avventura! Premi qualsiasi tasto per continuare..";
+    waddstr(help,messaggio.c_str());
+
+
+    wrefresh(help);
 }

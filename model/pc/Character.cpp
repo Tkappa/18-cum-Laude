@@ -59,12 +59,9 @@ return money;}
 
 p_item Character::equipArmor(p_item armor){
     p_item temp=curArmor;
-    cout<<"messo in temp current";
     curArmor=armor;
 
-    cout<<"Messo in current il parametro";
     fullstats.setDefense(basestats.getDefense()+curArmor->getValue());
-    cout<<"Aggiornato le statistiche";
     return temp;}
 
 inventory Character::getInventory(){

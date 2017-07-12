@@ -11,6 +11,9 @@
 #include "../../model/pc/MajorCharacter.hpp"
 #include <list>
 
+#define SHOP 1
+#define LAUREA 2
+
 #include <string.h>
 
 #include <cstdlib>
@@ -21,12 +24,84 @@
 
 
 
+
 struct posStanza{
     int x,y;
 };
 
+Map::Map(int n,int nLevelPrec,queue<char*>* narrative, int specialmap){
+    isStore=false;
+    globalnarrative=narrative;
+    next = NULL;
+    prev = NULL;
 
-Map::Map(int n,int nLevelPrec,queue<char*>* narrative){
+    nLevel=nLevelPrec+1;
+    nRooms=n;
+
+    int randBiome=rand()%4;
+    switch (randBiome){
+    case 0:
+        biome=open_day;
+        break;
+    case 1:
+        biome=piazza_verdi;
+        break;
+    case 2:
+        biome=facolta;
+        break;
+    case 3:
+        biome=sede_centrale;
+        break;
+        }
+
+    int inizX=rand()%mapHeight;
+    int inizY=rand()%mapLenght;
+    mapMatrix[inizX][inizY].createRoom();
+    mapMatrix[inizX][inizY].exploration();
+
+    stairDown.nome=">";
+    stairsUp.nome="<";
+    stairsUp.pos.mapX=inizX;
+    stairsUp.pos.mapY=inizY;
+    stairsUp.pos.stanzX=1;
+    stairsUp.pos.stanzY=3;
+    mapMatrix[stairsUp.pos.mapX][stairsUp.pos.mapY].createPos(stairsUp.pos.stanzX,stairsUp.pos.stanzY,stairsUp.nome);
+
+    if(specialmap==SHOP){
+    isStore=true;
+    stairDown.pos.mapX=inizX;
+    stairDown.pos.mapY=inizY;
+    stairDown.pos.stanzX=5;
+    stairDown.pos.stanzY=3;
+    mapMatrix[stairDown.pos.mapX][stairDown.pos.mapY].createPos(stairDown.pos.stanzX,stairDown.pos.stanzY,stairDown.nome);
+
+    int nOggetti=rand()%7+1;
+    for(int i=0;i<nOggetti;i++){
+        int type=3;
+        p_item ogg;
+        while(type==3){
+            ogg=new Item(nLevel+3,{0,0,0,0});
+            type= ogg->getType();
+        }
+
+        store.addItem(ogg);
+
+    }
+    }
+    else if(specialmap==LAUREA){
+        p_item degree=new Item("Laurea",50,WEAPON);
+        mapPos x;
+        x.mapX=inizX;
+        x.mapY=inizY;
+        x.stanzX=5;
+        x.stanzY=3;
+        degree->setPos(x);
+        degree->setSym("l");
+        objectList.push_back(degree);
+    }
+}
+
+Map::Map(int n,int nLevelPrec,queue<char*>* narrative,bioma biomaparametro){
 #ifdef debugMap
     cout<<"Iniziato il costruttore Mappa()"<<endl;
 #endif // debugMap
@@ -35,6 +110,10 @@ Map::Map(int n,int nLevelPrec,queue<char*>* narrative){
     globalnarrative=narrative;
     next = NULL;
     prev = NULL;
+
+    //assegno il bioma attuale;
+    biome=biomaparametro;
+    isStore=false;
 
     //Inizializzo il random e vedo quante stanze in più avra questo livello
     nLevel=nLevelPrec+1;
@@ -376,9 +455,22 @@ Map* Map::nextMap(){
     cout<<"Inziato il metodo nextMap()"<<endl;
 #endif // debugMap
     if (next==NULL){
-        Map * newmap= new Map(nRooms,nLevel,globalnarrative);
-        next=newmap;
-        newmap->setPrev(this);
+        if(nLevel==15){
+            Map * newmap= new Map(nRooms,nLevel,globalnarrative,LAUREA);
+            next=newmap;
+            newmap->setPrev(this);
+        }
+        else if(nLevel%4==0){
+            Map * newmap= new Map(nRooms,nLevel,globalnarrative,SHOP);
+            next=newmap;
+            newmap->setPrev(this);
+        }
+        else{
+            Map * newmap= new Map(nRooms,nLevel,globalnarrative,biome);
+            next=newmap;
+            newmap->setPrev(this);
+        }
+
     }
 #ifdef debugMap
     cout<<"Finito il metodo nextMap()"<<endl;
@@ -406,25 +498,56 @@ void Map::populate(int MapX,int MapY){
     cout<<"Inziato il metodo populate()"<<endl;
 #endif // debugMap
     int nNewMonsters=rand()%100+1;
-    ability test;
+    int nNewItems=rand()%100+1;
+    char* str= new char[400];
+
+
+    if(nNewMonsters<65){
+        nNewMonsters=1;
+    }
+    else if(nNewMonsters<90){
+        nNewMonsters=2;
+    }
+    else {
+        nNewMonsters=3;
+    }
+
+    if(nNewItems<65){
+        nNewItems=1;
+    }
+    else if(nNewItems<90){
+        nNewItems=2;
+    }
+    else {
+        nNewItems=3;
+    }
+
+    for(int i=0;i<nNewMonsters;i++){
     mapPos x=randRoomPos(MapX,MapY);
-    p_char p= new MajorCharacter(piazza_verdi,nLevel+1);
+    p_char p= new MajorCharacter(biome,nLevel+1);
     p->setPos(x);
     characterList.push_back(p);
-
-    mapPos itemx=randRoomPos(MapX,MapY);
-    p_item i=new Item(2,itemx);
-    objectList.push_back(i);
-
-
-    //ATTENZIONE SE CRASHA A CASO POTREBBE ESSERE QUESTO PEZZO DI CODICE
-    char* str= new char[400];
-    strcat(str,"Vedi '");
+    strcpy(str,"Vedi '");
     strcat(str,p->getSym().c_str());
     strcat(str,"' , ");
     strcat(str,p->getName().c_str());
 
     globalnarrative->push(str);
+}
+
+    for(int i=0;i<nNewItems;i++){
+    mapPos itemx=randRoomPos(MapX,MapY);
+    p_item it=new Item(2,itemx);
+    objectList.push_back(it);
+}
+
+
+
+
+
+
+
+
 
 #ifdef debugMapVerbose
     cout<<"Ho creato un nuovo personaggio:"<<p<<"\nQuesti sono tutti i personaggi:\n";
@@ -433,58 +556,6 @@ void Map::populate(int MapX,int MapY){
         cout << *i <<", "<< (*i)->getSym()<< endl;
 #endif // debugMapVerbose
 
-    //if(nNewMonsters<=50){
-        //MajorCharacter a= randNPC();
-        //Personaggi.push_back(a);
-
-
-    //}
-    /*else if(nNewMonsters>50 && nNewMonsters<=85){
-        //MajorCharacter a
-        mapPos x=randStanzPos(MapX,MapY);
-    MajorCharacter a("test",test,x,"blabla",NULL);
-     a.setSym('R');
-        for(int i=0;i<2;i++){
-            //a= randNPC();
-            //Personaggi.push_back(a);
-            x= randStanzPos(MapX,MapY);
-            a.setPos(x);
-        Personaggi.push_back(a);
-
-        Personaggi.push_back(a);
-        }
-    }*/
-    /*else if(nNewMonsters>85){
-        //MajorCharacter a
-        for(int i=0;i<3;i++){
-            //a= randNPC();
-            //Personaggi.push_back(a);
-            x= randStanzPos(MapX,MapY);
-        a=new MajorCharacter("pippo",{0,0,0,0},x);
-        a.setSym('R');
-        Personaggi.push_back(a);
-        }
-    }*/
-    /*int nNewObjects=rand()%100+1;
-    if(nNewObjects<=50){
-        //MajorCharacter a= randNPC();
-        //Personaggi.push_back(a);
-
-    }
-    else if(nNewObjects>50 && nNewObjects<=85){
-        //MajorCharacter a
-        for(int i=0;i<2;i++){
-            //a= randNPC(nLevel);
-            //Personaggi.push_back(a);
-        }
-    }
-    else if(nNewObjects>85){
-        //MajorCharacter a
-        for(int i=0;i<3;i++){
-            //a= randNPC();
-            //Personaggi.push_back(a);
-        }
-    }*/
 #ifdef debugMap
     cout<<"Inziato il metodo populate()"<<endl;
 #endif // debugMap
@@ -508,6 +579,8 @@ mapPos Map::randRoomPos(int MapX,int MapY){
 void Map::addItem(p_item a){
     this->objectList.push_back(a);
 }
+bool Map::checkIfStore(){
+return isStore;}
 
 //TURORIAL LISTE c++
 /*

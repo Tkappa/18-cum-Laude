@@ -1,6 +1,7 @@
 #include "Item.hpp"
 #include "environment.hpp"
 #include <iostream>
+#include<cstdio>
 
 using namespace std;
 
@@ -59,6 +60,8 @@ Item::Item(int level,mapPos i_pos){
     }
     position=i_pos;
 
+    price=value*2;
+
 }
 Item::Item(int level){
     string weapons[7]={"spada","arco","test","piede","braccio","lolo","equitalia"};
@@ -91,6 +94,10 @@ void Item::setName(string n){
     this->name = n;
 }
 
+int Item::getPrice(){
+
+    return price;
+}
 void Item::setValue(int n){
     this->value=n;
 }
@@ -135,6 +142,9 @@ string Item::getSym(){
 string Item::getInventoryId(){
         return inventoryId;
         }
+void Item::setPos(mapPos x){
+    position=x;
+}
 Item::~Item()
 {
     //dtor

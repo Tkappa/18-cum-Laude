@@ -23,9 +23,11 @@ class View{
         WINDOW * introduction;
         WINDOW * classselection;
         WINDOW * victory;
+        WINDOW * help;
     public:
         View();
 
+        void print_help();
         void print_victory();
         void print_introduction();
         void print_exitconfirmation();

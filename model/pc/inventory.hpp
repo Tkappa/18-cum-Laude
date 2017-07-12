@@ -23,6 +23,8 @@ public:
     bool addItem(p_item a);
     //rimuove l'arma corrispondente ad un intero dato in input dall'inventario
     p_item deleteItem(string c);
+    p_item getByID(string id);
+    int getSize();
 
     //converte in stringa l'inventario
     string inventoryToStr();

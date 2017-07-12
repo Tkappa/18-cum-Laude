@@ -21,7 +21,7 @@
 #define SEE 1
 #define DROP 2
 #define EQUIP 3
-#define USE 4
+#define BUY 4
 
 
 using namespace std;
@@ -39,7 +39,7 @@ void Controller::launch() {
 
     //crea la struttura dati con 3 stanze base
     Map* head;
-    head= new Map(1,1,&narrative);
+    head= new Map(1,1,&narrative,open_day);
     Map* curMap=head;
 
     //setup di ncurses , queste ci vogliono sempre
@@ -69,10 +69,17 @@ void Controller::launch() {
 
     refresh();
 
+
+
     //Questo � un abbozzo di movimento
     int c;
     int mov;
     bool turno= true;
+
+    vista.print_help();
+    c=getch();
+    vista.print_outputMap(curMap);
+
     while (1) {
         c = getch();
 
@@ -128,6 +135,32 @@ void Controller::launch() {
                 vista.print_inventory(pg.getInventory(),SEE);
                 turno = false;
                 break;
+            case 116://char t ( schermata di acquisto)
+                if(curMap->checkIfStore()){
+                    vista.print_inventory(curMap->store,BUY);
+                    bool finished=false;
+                    char* msg= new char[500];
+                    strcpy(msg,"Lettera selezionata invalida");
+                    while(!finished){
+                        c=getch();
+                        if (c=='k'){finished=true;}
+                        int status=buy(punt_pg,c,curMap);
+                        if(status==3){
+                            finished=true;
+
+                        }
+                        else if(status==2){
+                            strcpy(msg,"Non hai abbastanza spazio nell'inventario");
+                        }
+                        else if(status==1){
+                            strcpy(msg,"Non hai abbastanza CFU per aquistare l'oggetto");
+                        }
+                        narrative.push(msg);
+                        vista.print_narrative(&narrative);
+                    }}
+
+                vista.print_outputMap(curMap);
+                break;
             case 103://char g //Selezione dell'oggetto da buttare a terra
                 {vista.print_inventory(pg.getInventory(),DROP);
                 bool finished=false;
@@ -149,6 +182,11 @@ void Controller::launch() {
                     if(equip(punt_pg,c)){
                         finished=true;
                     }
+                }
+                if(punt_pg->getCurWeapon()->getName()=="Laurea"){
+                    vista.print_victory();
+                    c=getch();
+                    exit(1);
                 }
                 }break;
             case 108://char l raccoglie l'oggetto da terra
@@ -327,6 +365,29 @@ bool Controller::equip(p_char pg, char c){
     return false;
 }
 
+int Controller::buy(p_char pg,char c,Map* curMap){
+    string tempchar="a";
+    tempchar[0]=c;
+    p_item selectedItem=curMap->store.getByID(tempchar);
+    if(selectedItem!=nullptr){
+
+        int moneyafterbought=(pg->getMoney())-(selectedItem->getPrice());
+        if(moneyafterbought>=0){
+            if(pg->pg_inventory.getSize()<8){
+                pg->pg_inventory.addItem(curMap->store.deleteItem(tempchar));
+                pg->setMoney(moneyafterbought);
+                //successo
+                return 3;
+            }
+            //inventario pieno
+            return 2;
+        }
+        //non abbastanza soldi
+        return 1;
+    }
+    //Non c'è l'oggetto
+    return 0;
+}
 
 void Controller::testAttack() {
     ability s;
@@ -400,6 +461,14 @@ MajorCharacter Controller::pgInitialization(View curview){
             ab.setDefense(5);
             corretto=true;
         break;
+        case 112://Debug, tutte le statistiche a 99
+            ab.setLife(200);
+            ab.setStrength(99);
+            ab.setDefense(99);
+            soldiagg=1000;
+            corretto=true;
+            break;
+
     }
    }
    //MajorCharacter::MajorCharacter(string n, ability s, Pos p, string d, Follower* f)

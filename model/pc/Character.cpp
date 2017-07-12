@@ -122,7 +122,7 @@ int Character::moveToChar(Character *otherChar, Room room) {
     // ----------- LE POSIZIONI X ED Y SONO INVERTITE -----------
     // ----------------------------------------------------------
 
-    srand((uint) time(nullptr));
+//    srand((uint) time(nullptr));
 
     // stanze in cui si trovano il personaggio principale e l'NPC corrente
 //    Room otherCharRoom = map.getRoomForCoord(otherChar.pos.mapX, otherChar.pos.mapY);

@@ -40,5 +40,5 @@ Rimodellamento estetico:
 
 
 Cose fighe da provare a fare quando è finito tutto:
--Fare un NPC neutrale Tutor che appare nel suo negozietto nei livelli SHOP ( Molto più difficile di quello che sembra)
+-Fare un NPC neutrale Tutor che appare nel suo negozietto nei livelli SHOP e gira a caso senza attaccare il PG ( Molto più difficile di quello che sembra)
 -Aggiungere i colori alle varie stampe , i mostri in rosso e gli oggetti in giallo e cose cosi per renderlo più bellino( Facile ma bisogna litigare con Ncurses)

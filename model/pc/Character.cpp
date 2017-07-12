@@ -16,10 +16,10 @@
 #include <cstdio>
 #include "Character.hpp"
 
+
 using namespace std;
 
 Character::Character() {
-    this->basestats;
     //this->stats = {5, 5, 5};
     this->pos = {0, 0, 0, 0};
     //Item w;
@@ -116,25 +116,81 @@ bool Character::move(int direction) {
     return false;
 }
 
-int Character::moveToChar(Character & otherChar) {
-    // differenza tra le componenti x ed y dei due personaggi
-    int dx = abs(this->pos.stanzX - otherChar.pos.stanzX);
-    int dy = abs(this->pos.stanzY - otherChar.pos.stanzY);
+int Character::moveToChar(Character *otherChar, Room room) {
+
+    // ----------------------------------------------------------
+    // ----------- LE POSIZIONI X ED Y SONO INVERTITE -----------
+    // ----------------------------------------------------------
+
+    srand((uint) time(nullptr));
+
+    // stanze in cui si trovano il personaggio principale e l'NPC corrente
+//    Room otherCharRoom = map.getRoomForCoord(otherChar.pos.mapX, otherChar.pos.mapY);
+
+    // (dx_room < 0) => stanza dell'altro personaggio a destra rispetto a questa
+    int dx_room = this->pos.mapX - otherChar->pos.mapX;
+    // (dy_room < 0) => stanza dell'altro personaggio sotto a questa
+    int dy_room = this->pos.mapY - otherChar->pos.mapY;
+
+    Pos sourcePos = this->pos, targetPos;
+
+    if (dx_room != 0 || dy_room != 0) {
+        // stanze diverse
+
+        // ------ se i due personaggi sono distanti al massimo 1 stanza ------
+        bool oneRoomNearX = abs(dx_room) == 1;
+        bool oneRoomNearY = abs(dy_room) == 1;
+
+        // se sono più distanti di una stanza sia sull'asse x che y ritorno una direzione a caso
+        if ((!oneRoomNearX && !oneRoomNearY) || (oneRoomNearX && oneRoomNearY))
+            return rand() % 4 + 1;
+
+        // se sono nelle stanze una di fianco all'altra sull'asse x
+        if (oneRoomNearX) {
+            int direction = dx_room < 0 ? 4 : 2;    // 4 = giù; 2 = su
+            bool hasDoorInDirection = room.hasDoor(direction);
+
+            if (hasDoorInDirection) {
+                int targetPosX = direction == 4 ? roomHeight : 0;
+                targetPos = { 0, 0, targetPosX, roomLenght / 2 };
+            }
+
+        } else {    // oneRoomNearY == true, una stanza sopra l'altra sull'asse y
+            int direction = dy_room < 0 ? 3 : 1;    // 3 = destra; 1 = sinistra
+            bool hasDoorInDirection = room.hasDoor(direction);
+
+            if (hasDoorInDirection) {
+                int targetPosY = direction == 3 ? roomLenght : 0;
+                targetPos = { 0, 0, roomHeight / 2, targetPosY };
+            }
+        }
+
+        // decido se muovermi sull'asse verticale o orizzonatale, anche a seconda della presenza di porte
+        // mi muovo nella direzione della porta
+    } else {
+        targetPos = otherChar->pos;
+    }
+
+    // stessa stanza, o stanze diverse ma considero la porta come destinazione verso cui muoversi
+
+    // differenza tra le componenti x ed y delle due posizioni
+    int dx = abs(sourcePos.stanzX - targetPos.stanzX);
+    int dy = abs(sourcePos.stanzY - targetPos.stanzY);
 
     // asse su cui muoversi, a seconda di quale dove esiste la distanza maggiore
     bool moveOnXAxis = dx > dy;
 
     if (moveOnXAxis) { // considero l'asse x
-        if (this->pos.stanzX > otherChar.pos.stanzX) { // se il personaggio corrente è più a destra
-            return 1; // vado a sinistra
+        if (sourcePos.stanzX < targetPos.stanzX) { // se il personaggio corrente è più in alto
+            return 4; // vado in giù
         } else {
-            return 3; // altrimenti vado a destra
+            return 2; // altrimenti vado in su
         }
     } else {
-        if (this->pos.stanzY > otherChar.pos.stanzY) { // se il personaggio corrente è più in basso
-            return 2; // mi muovo verso l'alto
+        if (sourcePos.stanzY < targetPos.stanzY) { // se il personaggio corrente è più a sinistra
+            return 3; // mi muovo verso destra
         } else {
-            return 4; // mi muovo verso il basso
+            return 1; // mi muovo verso sinistra
         }
     }
 }

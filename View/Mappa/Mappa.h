@@ -79,10 +79,12 @@ class Map{
         void populate(int MapX,int MapY);
         //Metodo utile a populate per mettere una posizione casuale nella stanza all'oggetto creato
         mapPos randRoomPos(int MapX,int MapY);
-
+        bool checkIfStore();
         void addItem(p_item a);
 
-        bool checkIfStore();
+
+        // restituisce la stanza nella posizione specificata
+        Room getRoomForCoord(int posX, int posY);
 };
 
 

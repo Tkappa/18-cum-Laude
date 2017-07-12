@@ -582,6 +582,13 @@ void Map::addItem(p_item a){
 bool Map::checkIfStore(){
 return isStore;}
 
+
+Room Map::getRoomForCoord(int posX, int posY) {
+
+    return mapMatrix[posX][posY];
+}
+
+
 //TURORIAL LISTE c++
 /*
     std::list<posStanza> listStanze; crei la lista

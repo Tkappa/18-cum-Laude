@@ -1,60 +1,44 @@
-Obiettivo: Gioco giocabile entro 7/7 [PRIORITA 1]
-Gioco completamente funzionale entro il 11/7 [PRIORITA 2]
-Gioco con tutti i fronzoli,relazione e consegna entro il 15/07 [PRIORITA 3]
-Le cose targate 4 sono cose non necessarie al completam
-Ho già mandato la mail a lanese per chiedergli come funziona e le varie date.
-(Il numero alla sinistra del compito è la priorità, in caso finite il vostro compito e avete tempo avvertitemi e fate qualcos'altro con priorità alta o aiutate gli altri)
+CONSEGNA 15/7/2017, (Se riusciamo anche a fare il 14 non sarebbe affatto male)
 
-Necessario:
+Se fate qualcosa anche di minuscolo scrivetemelo assolutamente che domani faccio tutta sta lista e se posso saltare qualcosa sono solo felice
 
 DA FARE::
 
 
-    NPC:
- Aggiustare MoveTo in modo che tenga in considerazione anche quando si è in stanze diverse
- [2]--Fare in modo che il follower non stia attaccato al culo del personaggio ma si muova indipendentemente , seguendo però il giocatore
-    
-  Controller/Gestione del gioco:
- [1]--Funzione Turn() //GIUSEPPE, IL PRIMA POSSIBILE, MAX MERCOLEDI-5
-        Fa muovere tutti gli NPC nella lista degli NPC vivi della Mappa, facendogli eseguire tutti i vari attacchi in caso debbano attaccare
-        Inoltre stampa tutta la storia
- [2]--Gestione degli input [[HO GIA CREATO LA BASE IO, BASTA SPOSTARE IL MEGA SWITCH IN UNA CLASSE A PARTE E FARE QUELLE CHE MANCANO]]
-        Gestire gli input , ogni volta che viene premuto un tasto valido viene eseguita la corrispettiva azione:
-        Azioni che reputo necessarie:
-            -Movimento(con wasd o le freccette)(fatto)
-                  Muove il personaggio e fa passare il turno()
-            -Inventario:(fatto tutte e tre)
-                  Fa vedere a schermo l'inventario sostituendolo alla storia
-                  Il turn() verrà eseguito al conseguimento con successo di una delle 3 azioni , e non per ogni tasto premuto.
-                  Si potrà accedere all'inventario in 3 modi( quindi 3 tasti diversi): 
-                        1)Usa , l'oggetto selezionato ( se valido , cioè se è un consumabile) viene usato e tolto dall'inventario
-                        2)Equipaggia, l'oggetto selezionato( se valido , cioè arma o armatura) viene equipaggiato al posto di quello attuale, che viene rimesso nell'inventario
-                        3)Lascia, l'oggetto selezionato viene buttato a terra (TODO [4] se si lasciano più oggetti nella stessa casella invece di sovrascriverli visualizzare una lista, però non sprecarci tempo prima che tutto il resto sia fatto)
-            -Aiuto:
-                 Visualizzarà la schermata di tutorial , non fa passare il turn()
-            -Avanzamento al prossimo livello , ritorno a quello precedente ( rispettivamente > e <)(fatto)
-                 Se si è sulla casella giusta ( le scale) si passa al prossimo livello o si torna a quello precedente
-            -Aspettare
-                 Fa passare il turn()
-            -Raccogliere l'oggetto(fatto)
-                 Se il giocatore è sopra la casella dell'oggetto , questo viene aggiunto all'inventario, fa passare il turn()
-             //Eventuali altre?
-
-VIEW:
-[1] Renderlo dinamica rispetto alle console / creare una console di dimensione fissa per tutti
-Impossibile renderlo dinamico , semplicemnte fare che stampa errore se è troppo piccolo (120,30)
-     
-    Mappa: 
- [3]--Ogni bioma diverso avrà tipi di stanza diverse con grandezze variabili o cose del genere
- ogni tot mappe il bioma cambia
- al cambio del bioma c'è un livello con solo il negoziante che ti vende le cose
- Come ultimo livello c'è il magnifico rettore che ti da la laurea , il gioco finisce quando equipaggi la laurea
   
+VIEW:
+All'avvio del programma controllare che COLS>120 e che LINES > 30 (variabili globali di ncurses)
+-> in caso negativo dire di ingrandire il terminale(a mano) sopra i valori minimie e poi chiudegli il programma il programma in faccia
+-> in caso positivo avviare il gioco
+(Tutti i modi su internet i rendere dinamico NCurses non funionano sul nostro progetto , fidatevi che ci ho provato anche troppo)
+
+Bilanciamenti: [Funzione da modificare]
+(Ho notato che sia gli npc che le armi non scalano con i livelli, ci devo guardare un attimo)
+-[Character->Setupabilities]NPC sono troppo deboli , rendere NPC più forti in qualche modo
+-[Item->Item()]Fare in modo che sia più probabile che alla creazione di un oggetto random escano soldi
+-[Item->Item()]Bilanciare armi e armature in modo che siano più deboli all'inizio ma che scalino con i livelli in modo bello
+-[Map->Map()]Nel costruttore della mappa speciale fare in modo che l'inventario del negoziante parta da 4 (variabile nOggettiRandom o qualcosa del genere)
+
+Varie:
+-[Map->Map()]Nel costruttore delle mappe speciali fare in modo che:
+--->Quando SpecialType è shop aggiungere alla narrazione qualcosa detto dal tutor che ti spiega come usare lo shop
+--->Quando cambia bioma( cioè quando entra nello shop) aggiungere alla narrazione il fatto che è cambiato il bioma , magari con vari testi scelti casualmente
+--->Quando specialType è laurea aggiungere alla narrazione il Magnifico Rettore che si congratula e ti dice di equipaggiare la laurea
+
+-Mettere dei nomi decenti e in tema alle armi/armature e ai mostri
+
+-[Controller-launch()] Aggiungere allo switch gigante della morte:
+--->Tasto che va a vuoto (fa passare il turn) e in [View->print_help()] aggiungere questo tasto al tutorial
+--->Tasto h che NON fa passare il turno( mette turno a false) e chiama vista.print_help()
 
 
-Piccole correzzioni da fare:
-   Commentare bene
-    quando si sale le scale al livello 0 uccidere il personaggio
-    
-    
-    
+Rimodellamento estetico:
+-Cancellare tutti gli include inutili
+-Mettere tutti gli enum , variabili globali , typedef nello stesso file ( aggiungerli ad eviroment.hpp) e mettere l'include solo di quello
+-Cancellare tutte le funzioni inutili/deprecate (i to_str o i riferimenti ai follower)
+-Commentare e indentare come lanese comanda
+
+
+Cose fighe da provare a fare quando è finito tutto:
+-Fare un NPC neutrale Tutor che appare nel suo negozietto nei livelli SHOP ( Molto più difficile di quello che sembra)
+-Aggiungere i colori alle varie stampe , i mostri in rosso e gli oggetti in giallo e cose cosi per renderlo più bellino( Facile ma bisogna litigare con Ncurses)

@@ -563,24 +563,25 @@ void Controller::turn(p_char player,Map* curMap,int player_direction,View vista)
     /**/
 
 int Controller::combat(p_char attacker, p_char defender){
-    int attHP,defHP,attSTR,defSTR,attDEF,defDEF;
+    int attHP,defHP,attSTR,defSTR,defDEF;
 
     attHP=attacker->getFullStats().getLife();
     defHP=defender->getFullStats().getLife();
 
-
+    defSTR=defender->getFullStats().getStrength();
     defDEF=defender->getFullStats().getDefense();
 
     attSTR=attacker->getFullStats().getStrength();
-    int newattSTR=attacker->getFullStats().getStrength()-defDEF;
+    int newattSTR=attSTR-defDEF;
 
     if(newattSTR<0) newattSTR=0;
 
-    int attNewHp,defNewHp;
+    int defNewHp;
 
     defNewHp=defHP-newattSTR;
 
     ability def_temp;
+
     def_temp.setLife(defNewHp);
     def_temp.setStrength(defSTR);
     def_temp.setDefense(defDEF);

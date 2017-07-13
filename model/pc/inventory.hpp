@@ -4,10 +4,8 @@
 
 
 #include "Item.hpp"
-#include <iostream>
-#include <string>
-#include <stdio.h>
-#include <list>
+
+#include "../../enviroment.hpp"
 
 using namespace std;
 
@@ -17,19 +15,22 @@ public:
 
     //crea una lista di armi
     inventory();
+
     list<p_item> listw;
+
+    //getter dell'inventario
     list<p_item> getInventory();
-    //aggiunge un arma all'equipaggiamento del personaggio
+
+    //aggiunge un oggetto all'equipaggiamento del personaggio
     bool addItem(p_item a);
-    //rimuove l'arma corrispondente ad un intero dato in input dall'inventario
+
+    //rimuove l'arma corrispondente ad un carattere dato in input dall'inventario
     p_item deleteItem(string c);
+
+    //Ritorna un oggetto con ID corrispondente a quello passato in parametro
     p_item getByID(string id);
+
     int getSize();
-
-    //converte in stringa l'inventario
-    string inventoryToStr();
-
-
 
 };
 

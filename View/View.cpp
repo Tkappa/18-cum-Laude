@@ -397,7 +397,7 @@ void View::print_death(p_char pgprincipale ,p_char omicida){
     }
     else{
         messaggio=omicida->getName();
-        messaggio+=" ti ha convinto che forse l'universit� non fa per te.";
+        messaggio+=" ti ha convinto che forse l'universita' non fa per te.";
     }
 
     waddstr(death,messaggio.c_str());

@@ -15,8 +15,7 @@
 #define CONTROLLER_H
 
 #include <string>
-//#include "../model/pc/Character.hpp"
-#include "../model/npc/Follower.hpp"
+
 #include "../model/pc/MajorCharacter.hpp"
 #include "../view/mappa/Mappa.h"
 #include "../view/View.h"
@@ -34,18 +33,17 @@ protected:
 private:
     queue<char*> narrative;
 public:
-    Controller(int nLevels);
+    Controller();
     void launch();
-    void testFollower();
-    void testAttack();
-    void dati(char buf[]);
-    void movement(int dir);
+
     MajorCharacter pgInitialization(View curview);
-    //da rimuovere e mettere nella gestione degli input
+
+
     void loot(p_char pg, Map* curMap);
     bool drop(p_char pg,char c,Map* curMap);
     bool equip(p_char pg, char c);
     int buy(p_char pg,char c,Map* curMap);
+
     void turn(p_char player,Map* curMap,int player_direction,View vista);
     int combat(p_char attacker, p_char defender);
 

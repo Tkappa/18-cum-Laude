@@ -14,43 +14,26 @@
 #ifndef MAJORCHARACTER_HPP
 #define MAJORCHARACTER_HPP
 
-/*
-
-#define FACOLTA "../model/res/facolta.txt"
-#define PIAZZA_VERDI "../model/res/piazza_verdi.txt"
-#define SEDE_CENTRALE "../model/res/sede_centrale.txt"
- */
-
-#include <string>
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <fstream>
 #include "Character.hpp"
-#include "../npc/Follower.hpp"
+#include "ability.h"
+#include "../../environment.hpp"
 
 using namespace std;
 
-enum bioma {
-    open_day = 1, facolta, piazza_verdi, sede_centrale
-};
+
 
 
 class MajorCharacter : public Character {
 public:
-    MajorCharacter();
-    MajorCharacter(bioma a,int nLivelli);
-    MajorCharacter(string n, ability s);
-//    MajorCharacter(string n, ability s, Pos p);
-//    MajorCharacter(string n, ability s, Pos p, string d);
-    MajorCharacter(string n, ability s, Pos p, string desc, Follower* f);
-    void setFollower(Follower* f);
-    void setPos(Pos newPos);
-//    string string toStr() override;
-    string toStr();
 
-protected:
-    Follower* follower;
+    MajorCharacter();
+    //Costruttore Randomico
+    MajorCharacter(int a,int nLivelli);
+
+    //Costruttore per il personaggio principale
+    MajorCharacter(string n, ability s);
+
+    void setPos(Pos newPos);
 
 private:
     static ability setUpAbilities(int curLevel);

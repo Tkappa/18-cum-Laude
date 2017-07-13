@@ -4,11 +4,10 @@
 
 #ifndef MAPPA_MAPPA_H
 #define MAPPA_MAPPA_H
-#include <list>
+
+#include "../../environment.hpp"
 #include "Stanza.h"
-#include <queue>
 #include "../../model/pc/MajorCharacter.hpp"
-#include "../../model/pc/Character.hpp"
 
 struct pers{
 string nome;
@@ -37,33 +36,41 @@ class Map{
         inventory store;
         std::list<p_char> characterList;
         std::list<p_item> objectList;
+
         //Puntatori alla mappa precedente e successiva
         Map* next;
         Map* prev;
 
         //crea una nuova mappa popolata da stanza
-        Map(int nRoomsPrec,int nLevel,queue<char*>* narrative,bioma x);
+        Map(int nRoomsPrec,int nLevel,queue<char*>* narrative,int x,bool mappaSpeciale);
+
         //Crea una mappa di tipo speciale
-        Map(int n,int nLevelPrec,queue<char*>* narrative, int maptype);
-//        Mappa(const Mappa& orig);
-        //stampa la mappa con cout facendo solo 0 e 1
-        void printMap();
+        Map(int nRoomsPrec,int nLevelPrec,queue<char*>* narrative, bioma maptype);
+
         //restituisce il carattere che sta alle coordinate specificate
         char getMapChar(int MapX,int MapY,int StX,int StY);
+
         //scrive sulla struttura dati di personaggio e lo sposta nella direzione specificata
         void moveChar(p_char personaggio,int dir);
+
         //mette il personaggio specificato(dovrebbe essere quello principale) sopra le scale che portano su come posizione iniziale
         void assignInizialPosition_toPlayer(p_char personaggio);
+
         //assegna la posizione specificata al personaggio passato per paramentro
         void assingPosition(p_char personaggio,int MapX,int MapY,int StX,int StY);
+
         //ritorna vero se il personaggio inserito pu� muoversi nella direzione specificata , altimenti falso
         bool mapCanMove(p_char personaggio,int dir);
+
         //ritorna il valore di "esplorato" della stanza in quelle coordinate
         bool roomExplored(int MapX,int MapY);
+
         //fornisce una copia di "personaggi"
         std::list<p_char> getListChar();
+
         //fornisce una lista di item
         std::list<p_item> getListItem();
+
         //Restituisce le due scale in modo da prenderne le posizioni
         pers getStairsUp();
         pers getStairsDown();
@@ -79,8 +86,14 @@ class Map{
         void populate(int MapX,int MapY);
         //Metodo utile a populate per mettere una posizione casuale nella stanza all'oggetto creato
         mapPos randRoomPos(int MapX,int MapY);
+
+        //Controlla se la mappa corrente e' un  negozio
         bool checkIfStore();
+
+        //aggiunge un oggetto alla lista di oggetti della mappa
         void addItem(p_item a);
+
+        //Restituisce il livello della mappa attuale
         int getNLevel();
 
         // restituisce la stanza nella posizione specificata

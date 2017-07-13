@@ -14,41 +14,50 @@
 #ifndef CHARACTER_HPP
 #define CHARACTER_HPP
 
-#include <string>
-#include <list>
-#include "environment.hpp"
+#include "../../environment.hpp"
 #include "ability.h"
 #include "inventory.hpp"
 #include "../../View/Mappa/Stanza.h"
 
 using namespace std;
 
-typedef Item* p_item;
+
+
 class Character {
-public:
+    public:
+
     Character();
     Character(string n, ability s);
     Character(string n, ability s, Pos p);
-    Character(string n, ability s, Pos p, string d);
-    bool move(int direction);
+
+    //Stabilisce in che direzione si deve muovere per raggiungere otherChar
     int moveToChar(Character * otherChar, Room room);
-    bool attack(Character & otherChar);
+
+    //Controlla se muovendosi in quella direzione la sua posizione sarà la stessa di x
+    bool willCollide(Character * x,int d);
+
+    //Setter e getter di tutti i valori
     Pos getPos();
     virtual void setPos(Pos newPos);
+
     bool isAlive();
-    ability getBaseStats();
-    ability getFullStats();
+    void setAlive(bool isalive);
+
     void setStats(ability & s);
-    void setName(string s);
+    ability getBaseStats();
+
+    ability getFullStats();
     void setFullStats(ability & s);
+
+    void setName(string s);
     string getName();
-    string getDesc();
-    void setDesc(string s);
+
     string getSym();
     void setSym(string sym);
-    virtual string toStr();
 
     void addMoney(int amount);
+    int getMoney();
+    void setMoney(int i);
 
     p_item getCurWeapon();
     void setCurWeapon(p_item weapon);
@@ -57,19 +66,18 @@ public:
     p_item getCurArmor();
     void setCurArmor(p_item weapon);
     p_item equipArmor(p_item weapon);
-    int getMoney();
-    bool willCollide(Character * x,int d);
-    void setAlive(bool isalive);
 
-    void setMoney(int i);
-    Pos pos;
+
     inventory getInventory();
+
+
+    //Valori che davano problemi se usati con il getter
+    Pos pos;
     inventory pg_inventory;
 protected:
 
     int money;
     string name;
-    string desc;
     ability basestats;
     ability fullstats;
     p_item curWeapon;

@@ -5,31 +5,8 @@ Se fate qualcosa anche di minuscolo scrivetemelo assolutamente che domani faccio
 DA FARE::
 
 
-  
-VIEW:
-All'avvio del programma controllare che COLS>120 e che LINES > 30 (variabili globali di ncurses)
--> in caso negativo dire di ingrandire il terminale(a mano) sopra i valori minimie e poi chiudegli il programma il programma in faccia
--> in caso positivo avviare il gioco
-(Tutti i modi su internet i rendere dinamico NCurses non funionano sul nostro progetto , fidatevi che ci ho provato anche troppo)
-
-Bilanciamenti: [Funzione da modificare]
-(Ho notato che sia gli npc che le armi non scalano con i livelli, ci devo guardare un attimo)
--[Character->Setupabilities]NPC sono troppo deboli , rendere NPC più forti in qualche modo
--[Item->Item()]Fare in modo che sia più probabile che alla creazione di un oggetto random escano soldi
--[Item->Item()]Bilanciare armi e armature in modo che siano più deboli all'inizio ma che scalino con i livelli in modo bello
--[Map->Map()]Nel costruttore della mappa speciale fare in modo che l'inventario del negoziante parta da 4 (variabile nOggettiRandom o qualcosa del genere)
-
 Varie:
--[Map->Map()]Nel costruttore delle mappe speciali fare in modo che:
---->Quando SpecialType è shop aggiungere alla narrazione qualcosa detto dal tutor che ti spiega come usare lo shop
---->Quando cambia bioma( cioè quando entra nello shop) aggiungere alla narrazione il fatto che è cambiato il bioma , magari con vari testi scelti casualmente
---->Quando specialType è laurea aggiungere alla narrazione il Magnifico Rettore che si congratula e ti dice di equipaggiare la laurea
-
 -Mettere dei nomi decenti e in tema alle armi/armature e ai mostri
-
--[Controller-launch()] Aggiungere allo switch gigante della morte:
---->Tasto che va a vuoto (fa passare il turn) e in [View->print_help()] aggiungere questo tasto al tutorial
---->Tasto h che NON fa passare il turno( mette turno a false) e chiama vista.print_help()
 
 
 Rimodellamento estetico:

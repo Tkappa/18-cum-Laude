@@ -53,7 +53,7 @@ protected:
     Follower* follower;
 
 private:
-    static ability setUpAbilities(int statsAmount);
+    static ability setUpAbilities(int curLevel);
 };
 
 #endif /* MAJORCHARACTER_HPP */

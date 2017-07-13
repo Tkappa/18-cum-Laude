@@ -17,17 +17,27 @@ Item::Item(int level,mapPos i_pos){
     string weapons[7]={"spada","arco","test","piede","braccio","lolo","equitalia"};
     string armors[7]={"tshirt","lavitafaschifo","colonna","aiuto","ippopotamo","temporaneo","ciaomamma"};
     int i;
-    i=random()%4;
+    int randitem=rand()%100;
+    if(randitem<50){
+        i=2;
+    }
+    else if(randitem<70){
+        i=3;
+
+    }
+    else{
+        i=random()%2;
+    }
     Item* a;
     if(i==0){
         name=generateName(weapons);//genero un'arma
-        value=1+level+(random()%3);
+        value=2+level+(random()%3);
         type=WEAPON;
         symb="w";
     }
     if(i==1){
         name=generateName(armors);//genero un armatura
-        value=1+level+(random()%3);
+        value=2+level+(random()%3);
         type=ARMOR;
         symb="a";
     }
@@ -38,19 +48,19 @@ Item::Item(int level,mapPos i_pos){
         symb="$";
     }
     if(i==3){
-        string temp="Pozione di cura ";
+        string temp="Redbull ";
 
         int poz=level/3+random()%10;
         if (poz<6){
-            value=5;
+            value=10;
             temp+="piccola";
         }
         else if (poz<11){
-            value=10;
+            value=20;
             temp+="media";
         }
         else {
-            value=15;
+            value=30;
             temp+="grande";
         }
 
@@ -60,7 +70,7 @@ Item::Item(int level,mapPos i_pos){
     }
     position=i_pos;
 
-    price=value*2;
+    price=value*10;
 
 }
 Item::Item(int level){

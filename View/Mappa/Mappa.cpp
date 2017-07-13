@@ -38,6 +38,8 @@ Map::Map(int n,int nLevelPrec,queue<char*>* narrative, int specialmap){
     nLevel=nLevelPrec+1;
     nRooms=n;
 
+    char* msg=new char[500];
+
     int randBiome=rand()%4;
     switch (randBiome){
     case 0:
@@ -75,7 +77,53 @@ Map::Map(int n,int nLevelPrec,queue<char*>* narrative, int specialmap){
     stairDown.pos.stanzY=3;
     mapMatrix[stairDown.pos.mapX][stairDown.pos.mapY].createPos(stairDown.pos.stanzX,stairDown.pos.stanzY,stairDown.nome);
 
-    int nOggetti=rand()%7+1;
+    strcpy(msg,"Noti un cambiamento del clima, ti stai addentrando ");
+    switch(biome){
+    case piazza_verdi:
+            strcat(msg,"in pizza verdi");
+        break;
+    case facolta:
+            strcat(msg,"in facolta'");
+        break;
+    case open_day:
+            strcat(msg,"in un open day");
+        break;
+    case sede_centrale:
+            strcat(msg,"nella sede centrale");
+        break;
+    }
+    narrative->push(msg);
+
+    switch(nLevelPrec/4){
+case 1:
+    msg= new char[500];
+    strcpy(msg,"Tutor: Benvenuto al ricevimento , premi t per vedere come ti posso aiutare");
+    narrative->push(msg);
+    msg=new char[500];
+    strcpy(msg,"Tutor: Spero che hai abbastanza CFU da saziare la mia fame");
+    narrative->push(msg);
+    break;
+case 2:
+    msg= new char[500];
+    strcpy(msg,"Tutor: Non hai ancora mollato gli studi? Impressionante!");
+    narrative->push(msg);
+    msg=new char[500];
+    strcpy(msg,"Tutor: Mi chiedo se hai la stoffa di arrivare fino alla fine pero'");
+    narrative->push(msg);
+    break;
+
+case 3:
+    msg= new char[500];
+    strcpy(msg,"Tutor: Bentornato! Sei quasi arrivato , puoi farcela!");
+    narrative->push(msg);
+    msg=new char[500];
+    strcpy(msg,"Tutor: Magari tra qualche anno prenderai il mio posto");
+    narrative->push(msg);
+    break;
+    }
+
+
+    int nOggetti=rand()%4+4;
     for(int i=0;i<nOggetti;i++){
         int type=3;
         p_item ogg;
@@ -98,6 +146,13 @@ Map::Map(int n,int nLevelPrec,queue<char*>* narrative, int specialmap){
         degree->setPos(x);
         degree->setSym("l");
         objectList.push_back(degree);
+        msg=new char[500];
+        strcpy(msg,"Magnifico Rettore: Congratuziani giovane passerotto, sei riuscito a non farti distrarre e conquistare la laurea");
+        narrative->push(msg);
+        msg=new char[500];
+        strcpy(msg,"Magnifico Rettore: Ora vai , prendi e equipaggia la laurea ");
+
+        narrative->push(msg);
     }
 }
 
@@ -502,20 +557,20 @@ void Map::populate(int MapX,int MapY){
     char* str= new char[400];
 
 
-    if(nNewMonsters<65){
+    if(nNewMonsters<70){
         nNewMonsters=1;
     }
-    else if(nNewMonsters<90){
+    else if(nNewMonsters<95){
         nNewMonsters=2;
     }
     else {
         nNewMonsters=3;
     }
 
-    if(nNewItems<65){
+    if(nNewItems<50){
         nNewItems=1;
     }
-    else if(nNewItems<90){
+    else if(nNewItems<75){
         nNewItems=2;
     }
     else {

@@ -404,6 +404,9 @@ void View::print_help(){
      messaggio="Per buttare oggetti a terra dovrai premere il tasto 'g'";
     waddstr(help,messaggio.c_str());
     wmove(help,curY++,1);
+    messaggio="Per fare passare un turno senza fare niente premere il tasto 'o'";
+    waddstr(help,messaggio.c_str());
+    wmove(help,curY++,1);
      messaggio="Quando sarai al ricevimento con il tutor dovrai premere il tasto 't' per vedere come ti puo aiutare(Costa CFU)";
     waddstr(help,messaggio.c_str());
     wmove(help,curY++,1);

@@ -50,6 +50,11 @@ void Controller::launch() {
     curs_set(0); //toglie il cursore
     keypad(stdscr, TRUE); //offre la possibilit� di usare tasti speciali (freccette etc..)
 
+    if(COLS<120||LINES<30){
+        endwin();
+        cout<<"Si prega di ingrandire il terminale in modo che la larghezza sia 120 o piu' e la l'altezza 30 o piu' (tasto destro sul terminale , proprieta', layout, dimensioni finestra)";
+        exit(1);
+    }
     //inizializzazione della classe view
     View vista;
 
@@ -142,6 +147,12 @@ void Controller::launch() {
                 vista.clearoutputMap();
                 vista.print_outputMap(curMap);
                 }
+                break;
+            case 111://char o (salta turno)
+                break;
+            case 104: //char h (show help)
+                vista.print_help();
+                turno=false;
                 break;
             case 105://char i ( visualizza l'inventario
                 vista.print_inventory(pg.getInventory(),SEE);
@@ -438,35 +449,35 @@ MajorCharacter Controller::pgInitialization(View curview){
         c=getchar();
         switch(c){
         case 97:  //a -> ingeneria HIGH FORZA E VITA, LOW RESTO
-            ab.setLife(20);
-            ab.setStrength(5);
-            ab.setDefense(2);
+            ab.setLife(30);
+            ab.setStrength(7);
+            ab.setDefense(3);
             corretto=true;
         break;
         case 98: //b-> lingue  HIGH DEF E VITA,LOW RESTO
-            ab.setLife(20);
-            ab.setStrength(2);
-            ab.setDefense(5);
+            ab.setLife(30);
+            ab.setStrength(3);
+            ab.setDefense(7);
             corretto=true;
         break;
         case 99: //c-> scienze Tutto nedio
-            ab.setLife(15);
-            ab.setStrength(3);
-            ab.setDefense(3);
+            ab.setLife(20);
+            ab.setStrength(5);
+            ab.setDefense(5);
 
             corretto=true;
         break;
         case 100: //d->umanistiche HIGH VITA E SOLDI,LOW RESTO
 
-            ab.setLife(20);
-            ab.setStrength(2);
-            ab.setDefense(2);
+            ab.setLife(30);
+            ab.setStrength(3);
+            ab.setDefense(3);
             soldiagg=50;
 
             corretto=true;
         break;
         case 101: //e->fuoricorso LOW TUTTO INIZI CON UN DEBITO
-            ab.setLife(10);
+            ab.setLife(15);
             ab.setStrength(1);
             ab.setDefense(1);
             soldiagg=-50;
@@ -474,9 +485,9 @@ MajorCharacter Controller::pgInitialization(View curview){
             corretto=true;
         break;
         case 102: //f->medicina HIGH FORZA E DEF,LOW RESTO
-            ab.setLife(10);
-            ab.setStrength(5);
-            ab.setDefense(5);
+            ab.setLife(15);
+            ab.setStrength(7);
+            ab.setDefense(7);
             corretto=true;
         break;
         case 112://Debug, tutte le statistiche a 99
@@ -572,7 +583,30 @@ int Controller::combat(p_char attacker, p_char defender){
     defDEF=defender->getFullStats().getDefense();
 
     attSTR=attacker->getFullStats().getStrength();
-    int newattSTR=attSTR-defDEF;
+
+    int diceroll=rand()%20+1;
+    int newattSTR;
+    char* tipoattacco=new char[500];
+
+    if(diceroll<2){
+        strcpy(tipoattacco,"Fallimento critico! ");
+        newattSTR=0;
+    }
+    else if(diceroll<16){
+        strcpy(tipoattacco,"Attacco normale! ");
+        newattSTR=attSTR-defDEF;
+
+    }
+    else if(diceroll<20){
+        strcpy(tipoattacco,"Attacco potente! ");
+        newattSTR=attSTR-(defDEF/3);
+    }
+    else if(diceroll==20){
+        strcpy(tipoattacco,"Colpo critico! ");
+        newattSTR=attSTR-defDEF/5;
+    }
+
+
 
     if(newattSTR<0) newattSTR=0;
 
@@ -590,8 +624,8 @@ int Controller::combat(p_char attacker, p_char defender){
     char* str= new char[400];
 
     char buf[10];
-
-    strcpy(str,attacker->getName().c_str());
+    strcpy(str,tipoattacco);
+    strcat(str,attacker->getName().c_str());
     strcat(str," ha attaccato ");
     strcat(str,defender->getName().c_str());
     strcat(str," e ha inflitto ");
@@ -607,7 +641,7 @@ int Controller::combat(p_char attacker, p_char defender){
 
     narrative.push(str);
 
-    if(defNewHp<0){
+    if(defNewHp<=0){
         defender->setAlive(false);
         //difensore morto
         return 1;

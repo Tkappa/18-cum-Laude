@@ -102,13 +102,14 @@ string MajorCharacter::toStr() {
  MajorCharacter::MajorCharacter(bioma currentZone, int currentLevel) : MajorCharacter() {
     // la somma dei valori delle statistiche del personaggio viene impostata in relazione al livello
     // ed il suo valore si discosta dal livello per al massimo un terzo del valore di quest'ultimo
-    int deltaStats = currentLevel / 3;
+    /*int deltaStats = currentLevel / 2;
 
-    // con questa formula la vita differisce di +- 1/3 rispetto al livello corrente
+    // con questa formula la statistiche differiscono di +- 1/3 rispetto al livello corrente con possibilità di valori alti dal random
     int amount = currentLevel+1-deltaStats;
     int randamont = deltaStats != 0 ? rand() % deltaStats * 2 : 0;
-    int statsAmount = amount+randamont;
-
+    //Parte da 10 in modo che siano simili al personaggio come statistiche iniziali
+    int statsAmount = 10+amount+randamont;
+    */
     auto namesVector = SEDE_CENTRALE;
 
     if (currentZone == open_day) {
@@ -119,7 +120,7 @@ string MajorCharacter::toStr() {
         namesVector = PIAZZA_VERDI;
     }
 
-    ability stats = setUpAbilities(statsAmount);
+    ability stats = setUpAbilities(currentLevel);
 
     string name = namesVector[rand() % namesVector.size()];
     string symb=name.substr(0,1);
@@ -132,31 +133,26 @@ string MajorCharacter::toStr() {
  }
 
 
-ability MajorCharacter::setUpAbilities(int statsAmount) {
+ability MajorCharacter::setUpAbilities(int curLevel) {
 
 
     // imposto le abilità del personaggio
     ability stats;
 
-    // se la somma delle caratteristiche del personaggio è <= 3
-    // assegno ad ognuna delle 3 caratteristiche il valore 1
-    if (statsAmount <= 3) {
-        stats.setDefense(1);
-        stats.setStrength(1);
-        stats.setLife(1);
-    } else {
-        // assegno casualmente una parte dei valori delle caratteristiche
-        // se il valore fosse minore di 1, assegno 1 di default
-        int intelligenceAmount = statsAmount > 0 ? rand() % statsAmount + 1 : 1;
-        stats.setDefense(intelligenceAmount < 1 ? 1 : intelligenceAmount);
+    //Di quanto può differire il valore dalla statistica base in positivo o negativo
 
-        statsAmount -= intelligenceAmount;
-        int strengthAmount = statsAmount > 0 ? rand() % statsAmount + 1 : 1;
-        stats.setStrength(strengthAmount < 1 ? 1 : strengthAmount);
+    int difference=2;
 
-        int lifeAmount = statsAmount - strengthAmount;
-        stats.setLife(lifeAmount < 1 ? 1 : lifeAmount);
-    }
+    //la statistica base che permette che gli npc diventino sempre più forti andando avanti
+    int base=2+curLevel;
+
+    int intelligenceAmount = base+(rand()%(difference*2))-difference;
+    int strengthAmount = base+(rand()%(difference*2))-difference;
+    int lifeAmount = 3*(base+(rand()%(difference*2))-difference);
+
+    stats.setDefense(intelligenceAmount);
+    stats.setStrength(strengthAmount);
+    stats.setLife(lifeAmount);
 
     return stats;
 }

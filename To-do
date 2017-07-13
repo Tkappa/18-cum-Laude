@@ -4,18 +4,5 @@ Se fate qualcosa anche di minuscolo scrivetemelo assolutamente che domani faccio
 
 DA FARE::
 
-
-Varie:
--Mettere dei nomi decenti e in tema alle armi/armature e ai mostri
-
-
-Rimodellamento estetico:
--Cancellare tutti gli include inutili
--Mettere tutti gli enum , variabili globali , typedef nello stesso file ( aggiungerli ad eviroment.hpp) e mettere l'include solo di quello
--Cancellare tutte le funzioni inutili/deprecate (i to_str o i riferimenti ai follower)
--Commentare e indentare come lanese comanda
-
-
 Cose fighe da provare a fare quando è finito tutto:
 -Fare un NPC neutrale Tutor che appare nel suo negozietto nei livelli SHOP e gira a caso senza attaccare il PG ( Molto più difficile di quello che sembra)
--Aggiungere i colori alle varie stampe , i mostri in rosso e gli oggetti in giallo e cose cosi per renderlo più bellino( Facile ma bisogna litigare con Ncurses)

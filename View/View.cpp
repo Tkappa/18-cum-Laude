@@ -259,7 +259,8 @@ void View::print_outputMap(Map * CurLevel){
                 for(rigSt=0;rigSt<roomHeight;rigSt++){
                     for(colSt=0;colSt<roomLenght;colSt++){
                         char stamp=CurLevel->getMapChar(colMap,rigMap,colSt,rigSt);
-                            waddch(outputMap,stamp);
+
+                        waddch(outputMap, stamp);
                     }
                     cursY++;
                     wmove(outputMap,cursY,cursX);
@@ -287,7 +288,14 @@ void View::print_outputMap(Map * CurLevel){
             printy=3+(*i)->position.mapY*roomHeight+(*i)->position.stanzY;
             printx=1+(*i)->position.mapX*roomLenght+(*i)->position.stanzX;
             wmove(outputMap,printx,printy);
-            waddstr(outputMap,(*i)->getSym().c_str());
+
+            char ch = (*i)->getSym()[0];
+            if (ch == '$' || (ch >= 97 || ch <= 122)) {
+                init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+                waddch(outputMap, ch | COLOR_PAIR(1) | A_BOLD);
+            } else {
+                waddstr(outputMap,(*i)->getSym().c_str());
+            }
     }
 
     //Stampa tutti i personaggi "che si muovono" cosi non modificano la struttura dati
@@ -296,7 +304,14 @@ void View::print_outputMap(Map * CurLevel){
             printy=3+(*i)->pos.mapY*roomHeight+(*i)->pos.stanzY;
             printx=1+(*i)->pos.mapX*roomLenght+(*i)->pos.stanzX;
             wmove(outputMap,printx,printy);
-            waddstr(outputMap,(*i)->getSym().c_str());
+
+            char ch = (*i)->getSym()[0];
+            if (ch >= 65 && ch <= 90) {
+                init_pair(2, COLOR_RED, COLOR_BLACK);
+                waddch(outputMap, ch | COLOR_PAIR(2) | A_BOLD);
+            } else {
+                waddstr(outputMap,(*i)->getSym().c_str());
+            }
     }
 
     wrefresh(outputMap);
@@ -327,7 +342,7 @@ void View::print_death(p_char pgprincipale ,p_char omicida){
     }
     else{
         messaggio=omicida->getName();
-        messaggio+=" ti ha convinto che forse l'università non fa per te.";
+        messaggio+=" ti ha convinto che forse l'universitï¿½ non fa per te.";
     }
     waddstr(death,messaggio.c_str());
     wmove(death,2,1);

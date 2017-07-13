@@ -45,6 +45,7 @@ void Controller::launch() {
 
     //setup di ncurses , queste ci vogliono sempre
     initscr(); //inizializza ncurses
+    start_color(); // aggiunge il supporto ai colori
     clear(); //pulisce la console
     cbreak(); // toglie la necessita di premere invio ad ogni comando
     curs_set(0); //toglie il cursore

@@ -5,17 +5,22 @@ inventory::inventory(){
 }
 
 bool inventory:: addItem(p_item a){
+
     if(listw.size()<8){
         string temp="a";
+
+        //97 e' la lettera a da dove partono gli ID dell'inventario
         temp[0]=97+listw.size();
-        //cout<<"aggiunto elemento di id: "<<temp<<" all'inventario"<<endl;
         a->setInventoryId(temp);
         listw.push_back(a);
-        return true;}
+        return true;
+    }
     return false;
 
 }
+
 p_item inventory::getByID(string id){
+
     for(std::list<p_item>::iterator i=listw.begin(); i!=listw.end();++i){
         if((*i)->getInventoryId()==id){
             p_item temp=*i;
@@ -24,24 +29,31 @@ p_item inventory::getByID(string id){
     }
     return nullptr;
 }
+
 list<p_item> inventory::getInventory(){
-return listw;
+    return listw;
 }
 
 p_item inventory:: deleteItem(string id) {
+
     int offset=1;
     p_item temp=nullptr;
+
     std::list<p_item>:: iterator eliminatore;
     std::list<p_item>:: iterator i=listw.begin();
     bool trovato=false;
 
     while(i!=listw.end()){
+
         string controllo=(*i)->getInventoryId();
+
         if(trovato){
+            //Se ha eliminato l'oggetto tutti i valori dopo devono slittare indietro di una lettere
             controllo[0]-=offset;
             (*i)->setInventoryId(controllo);
         }
-        if(controllo==id&&!trovato){
+        if((controllo==id)&&!trovato){
+            //Se la lettera e' uguale e non ha gia trovato l'oggetto lo elimina dalla lista
             temp=*i;
             eliminatore=i++;
             listw.erase(eliminatore);
@@ -50,37 +62,13 @@ p_item inventory:: deleteItem(string id) {
         else{
             ++i;
         }
-//        cout<<"Indirizzo di i:"<<*i<<" Indirizzo di list.end() "<<listw.end()<<endl;
     }
+    //Ritorna l'oggetto eliminato o null in caso non sia stato trovato
     return temp;
 }
 
-string inventory:: inventoryToStr() {
-    /*char buf[10];
-    string s="",tmp="";
-    int count=0;
-    for(list<Item>::iterator i=listw.begin(); i!=listw.end();++i){
-
-        tmp = "Item name: " + (*i).getName() + " - value: ";
-        sprintf(buf, "%d", (*i).getValue());
-        s += buf;
-        tmp += " - type: ";
-        sprintf(buf, "%d", (*i).getType());
-        tmp+= buf;
-        tmp+= "- id: ";
-        sprintf(buf, "%d", count);
-        tmp += buf;
-        tmp += "\n";
-
-        s=s+tmp;
-        count++;
-    }
-
-    return s;
-*/}
-
 int inventory::getSize(){
-return listw.size();
+    return listw.size();
 }
 
 

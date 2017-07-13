@@ -9,6 +9,7 @@
 #endif
 
 #include "mappa/Mappa.h"
+#include "../environment.hpp"
 #include "../model/pc/Character.hpp"
 #include "../model/pc/inventory.hpp"
 

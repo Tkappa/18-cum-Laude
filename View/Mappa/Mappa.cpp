@@ -3,20 +3,11 @@
 //
 
 
-
-
-#include "Stanza.h"
 #include "Mappa.h"
-#include <iostream>
-#include "../../model/pc/MajorCharacter.hpp"
-#include <list>
 
+//Definizioni per la tipologia di mappa speciale
 #define SHOP 1
 #define LAUREA 2
-
-#include <string.h>
-
-#include <cstdlib>
 
 //Decommentare per vedere i messaggi di debug della creazione della mappa
 //#define debugMap
@@ -29,7 +20,8 @@ struct posStanza{
     int x,y;
 };
 
-Map::Map(int n,int nLevelPrec,queue<char*>* narrative, int specialmap){
+Map::Map(int n,int nLevelPrec,queue<char*>* narrative, int specialmap,bool mapaSpeciale){
+
     isStore=false;
     globalnarrative=narrative;
     next = NULL;
@@ -202,7 +194,7 @@ Map::Map(int n,int nLevelPrec,queue<char*>* narrative,bioma biomaparametro){
 
     int x,y;
     //Algoritmo di generazione stanze
-    //Spiegazione: Ciclo finchè ci sono stanze da creare, Per ogni elemento della lista di stanze provo a crearci una stanza accanto
+    //Spiegazione: Ciclo finchè ci sono stanze da creare, Per ogni elemento della lista di stanze esistenti provo a crearci una stanza accanto
     // controllando sempre se non va fuori limiti o se esiste gia
     //se crea una nuova stanza la aggiunge alla lista e continua finchè non ci sono più stanze da creare
     // se nella creazione di una stanza "crea" una stanza già esistente , le unisce attraverso una porta
@@ -347,15 +339,6 @@ Map::Map(int n,int nLevelPrec,queue<char*>* narrative,bioma biomaparametro){
 #endif // debugMap
 }
 
-void  Map::printMap(){
-    for (int i=0;i<mapHeight ;i++){
-        for (int j=0;j<mapLenght;j++){
-            if(!mapMatrix[i][j].exists()) std::cout<<0<<" ";
-            else std::cout<<1<<" ";
-        }
-        std::cout<<"\n";
-    }
-}
 char Map::getMapChar(int MapX,int MapY,int StX,int StY){
 #ifdef debugMap
     cout<<"Entrato dentro getMapChar(), char e':";
@@ -363,6 +346,7 @@ char Map::getMapChar(int MapX,int MapY,int StX,int StY){
 #endif // debugMap
     return mapMatrix[MapY][MapX].getValue(StX,StY);
 }
+
 void Map::moveChar(p_char personaggio,int dir){
 #ifdef debugMap
     cout<<"Inziato il metodo moveChar()"<<endl;
@@ -431,6 +415,7 @@ void Map::moveChar(p_char personaggio,int dir){
     cout<<"Finito il metodo moveChar()"<<endl;
 #endif // debugMap
 }
+
 void Map::assignInizialPosition_toPlayer(p_char personaggio){
 #ifdef debugMap
     cout<<"Inziato il metodo assegnaPosIniziale()"<<endl;
@@ -448,6 +433,7 @@ void Map::assignInizialPosition_toPlayer(p_char personaggio){
     cout<<"Finito il metodo assegnaPosIniziale()"<<endl;
 #endif // debugMap
 }
+
 void Map::assingPosition(p_char personaggio,int MapX,int MapY,int StX,int StY){
 #ifdef debugMap
     cout<<"Inziato il metodo assegnaPos()"<<endl;
@@ -463,6 +449,7 @@ void Map::assingPosition(p_char personaggio,int MapX,int MapY,int StX,int StY){
     cout<<"Finito il metodo moveChar()"<<endl;
 #endif // debugMap
 }
+
 bool Map::mapCanMove(p_char personaggio,int dir){
 #ifdef debugMap
     cout<<"Entrato dentro il metodo mapCanMove()"<<endl;
@@ -470,13 +457,13 @@ bool Map::mapCanMove(p_char personaggio,int dir){
     Pos p= personaggio->getPos();
     return mapMatrix[p.mapX][p.mapY].canMove(p.stanzX,p.stanzY,dir);
 }
+
 bool Map::roomExplored(int MapX,int MapY){
 #ifdef debugMap
     cout<<"Entrato dentro il metodo stanzaEsplorata()"<<endl;
 #endif // debugMap
     return mapMatrix[MapY][MapX].isExplored();
 }
-
 
 std::list<p_char> Map::getListChar(){
 #ifdef debugMap
@@ -491,6 +478,7 @@ pers Map::getStairsUp(){
 #endif // debugMap
 return  stairsUp;
 }
+
 pers Map::getStairsDown(){
 #ifdef debugMap
     cout<<"Inziato il metodo getStairsDown()"<<endl;
@@ -498,29 +486,33 @@ pers Map::getStairsDown(){
 return stairDown;
 }
 
- void Map::setPrev(Map* Map_Pointer){
+void Map::setPrev(Map* Map_Pointer){
 
    #ifdef debugMap
     cout<<"Entrato dentro il metodo setPreb()"<<endl;
 #endif // debugMap
         prev=Map_Pointer;
  }
+
 Map* Map::nextMap(){
 #ifdef debugMap
     cout<<"Inziato il metodo nextMap()"<<endl;
 #endif // debugMap
     if (next==NULL){
         if(nLevel==15){
-            Map * newmap= new Map(nRooms,nLevel,globalnarrative,LAUREA);
+            //Se è il livello finale crea la stanza finale LAUREA
+            Map * newmap= new Map(nRooms,nLevel,globalnarrative,LAUREA,true);
             next=newmap;
             newmap->setPrev(this);
         }
         else if(nLevel%4==0){
-            Map * newmap= new Map(nRooms,nLevel,globalnarrative,SHOP);
+            //Ogni 4 livelli crea un negozio
+            Map * newmap= new Map(nRooms,nLevel,globalnarrative,SHOP,true);
             next=newmap;
             newmap->setPrev(this);
         }
         else{
+            //altrimenti crea una mappa normale
             Map * newmap= new Map(nRooms,nLevel,globalnarrative,biome);
             next=newmap;
             newmap->setPrev(this);
@@ -537,26 +529,23 @@ Map* Map::prevMap(){
  #ifdef debugMap
     cout<<"Inziato il metodo prevMap()"<<endl;
 #endif // debugMap
-    if (!prev){
-        //Schermata di uscita dal dungeon
-    }
-#ifdef debugMap
-    cout<<"Finito il metodo prevMap()"<<endl;
-#endif // debugMap
     return prev;
 }
 
 std::list<p_item> Map::getListItem(){
-return objectList;}
+    return objectList;
+}
+
 void Map::populate(int MapX,int MapY){
   #ifdef debugMap
     cout<<"Inziato il metodo populate()"<<endl;
 #endif // debugMap
+
     int nNewMonsters=rand()%100+1;
     int nNewItems=rand()%100+1;
     char* str= new char[400];
 
-
+    //Vede quanti mostri creare , preferendo numeri più piccoli
     if(nNewMonsters<70){
         nNewMonsters=1;
     }
@@ -567,6 +556,7 @@ void Map::populate(int MapX,int MapY){
         nNewMonsters=3;
     }
 
+    //Vede quanti oggetti creare
     if(nNewItems<50){
         nNewItems=1;
     }
@@ -578,31 +568,27 @@ void Map::populate(int MapX,int MapY){
     }
 
     for(int i=0;i<nNewMonsters;i++){
-    mapPos x=randRoomPos(MapX,MapY);
-    p_char p= new MajorCharacter(biome,nLevel+1);
-    p->setPos(x);
-    characterList.push_back(p);
-    strcpy(str,"Vedi '");
-    strcat(str,p->getSym().c_str());
-    strcat(str,"' , ");
-    strcat(str,p->getName().c_str());
+        //Crea un nuovo mostro
+        mapPos x=randRoomPos(MapX,MapY);
+        p_char p= new MajorCharacter(biome,nLevel+1);
+        p->setPos(x);
 
-    globalnarrative->push(str);
-}
+        //Aggiorna la narrative con l'apparizione del mostro
+        characterList.push_back(p);
+        strcpy(str,"Vedi '");
+        strcat(str,p->getSym().c_str());
+        strcat(str,"' , ");
+        strcat(str,p->getName().c_str());
+
+        globalnarrative->push(str);
+    }
 
     for(int i=0;i<nNewItems;i++){
-    mapPos itemx=randRoomPos(MapX,MapY);
-    p_item it=new Item(2,itemx);
-    objectList.push_back(it);
-}
-
-
-
-
-
-
-
-
+        //Crea un nuovo oggetto e lo aggiunge alla mappa
+        mapPos itemx=randRoomPos(MapX,MapY);
+        p_item it=new Item(2,itemx);
+        objectList.push_back(it);
+    }
 
 #ifdef debugMapVerbose
     cout<<"Ho creato un nuovo personaggio:"<<p<<"\nQuesti sono tutti i personaggi:\n";
@@ -634,15 +620,15 @@ mapPos Map::randRoomPos(int MapX,int MapY){
 void Map::addItem(p_item a){
     this->objectList.push_back(a);
 }
-bool Map::checkIfStore(){
-return isStore;}
 
+bool Map::checkIfStore(){
+    return isStore;
+}
 
 Room Map::getRoomForCoord(int posX, int posY) {
-
     return mapMatrix[posX][posY];
 }
 
 int Map::getNLevel(){
-return nLevel;
+    return nLevel;
 }

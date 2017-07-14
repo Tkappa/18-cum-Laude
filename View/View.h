@@ -39,6 +39,7 @@ class View{
         void print_narrative(queue<char*>* narrative);
         void print_inventory(inventory pg_inventory, int status);
         void clearoutputMap();
+        void clearAndDestroy();
 
 };
 

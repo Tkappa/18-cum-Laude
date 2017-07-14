@@ -536,3 +536,37 @@ void View::print_help(){
 
     wrefresh(help);
 }
+
+void View::clearAndDestroy(){
+    wclear(nameAndStats);
+    wclear(outputMap);
+    wclear(narrative);
+    wclear(winventory);
+    wclear(death);
+    wclear(exitconfirmation);
+    wclear(introduction);
+    wclear(classselection);
+    wclear(victory);
+    wclear(help);
+    wrefresh(nameAndStats);
+    wrefresh(outputMap);
+    wrefresh(narrative);
+    wrefresh(winventory);
+    wrefresh(death);
+    wrefresh(exitconfirmation);
+    wrefresh(introduction);
+    wrefresh(classselection);
+    wrefresh(victory);
+    wrefresh(help);
+    delwin(nameAndStats);
+    delwin(outputMap);
+    delwin(narrative);
+    delwin(winventory);
+    delwin(death);
+    delwin(exitconfirmation);
+    delwin(introduction);
+    delwin(classselection);
+    delwin(victory);
+    delwin(help);
+
+}

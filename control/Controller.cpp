@@ -267,6 +267,11 @@ void Controller::launch() {
     turno=true;
     }
 
+    //Deinizializza ncurses e spegne il gioco
+    vista.clearAndDestroy();
+    echo();
+    endwin();
+
 }
 
 void Controller::loot(p_char pg, Map* curMap){

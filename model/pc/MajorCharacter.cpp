@@ -77,7 +77,7 @@ ability MajorCharacter::setUpAbilities(int curLevel) {
     int difference=2;
 
     //la statistica base che permette che gli npc diventino sempre più forti andando avanti
-    int base=2+curLevel;
+    int base=1+curLevel;
 
     //(rand()%(difference*2))-difference fa in modo che i valori possano essere anche negativi
     int intelligenceAmount = base+(rand()%(difference*2))-difference;

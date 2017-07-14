@@ -43,7 +43,7 @@ Item::Item(int level,mapPos i_pos){
     }
     if(i==2){
         name="money";
-        value=(1+level)*((rand()%20)+1);
+        value=((rand()%20)+1);
         type=MONEY;
         symb="$";
     }

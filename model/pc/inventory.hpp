@@ -5,7 +5,7 @@
 
 #include "Item.hpp"
 
-#include "../../enviroment.hpp"
+#include "../../environment.hpp"
 
 using namespace std;
 

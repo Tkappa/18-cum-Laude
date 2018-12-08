@@ -5,5 +5,5 @@ Made with love by:
 
 + [Igor Ershov](https://github.com/Tkappa)
 + [Stefano Andriolo](https://github.com/steppp)
-+ Valentina Ferraioli
++ [Valentina Ferraioli](https://github.com/val97)
 + [Giuseppe Montalbano](https://github.com/GiuseppeMontalbano)
